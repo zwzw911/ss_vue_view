@@ -1,0 +1,796 @@
+
+
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.font_serif{
+  font-family: Serif;
+}
+.font_monospace{
+  font-family: monospace;
+}
+.font_fantasy{
+  font-family: fantasy;
+}
+.font_cursive{
+  font-family: cursive;
+}
+
+.long_word_break {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+.page_bg {
+  background:linear-gradient(to bottom,#fffff0,#ffffe8)
+}
+.page_ele_bg{
+  background-color: #fafafa;
+}
+.page_border{
+  border-radius:5px;
+  border:1px solid #d0d0d0 ;
+}
+.line-break {
+  word-break:break-all;/*for long englis word*/
+  word-wrap:break-word;
+}
+.spinner-midpoint{
+  top:50%;
+  left:50%;
+  position:relative;
+  height:60px;
+  width:120px;
+  margin:0px ;
+}
+.top{
+  vertical-align: top;
+}
+@color-success:#3c763d;
+@color-info:#31708f;
+@color-warning:#8a6d3b;
+@color-danger:#a94442;
+.hr-info(@color-info){
+  height: 2px;
+  border: none;
+  border-top:2px double @color-info;
+}
+.center
+{
+  text-align:center;
+}
+.auto_center{
+  margin-left:auto;
+  margin-right:auto;
+}
+.readonly{
+  border:none;
+//  background-color: rgba(0,0,0,0);
+  opacity: 1;
+  color:black;
+}
+
+/*
+*   finance only
+*/
+aside>div>span:first-of-type{
+  .marginT_4
+}
+aside>div>span:not(:first-of-type){
+  .marginV_4
+}
+
+/* 上下较紧凑的page-header */
+.page-header-narrow{
+  padding-bottom: 9px;
+  margin: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+/*           font size             */
+.font_size(@num){
+  font-size: 14px+@num*2px;
+}
+
+.font_size_1{
+  .font_size(1);
+}
+
+.font_size_2{
+  .font_size(2);
+}
+
+.font_size_3{
+  .font_size(3);
+}
+
+.font_size_4{
+  .font_size(4);
+}
+
+
+
+/*
+*   公式
+*/
+/**************************************************************/
+/**************** margin and padding ************************/
+/**************************************************************/
+@base:5px;
+
+//margin
+.marginL(@num){
+  margin-left: @base * @num ;
+}
+
+.marginR(@num){
+  margin-right: @num*@base;
+}
+.marginT(@num){
+  margin-top: @num*@base;
+}
+.marginB(@num){
+  margin-bottom: @num * @base;
+}
+.marginV(@num){
+  .marginT(@num);
+  .marginB(@num);
+}
+.marginH(@num){
+  .marginL(@num);
+  .marginR(@num);
+}
+
+ //padding
+.paddingL(@num){
+  padding-left: @num*@base;
+}
+.paddingR(@num){
+  padding-right: @num*@base;
+}
+.paddingT(@num){
+  padding-top: @num*@base;
+}
+.paddingB(@num){
+  padding-bottom: @num*@base;
+}
+.paddingV(@num){
+  .paddingT(@num);
+  .paddingB(@num);
+}
+.paddingH(@num){
+  .paddingL(@num);
+  .paddingR(@num);
+}
+
+//height
+.height(@num){
+  height: @base*@num;
+}
+.height1{
+  .height(1);
+}
+.height2{
+  .height(2);
+}
+.height3{
+  .height(3);
+}
+.height4{
+  .height(4);
+}
+.height5{
+  .height(5);
+}
+.height6{
+  .height(6);
+}
+.height7{
+  .height(7);
+}
+.height8{
+  .height(8);
+}
+
+
+.marginL_1{
+  .marginL(1);
+}
+.marginL_2{
+  .marginL(2);
+}
+.marginL_3{
+  .marginL(3);
+}
+.marginL_4{
+  .marginL(4);
+}
+.marginL_5{
+  .marginL(5);
+}
+.marginL_6{
+  .marginL(6);
+}
+.marginL_7{
+  .marginL(7);
+}
+.marginL_X{
+  .marginL(20);
+}
+.marginL_-7{
+  .marginL(-7);
+}
+.marginL_-14{
+  .marginL(-14);
+}
+.marginR_1{
+  .marginR(1);
+}
+.marginR_2{
+  .marginR(2);
+}
+.marginR_3{
+  .marginR(3);
+}
+.marginR_4{
+  .marginR(4);
+}
+.marginR_5{
+  .marginR(5);
+}
+.marginR_6{
+  .marginR(6);
+}
+.marginR_7{
+  .marginR(7);
+}
+.marginR_X{
+  .marginR(20);
+}
+
+.marginT_1{
+  .marginT(1);
+}
+.marginT_2{
+  .marginT(2);
+}
+.marginT_3{
+  .marginT(3);
+}
+.marginT_4{
+  .marginT(4);
+}
+.marginT_5{
+  .marginT(5);
+}
+.marginT_6{
+  .marginT(6);
+}
+.marginT_7{
+  .marginT(7);
+}
+.marginT_X{
+  .marginT(20);
+}
+
+.marginB_1{
+  .marginB(1);
+}
+.marginB_2{
+  .marginB(2);
+}
+.marginB_3{
+  .marginB(3);
+}
+.marginB_4{
+  .marginB(4);
+}
+.marginB_5{
+  .marginB(5);
+}
+.marginB_6{
+  .marginB(6);
+}
+.marginB_7{
+  .marginB(7);
+}
+.marginB_X{
+  .marginB(20);
+}
+
+.marginV_1{
+  .marginV(1);
+}
+.marginV_2{
+  .marginV(2);
+}
+.marginV_3{
+  .marginV(3);
+}
+.marginV_4{
+  .marginV(4);
+}
+.marginV_5{
+  .marginV(5);
+}
+.marginV_6{
+  .marginV(6);
+}
+.marginV_7{
+  .marginV(7);
+}
+.marginV_X{
+  .marginV(20);
+}
+
+.marginH_1{
+  .marginH(1);
+}
+.marginH_2{
+  .marginH(2);
+}
+.marginH_3{
+  .marginH(3);
+}
+.marginH_4{
+  .marginH(4);
+}
+.marginH_5{
+  .marginH(5);
+}
+.marginH_6{
+  .marginH(6);
+}
+.marginH_7{
+  .marginH(7);
+}
+.marginH_X{
+  .marginH(20);
+}
+
+
+
+
+.paddingL_1{
+  .paddingL(1);
+}
+.paddingL_2{
+  .paddingL(2);
+}
+.paddingL_3{
+  .paddingL(3);
+}
+.paddingL_4{
+  .paddingL(4);
+}
+.paddingL_5{
+  .paddingL(5);
+}
+.paddingL_6{
+  .paddingL(6);
+}
+.paddingL_7{
+  .paddingL(7);
+}
+.paddingL_X{
+  .paddingL(20);
+}
+
+.paddingR_1{
+  .paddingR(1);
+}
+.paddingR_2{
+  .paddingR(2);
+}
+.paddingR_3{
+  .paddingR(3);
+}
+.paddingR_4{
+  .paddingR(4);
+}
+.paddingR_5{
+  .paddingR(5);
+}
+.paddingR_6{
+  .paddingR(6);
+}
+.paddingR_7{
+  .paddingR(7);
+}
+.paddingR_X{
+  .paddingR(20);
+}
+
+.paddingT_1{
+  .paddingT(1);
+}
+.paddingT_2{
+  .paddingT(2);
+}
+.paddingT_3{
+  .paddingT(3);
+}
+.paddingT_4{
+  .paddingT(4);
+}
+.paddingT_5{
+  .paddingT(5);
+}
+.paddingT_6{
+  .paddingT(6);
+}
+.paddingT_7{
+  .paddingT(7);
+}
+.paddingT_X{
+  .paddingT(20);
+}
+
+.paddingB_1{
+  .paddingB(1);
+}
+.paddingB_2{
+  .paddingB(2);
+}
+.paddingB_3{
+  .paddingB(3);
+}
+.paddingB_4{
+  .paddingB(4);
+}
+.paddingB_5{
+  .paddingB(5);
+}
+.paddingB_6{
+  .paddingB(6);
+}
+.paddingB_7{
+  .paddingB(7);
+}
+.paddingB_X{
+  .paddingB(20);
+}
+
+.paddingV_1{
+  .paddingV(1);
+}
+.paddingV_2{
+  .paddingV(2);
+}
+.paddingV_3{
+  .paddingV(3);
+}
+.paddingV_4{
+  .paddingV(4);
+}
+.paddingV_5{
+  .paddingV(5);
+}
+.paddingV_6{
+  .paddingV(6);
+}
+.paddingV_7{
+  .paddingV(7);
+}
+.paddingV_X{
+  .paddingV(20);
+}
+
+
+
+.paddingH_1{
+  .paddingH(1);
+}
+.paddingH_2{
+  .paddingH(2);
+}
+.paddingH_3{
+  .paddingH(3);
+}
+.paddingH_4{
+  .paddingH(4);
+}
+.paddingH_5{
+  .paddingH(5);
+}
+.paddingH_6{
+  .paddingH(6);
+}
+.paddingH_7{
+  .paddingH(7);
+}
+.paddingH_X{
+  .paddingH(20);
+}
+
+.delete-padding-1{
+  margin-left:-15px;
+}
+.delete-padding-2{
+  margin-left:-30px;
+}
+.delete-padding-3{
+  margin-left:-45px;
+}
+/**************************************************************/
+/**************** radius ************************/
+/**************************************************************/
+@base-radius:2px;
+.radius(@num){
+  border-radius:@num*@base-radius;
+}
+
+.radius0{
+  .radius(0)
+}
+.radius1{
+  .radius(1)
+}
+.radius2{
+  .radius(2)
+}
+.radius3{
+  .radius(3)
+}
+.radius4{
+  .radius(4)
+}
+.radius5{
+  .radius(5)
+}
+.radius6{
+  .radius(6)
+}
+.radius7{
+  .radius(7)
+}
+
+.top-left-radius(@num){
+  border-top-left-radius:@num*@base-radius ;
+}
+.top-left-radius0{
+  .top-left-radius(0)
+}
+.top-left-radius1{
+  .top-left-radius(1)
+}
+.top-left-radius2{
+  .top-left-radius(2)
+}
+.top-left-radius3{
+  .top-left-radius(3)
+}.top-left-radius4{
+   .top-left-radius(4)
+ }
+.top-left-radius5{
+  .top-left-radius(5)
+}
+.top-left-radius6{
+  .top-left-radius(6)
+}
+.top-left-radius7{
+  .top-left-radius(7)
+}
+
+.top-right-radius(@num){
+  border-top-right-radius:@num*@base-radius;
+}
+.top-right-radius0{
+  .top-right-radius(0)
+}
+.top-right-radius1{
+  .top-right-radius(1)
+}
+.top-right-radius2{
+  .top-right-radius(2)
+}
+.top-right-radius3{
+  .top-right-radius(3)
+}.top-right-radius4{
+   .top-right-radius(4)
+ }
+.top-right-radius5{
+  .top-right-radius(5)
+}
+.top-right-radius6{
+  .top-right-radius(6)
+}
+.top-right-radius7{
+  .top-right-radius(7)
+}
+
+
+.bottom-left-radius(@num){
+  border-bottom-left-radius:@num*@base-radius;
+}
+.bottom-left-radius0{
+  .bottom-left-radius(0)
+}
+.bottom-left-radius1{
+  .bottom-left-radius(1)
+}
+.bottom-left-radius2{
+  .bottom-left-radius(2)
+}
+.bottom-left-radius3{
+  .bottom-left-radius(3)
+}.bottom-left-radius4{
+   .bottom-left-radius(4)
+ }
+.bottom-left-radius5{
+  .bottom-left-radius(5)
+}
+.bottom-left-radius6{
+  .bottom-left-radius(6)
+}
+.bottom-left-radius7{
+  .bottom-left-radius(7)
+}
+
+.bottom-right-radius(@num){
+  border-bottom-right-radius:@num*@base-radius ;
+}
+.bottom-right-radius0{
+  .bottom-right-radius(0)
+}
+.bottom-right-radius1{
+  .bottom-right-radius(1)
+}
+.bottom-right-radius2{
+  .bottom-right-radius(2)
+}
+.bottom-right-radius3{
+  .bottom-right-radius(3)
+}.bottom-right-radius4{
+   .bottom-right-radius(4)
+ }
+.bottom-right-radius5{
+  .bottom-right-radius(5)
+}
+.bottom-right-radius6{
+  .bottom-right-radius(6)
+}
+.bottom-right-radius7{
+  .bottom-right-radius(7)
+}
+
+/**************************************************************/
+/**************** border ************************/
+/**************************************************************/
+
+
+.borderSet(@width:thin,@type,@color){
+  border: @width @type @color;
+}
+
+.border1{
+  .borderSet(thin,dashed,black);
+}
+
+.cursor(@type){
+  cursor: @type;
+}
+
+.cursor_pointer{
+  .cursor(pointer);
+}
+
+/*
+**********************************************************
+*******************  auto complete   *********************
+**********************************************************
+*/
+.ac-container {
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  z-index: 999;
+}
+.ac-container .ac-menu {
+  border: 1px solid #ccc;
+  list-style: none;
+  padding: 0;
+  background-color: white;
+  box-shadow: 0 3px 7px 0px rgba(0, 0, 0, 0.15);
+  margin: 0;
+}
+.ac-container .ac-menu .ac-menu-item {
+  border-bottom: 0px dotted #ccc;
+  line-height: 25px;
+  margin: 0;
+  padding:0 20px;
+}
+.ac-container .ac-menu .ac-menu-item:last-child {
+  border-bottom: 0;
+}
+.ac-container .ac-menu .ac-menu-item:hover {
+  background-color: #e0eaff;
+}
+.ac-container .ac-menu a {
+  padding-left: 5px;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.ac-container .ac-menu .ac-state-focus {
+  outline: none;
+  background-color: #e0eaff;
+}
+
+
+
+
+/*
+**********************************************************
+*******************  finance   ***************************
+**********************************************************
+*/
+/*
+* 从bootstrap.css中copy出。因为import不起作用
+*/
+.bg-primary {
+  color: #fff;
+  background-color: #428bca;
+}
+.bg-warning {
+  background-color: #fcf8e3;
+}
+
+/*
+* 只有less才能把class作为内容引用，css不行（css只能设置属性）
+*/
+@color:silver;
+.tabBorder{
+  border-top: 1px solid @color;
+  border-left: 1px solid @color;
+  border-right: 1px solid @color;
+}
+
+.content-border{
+  border: 1px solid @color;
+}
+
+.aside-hover-choosen{
+  .bg-primary;
+  //font-size: 21px; //默认字体 14px；为了保持纵向距离不变，paddingV从2减到1，对应的fontsize从14到21px
+  //.paddingV_1
+}
+
+#navbar span:hover{
+  .aside-hover-choosen
+}
+
+#configuration>span:hover,#bill>span:hover{
+  //background-color:#f8fdff;
+  .tabBorder;
+  .cursor_pointer
+}
+
+#configuration>span.activate,#bill>span.activate{
+  background:-moz-linear-gradient(#ffffff,#fdfdfd);
+  .tabBorder;
+  box-shadow:2px 0px 0px 0px silver;
+}
+
+
+//
+.activeQueryValue:hover{
+ // .bg-warning;
+
+}
+.activeQueryValue>span.fa{
+  color: transparent;
+}
+.activeQueryValue:hover>span.fa {
+  color: red;
+}
+
+
+/*    为了计算当前内容，以便决定footer的位置
+*     直接使用col-lg-12，因为是float，无法获得内容的高度，所以新设no-float
+*/
+.col-lg-12-no-float,.col-lg-4-no-float,.col-md-12-no-float,.col-sm-12-no-float,.col-xs-12-no-float{
+  width:100%;
+  padding:0 15px;
+}
+//让footer保持在最底部，结合js一起使用
+.fixed-footer {position: fixed;bottom: 0;left:0;width:100%;}

@@ -1,0 +1,80 @@
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+
+h1,
+.h1 {
+  font-size: 36px;
+}
+h2,
+.h2 {
+  font-size: 30px;
+}
+h3,
+.h3 {
+  font-size: 24px;
+}
+h4,
+.h4 {
+  font-size: 18px;
+}
+h5,
+.h5 {
+  font-size: 14px;
+}
+h6,
+.h6 {
+  font-size: 12px;
+}
+
+.page-header {
+  padding-bottom: 9px;
+  margin: 40px 0 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.page-header-narrow {
+  padding-bottom: 9px;
+  margin: 10px 0;
+  border-bottom: 1px solid #eee
+}
+
+
+.text-primary {
+  color: #3399ff;
+}
+
+.text-info {
+  color: #3399ff;
+}
+
+.text-success {
+  color: #00cc66;
+}
+.text-warning {
+  color: #ff9900;
+}
+.text-error {
+  color: #ff3300;
+}
+.text-muted {
+  color: #777;
+}

@@ -1,0 +1,40 @@
+/*
+*   公式
+*/
+/**************************************************************/
+/**************** color  ************************/
+/**************************************************************/
+@primary: #2d8cf0;
+@light-primary: #5cadff;
+@dark-primary: #2b85e4;
+
+@info: #2d8cf0;
+@success: #19be6b;
+@warning: #ff9900;
+@error: #ed3f14;
+
+//@dark-white: #ddd;
+
+//.primary{ color:#3399ff;}
+//.info{color:#2db7f5;}
+//.success{color:#00cc66;}
+//.warning{color:#ff9900;}
+//.error{color: #ff3300;}
+//.link{color: #3399ff;}
+.darken(@color){
+  color: darken(@color,20%);
+}
+
+.bg-header{
+  background-color: @primary;
+}
+
+.a-text-color-white{
+  color: white;
+}
+
+
+.a-text-color-white:hover{
+  .darken(white)
+}
+
