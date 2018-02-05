@@ -2,32 +2,23 @@
 </style>
 
 <template>
-<!--  <Menu :active-name="sidebarActiveMenu" width="auto" :open-names="sidebarOpenMenus" @on-select="clickMenu" @on-open-change="menuChange">
-    <Submenu v-for="(item,key) in sidebarName" :name="key" :key="key" >
-      <template slot="title">
-        <Icon :type="item.icon"></Icon>
-        {{item.name}}
-      </template>
-      <Menu-item v-for="(child,childKey) in item.children" :name="childKey" :key="childKey" >{{child.name}}</Menu-item>
-    </Submenu>
-  </Menu>-->
-  <Menu class="" active-name="1-2"  width="auto" :open-names="['1']">
-    <Submenu name="1">
-      <template slot="title">
-        <Icon type="ios-navigate"></Icon>
-        Item 1
-      </template>
-      <MenuItem name="1-1" >Option1</MenuItem>
-      <MenuItem name="1-2">Option2</MenuItem>
-      <MenuItem name="1-3">Option3</MenuItem>
-    </Submenu>
-  </Menu>
+  <div class="flex-flow-row-nowrap justify-content-space-between align-items-center">
+    <img :src="searchInfo.config.logoSrc"/>
+    <div class="">
+      <Input style="width: 280px;">
+        <Button   slot="append" icon="ios-search" :style="[buttonBgColor,buttonRadius]" style="" ></Button>
+      </Input>
+
+    </div>
+
+  </div>
 </template>
 
 <script>
   // import {TABLE} from '../../assets/constant'
 
   export default {
+    props:['searchInfo'], //searchInfo.config:一些图片/主题的配置
       methods:{
         /*menuChange(name){
 //          console.log(`menuchange in ${name}`)
@@ -61,16 +52,27 @@
       },
 
     computed:{
-     /* sidebarOpenMenus(){
-//          console.log(this.$store.state.mainState.sidebarOpenMenus)
-        return this.$store.state.sidebarState.sidebarOpenMenus
+      buttonBgColor(){
+        switch (this.searchInfo.config.buttonType){
+          case 'primary':
+            return {
+              'background-color':`#2d8cf0`,
+              color:`white`,
+            }
+        }
       },
-      sidebarActiveMenu(){
-        return this.$store.state.sidebarState.sidebarActiveMenu
-      }*/
+      buttonRadius(){
+        return {
+          'border-top-left-radius': `0px`,
+          'border-bottom-left-radius': `0px`
+        }
+
+      },
     },
       data(){
-        return {}
+        return {
+
+        }
           /*return {
             sidebarName: {
                 configuration:{

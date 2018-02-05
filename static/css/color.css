@@ -4,12 +4,15 @@
 /**************************************************************/
 /**************** color  ************************/
 /**************************************************************/
-.bg-header {
+.bg-primary {
   background-color: #2d8cf0;
 }
-.a-text-color-white {
-  color: white;
+.bg-light-primary {
+  background-color: #5cadff;
 }
-.a-text-color-white:hover {
-  color: #cccccc;
+.bg-dark-primary {
+  background-color: #2b85e4;
+}
+.color-white {
+  color: #ffffff;
 }

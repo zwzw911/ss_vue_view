@@ -13,28 +13,38 @@
 @warning: #ff9900;
 @error: #ed3f14;
 
-//@dark-white: #ddd;
 
-//.primary{ color:#3399ff;}
-//.info{color:#2db7f5;}
-//.success{color:#00cc66;}
-//.warning{color:#ff9900;}
-//.error{color: #ff3300;}
-//.link{color: #3399ff;}
+@white: #ffffff;
+@black: #000000;
+
 .darken(@color){
+  color: darken(@color,10%);
+}
+.darkener(@color){
   color: darken(@color,20%);
 }
+.lighten(@color){
+  color: lighten(@color,10%);
+}
+.lightener(@color){
+  color: lighten(@color,20%);
+}
 
-.bg-header{
+.bg-primary{
   background-color: @primary;
 }
+.bg-light-primary{
+  background-color: @light-primary;
+}
+.bg-dark-primary{
+  background-color: @dark-primary;
+}
 
-.a-text-color-white{
-  color: white;
+.color-white{
+  color:@white;
 }
 
 
-.a-text-color-white:hover{
-  .darken(white)
-}
+
+
 

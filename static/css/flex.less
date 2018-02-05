@@ -1,7 +1,3 @@
-
-
-
-
 /*
 *   公式
 */
@@ -28,7 +24,10 @@ justify-content: @type;
   align-content: @type;
 }
 
-
+//item: flex-grow
+.flex-grow(@num){
+  flex-grow: @num;
+}
 
 
 
@@ -76,7 +75,7 @@ justify-content: @type;
   .align-items(flex-start)
 }
 //一行：垂直：底部对齐
-.align-items-flex-start{
+.align-items-flex-end{
   .align-items(flex-end)
 }
 //一行：垂直：居中
@@ -116,4 +115,16 @@ justify-content: @type;
 //多行：垂直：均匀排列
 .align-content-space-around{
   .align-content(space-around)
+}
+
+
+
+.flex-grow-1{
+  .flex-grow(1)
+}
+.flex-grow-2{
+  .flex-grow(2)
+}
+.flex-grow-3{
+  .flex-grow(3)
 }

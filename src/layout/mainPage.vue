@@ -54,12 +54,33 @@
   }*/
 </style>
 <template>
-  <div class="layout" >
+  <div class="container" >
+    <!--<Layout>-->
+      <div class="header">
+        <selfHeader :header-info="headerInfo"></selfHeader>
+      </div>
+      <div class="">
+        <selfSearch :search-info="searchInfo"></selfSearch>
+      </div>
+      <div class="flex-flow-row-nowrap marginT7 " >
+        <div class="sideBar" style="" >
+          <selfSideBar></selfSideBar>
+        </div>
+        <!--flex-grow-1:占据所有剩余空间-->
+        <div  class="flex-grow-1 marginL4" >
+          <selfContent :content-info="contentInfo"></selfContent>
+        </div>
+      </div>
+      <!--</div>-->
 
+      <div class="footer">
+        <!--<selfFooter :footer-info="footerInfo"></selfFooter>-->
+      </div>
+    <!--</Layout>-->
     <!--<selfModalResult></selfModalResult>-->
 
-    <!--<selfHeader :header-info="headerInfo"></selfHeader>-->
-    <selfFooter :footer-info="footerInfo"></selfFooter>
+
+
 
 
 
@@ -105,14 +126,17 @@
 </template>
 
 <script>
-  // import selfHeader from '../subLayoutComponents/header.vue'
-  import selfFooter from '../subLayoutComponents/footer.vue'
+  import selfHeader from '../components/subLayoutComponents/header.vue'
+  import selfSearch from '../components/subLayoutComponents/search.vue'
+  import selfFooter from '../components/subLayoutComponents/footer.vue'
+  import selfSideBar from '../components/subLayoutComponents/sidebar.vue'
+  import selfContent from '../components/subLayoutComponents/mainPageContent.vue'
   // import sidebar from '../subLayoutComponents/sidebar.vue'
   // import selfFooter from '../subLayoutComponents/footer.vue'
   //
   // import selfModalResult from '../subLayoutComponents/modalResult.vue'
   export default {
-      components:{selfFooter},
+      components:{selfHeader,selfSearch,selfSideBar,selfContent},
       computed:{
 
 //                 isFixed(){
@@ -138,9 +162,31 @@
           itemsInHeader:[{name:"注册",href:"register"},{name:"登录",href:"login"}],
           userName:this.$store.state.headerInfo.userName
         },
+        searchInfo:{
+          config:{
+            logoSrc:'/static/logo.png',
+            buttonType:'primary',
+          },
+        },
         footerInfo:{
           year:this.$store.state.footerInfo.year
-        }
+        },
+        contentInfo:[
+          {
+            articleInfo:
+              {title:'title1',content:'content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1content1'},
+            authorInfo:
+              {userThumbSrc:'/static/logo.png',userName:'dasf'},
+          },
+          {
+            articleInfo:
+              {title:'title1',content:'content1'},
+            authorInfo:
+              {userThumbSrc:'/static/logo.png',userName:'dasf'},
+          }
+        ],
+
+
 
           /*headTitle:[
               {
