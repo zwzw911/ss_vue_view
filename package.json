@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "awesomeprint": "^1.0.2",
+    "axios": "^0.17.1",
     "iview": "^2.9.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",

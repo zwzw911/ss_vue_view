@@ -1,0 +1,402 @@
+/*
+*   公式
+*/
+/**************************************************************/
+/**************** margin and padding ************************/
+/**************************************************************/
+@base:5px;
+
+//margin
+.marginL(@num){
+  margin-left: @base * @num ;
+}
+
+.marginR(@num){
+  margin-right: @num*@base;
+}
+.marginT(@num){
+  margin-top: @num*@base;
+}
+.marginB(@num){
+  margin-bottom: @num * @base;
+}
+.marginV(@num){
+  .marginT(@num);
+  .marginB(@num);
+}
+.marginH(@num){
+  .marginL(@num);
+  .marginR(@num);
+}
+
+//padding
+.paddingL(@num){
+  padding-left: @num*@base;
+}
+.paddingR(@num){
+  padding-right: @num*@base;
+}
+.paddingT(@num){
+  padding-top: @num*@base;
+}
+.paddingB(@num){
+  padding-bottom: @num*@base;
+}
+.paddingV(@num){
+  .paddingT(@num);
+  .paddingB(@num);
+}
+.paddingH(@num){
+  .paddingL(@num);
+  .paddingR(@num);
+}
+
+//height
+.height(@num){
+  height: @base*@num;
+}
+.height1{
+  .height(1);
+}
+.height2{
+  .height(2);
+}
+.height3{
+  .height(3);
+}
+.height4{
+  .height(4);
+}
+.height5{
+  .height(5);
+}
+.height6{
+  .height(6);
+}
+.height7{
+  .height(7);
+}
+.height8{
+  .height(8);
+}
+
+
+.marginL1{
+  .marginL(1);
+}
+.marginL2{
+  .marginL(2);
+}
+.marginL3{
+  .marginL(3);
+}
+.marginL4{
+  .marginL(4);
+}
+.marginL5{
+  .marginL(5);
+}
+.marginL6{
+  .marginL(6);
+}
+.marginL7{
+  .marginL(7);
+}
+.marginLX{
+  .marginL(20);
+}
+.marginL-7{
+  .marginL(-7);
+}
+.marginL-14{
+  .marginL(-14);
+}
+.marginR1{
+  .marginR(1);
+}
+.marginR2{
+  .marginR(2);
+}
+.marginR3{
+  .marginR(3);
+}
+.marginR4{
+  .marginR(4);
+}
+.marginR5{
+  .marginR(5);
+}
+.marginR6{
+  .marginR(6);
+}
+.marginR7{
+  .marginR(7);
+}
+.marginRX{
+  .marginR(20);
+}
+
+.marginT1{
+  .marginT(1);
+}
+.marginT2{
+  .marginT(2);
+}
+.marginT3{
+  .marginT(3);
+}
+.marginT4{
+  .marginT(4);
+}
+.marginT5{
+  .marginT(5);
+}
+.marginT6{
+  .marginT(6);
+}
+.marginT7{
+  .marginT(7);
+}
+.marginTX{
+  .marginT(20);
+}
+
+.marginB1{
+  .marginB(1);
+}
+.marginB2{
+  .marginB(2);
+}
+.marginB3{
+  .marginB(3);
+}
+.marginB4{
+  .marginB(4);
+}
+.marginB5{
+  .marginB(5);
+}
+.marginB6{
+  .marginB(6);
+}
+.marginB7{
+  .marginB(7);
+}
+.marginBX{
+  .marginB(20);
+}
+
+.marginV1{
+  .marginV(1);
+}
+.marginV2{
+  .marginV(2);
+}
+.marginV3{
+  .marginV(3);
+}
+.marginV4{
+  .marginV(4);
+}
+.marginV5{
+  .marginV(5);
+}
+.marginV6{
+  .marginV(6);
+}
+.marginV7{
+  .marginV(7);
+}
+.marginVX{
+  .marginV(20);
+}
+
+.marginH1{
+  .marginH(1);
+}
+.marginH2{
+  .marginH(2);
+}
+.marginH3{
+  .marginH(3);
+}
+.marginH4{
+  .marginH(4);
+}
+.marginH5{
+  .marginH(5);
+}
+.marginH6{
+  .marginH(6);
+}
+.marginH7{
+  .marginH(7);
+}
+.marginHX{
+  .marginH(20);
+}
+
+
+
+
+.paddingL1{
+  .paddingL(1);
+}
+.paddingL2{
+  .paddingL(2);
+}
+.paddingL3{
+  .paddingL(3);
+}
+.paddingL4{
+  .paddingL(4);
+}
+.paddingL5{
+  .paddingL(5);
+}
+.paddingL6{
+  .paddingL(6);
+}
+.paddingL7{
+  .paddingL(7);
+}
+.paddingLX{
+  .paddingL(20);
+}
+
+.paddingR1{
+  .paddingR(1);
+}
+.paddingR2{
+  .paddingR(2);
+}
+.paddingR3{
+  .paddingR(3);
+}
+.paddingR4{
+  .paddingR(4);
+}
+.paddingR5{
+  .paddingR(5);
+}
+.paddingR6{
+  .paddingR(6);
+}
+.paddingR7{
+  .paddingR(7);
+}
+.paddingRX{
+  .paddingR(20);
+}
+
+.paddingT1{
+  .paddingT(1);
+}
+.paddingT2{
+  .paddingT(2);
+}
+.paddingT3{
+  .paddingT(3);
+}
+.paddingT4{
+  .paddingT(4);
+}
+.paddingT5{
+  .paddingT(5);
+}
+.paddingT6{
+  .paddingT(6);
+}
+.paddingT7{
+  .paddingT(7);
+}
+.paddingTX{
+  .paddingT(20);
+}
+
+.paddingB1{
+  .paddingB(1);
+}
+.paddingB2{
+  .paddingB(2);
+}
+.paddingB3{
+  .paddingB(3);
+}
+.paddingB4{
+  .paddingB(4);
+}
+.paddingB5{
+  .paddingB(5);
+}
+.paddingB6{
+  .paddingB(6);
+}
+.paddingB7{
+  .paddingB(7);
+}
+.paddingBX{
+  .paddingB(20);
+}
+
+.paddingV1{
+  .paddingV(1);
+}
+.paddingV2{
+  .paddingV(2);
+}
+.paddingV3{
+  .paddingV(3);
+}
+.paddingV4{
+  .paddingV(4);
+}
+.paddingV5{
+  .paddingV(5);
+}
+.paddingV6{
+  .paddingV(6);
+}
+.paddingV7{
+  .paddingV(7);
+}
+.paddingVX{
+  .paddingV(20);
+}
+
+
+
+.paddingH1{
+  .paddingH(1);
+}
+.paddingH2{
+  .paddingH(2);
+}
+.paddingH3{
+  .paddingH(3);
+}
+.paddingH4{
+  .paddingH(4);
+}
+.paddingH5{
+  .paddingH(5);
+}
+.paddingH6{
+  .paddingH(6);
+}
+.paddingH7{
+  .paddingH(7);
+}
+.paddingHX{
+  .paddingH(20);
+}
+
+.delete-padding-1{
+  margin-left:-15px;
+}
+.delete-padding-2{
+  margin-left:-30px;
+}
+.delete-padding-3{
+  margin-left:-45px;
+}

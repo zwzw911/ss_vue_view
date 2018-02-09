@@ -16,6 +16,7 @@
 
 @white: #ffffff;
 @black: #000000;
+@red: #ff0000;
 
 .darken(@color){
   color: darken(@color,10%);
@@ -33,15 +34,22 @@
 .bg-primary{
   background-color: @primary;
 }
-.bg-light-primary{
+.bg-lighten-primary{
   background-color: @light-primary;
 }
-.bg-dark-primary{
+.bg-darken-primary{
   background-color: @dark-primary;
 }
 
 .color-white{
   color:@white;
+}
+
+.color-lighten-red{
+  .lighten(@red)
+}
+.color-lightener-red{
+  .lightener(@red)
 }
 
 

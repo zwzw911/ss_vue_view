@@ -7,12 +7,18 @@
 .bg-primary {
   background-color: #2d8cf0;
 }
-.bg-light-primary {
+.bg-lighten-primary {
   background-color: #5cadff;
 }
-.bg-dark-primary {
+.bg-darken-primary {
   background-color: #2b85e4;
 }
 .color-white {
   color: #ffffff;
+}
+.color-lighten-red {
+  color: #ff3333;
+}
+.color-lightener-red {
+  color: #ff6666;
 }
