@@ -16,9 +16,15 @@
 .color-white {
   color: #ffffff;
 }
+.color-red {
+  color: #ff0000;
+}
 .color-lighten-red {
   color: #ff3333;
 }
 .color-lightener-red {
   color: #ff6666;
+}
+.color-lightener-primary {
+  color: #8cc0f7;
 }

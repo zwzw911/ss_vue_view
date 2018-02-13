@@ -1,22 +1,18 @@
-/**
- * Created by ada on 2018/2/8.
- * 用来记录一些client使用的enum（server段可能也会用到，用来产生client使用的数据，例如inputAttribute等）
- */
-'use strict'
+"use strict"
 
-const InputAttributeFieldName={
-    LABEL:'label',
-    PLACE_HOLDER:'placeHolder',
-    PLACE_HOLDER_BKUP:'placeHolderBkup',//为了实现点击 placeHolder消失，需要完成focus时，placeHolder为空；所以需要备份，以便blur+空 时恢复
-    INPUT_TYPE:'inputType',
-    ENUM_VALUE:'enumValue',
-}
 
-const InputTempDataFieldName={
-    VALID_RESULT:'validResult',//boolean
-}
+const InputAttributeFieldName=
+{"LABEL":"label","PLACE_HOLDER":"placeHolder","PLACE_HOLDER_BKUP":"placeHolderBkup","INPUT_TYPE":"inputType","ENUM_VALUE":"enumValue","UNIQUE":"unique"}
+const InputTempDataFieldName=
+{"VALID_RESULT":"validResult"}
+const ValidatePart=
+{"SEARCH_PARAMS":"searchParams","RECORD_INFO":"recordInfo","RECORD_ID":"recordId","CURRENT_PAGE":"currentPage","FILTER_FIELD_VALUE":"filterFieldValue","RECORD_ID_ARRAY":"recIdArr","EDIT_SUB_FIELD":"editSubField","EVENT":"event","SINGLE_FIELD":"singleField","MANIPULATE_ARRAY":"manipulateArray","METHOD":"method"}
+const Method=
+{"CREATE":"0","SEARCH":"1","UPDATE":"2","DELETE":"3","MATCH":"4","UPLOAD":"5"}
 
-module.exports={
+export {
     InputAttributeFieldName,
     InputTempDataFieldName,
+    ValidatePart,
+    Method,
 }

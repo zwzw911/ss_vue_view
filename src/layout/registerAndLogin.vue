@@ -3,7 +3,8 @@
     <!--<Layout>-->
     <Row>
       <Col span="7">
-      <selfRegister :register-info="registerInfo"></selfRegister>
+      <router-view />
+      <!--<selfLogin :login-info="loginInfo"></selfLogin>-->
       </Col>
     </Row>
 
@@ -63,7 +64,8 @@
 </template>
 
 <script>
-  import selfRegister from '../components/subComponents/register.vue'
+  // import selfRegister from '../components/subComponents/register.vue'
+  import selfLogin from '../components/subComponents/login.vue'
 
   // import sidebar from '../subLayoutComponents/sidebar.vue'
   import selfFooter from '../components/subLayoutComponents/footer.vue'
@@ -74,7 +76,7 @@
   //
   // import selfModalResult from '../subLayoutComponents/modalResult.vue'
   export default {
-      components:{selfRegister,selfFooter},
+      components:{selfLogin},
       computed:{
 
 //                 isFixed(){
@@ -103,7 +105,15 @@
           ruleForUpdate:ruleForUpdate.user,
           inputTempData:inputTempData.user,
         },
+        loginInfo:{
 
+            initInputValue:inputValueForCreate.user,
+            inputAttribute:inputAttribute.user,
+            ruleForCreate:ruleForCreate.user,
+            // ruleForUpdate:ruleForUpdate.user,
+            inputTempData:inputTempData.user,
+
+        },
         footerInfo:{
           year:this.$store.state.footerInfo.year
         },

@@ -3,19 +3,32 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
-
+// import {proxySetting} from '../src/constant/envConfiguration/envConfiguration'
+const proxySetting=require('../src/constant/envConfiguration/envConfiguration').proxySetting
+// const ap=require('awesomeprint')
+// ap.inf('proxySetting',proxySetting)
 module.exports = {
   dev: {
 
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      // proxySetting
+      '/user':
+        {
+          target:"http://127.0.0.1:3000",
+          changeOrigin:true,
+          pathRewrite:{
+            "^/user":"/user"
+          }
+        },
+    },
 
     // Various Dev Server settings
     host: '127.0.0.1', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: false,
+    autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
