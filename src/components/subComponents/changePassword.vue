@@ -4,61 +4,49 @@
 <template>
   <div class="">
     <div>
-      <p class="h4 font-fantasy">登录</p>
+      <p class="h4 font-fantasy">修改密码</p>
     </div>
     <div>
 
-            <!--:label-width="80"-->
+
+
       <div class="flex-flow-row-nowrap justify-content-flex-start paddingH4 marginV2">
         <p :style="showResultFlag ? '':hideOccupySpace" class="color-red h5">{{loginResultMsg}}</p>
       </div>
 
 
-      <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4 " ref="userInputValue" :model="userInputValue" :rules="ruleForInput">
+      <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4 " :label-width="80" ref="userInputValue" :model="userInputValue" :rules="ruleForInput">
         <template v-for="(v,k) in userInputValue">
-          <template v-if="undefined!==inputAttribute[k]['enum']">
-            <FormItem :prop="k" :key="k" >
-              <Select v-model="userInputValue[k]" :placeholder="inputAttribute[k]['placeHolder'][0]">
-                <Option v-for="(enumValue,enumKey) in inputAttribute[k]['enum']" :value="enumKey" :key="enumKey">{{enumValue}}</Option>
-              </Select>
-            </FormItem>
-          </template>
-          <template v-else="">
-            <FormItem  :prop="k" :key="k"  class="" :error="userInputTempData[k]['validResult']">
+
+
+            <FormItem  :prop="k" :key="k"  class="" :error="userInputTempData[k]['validResult']" :label="inputAttribute[k]['label']">
               <!---->
               <Input
-                @on-focus="focusInputPlaceHolderDisappear({keyName:k});focusResetLoginResult()"
+                @on-focus="focusInputPlaceHolderDisappear({keyName:k});"
                 @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValue({formVariantName:'userInputValue',fieldName:k});checkSubmitButtonStatus({})"
                 @on-change="validSingleInputValue({formVariantName:'userInputValue',fieldName:k});checkSubmitButtonStatus({});"
                 :type="inputAttribute[k]['inputType']" v-model="userInputValue[k]" :placeholder="inputAttribute[k]['placeHolder'][0]"
               >
-                <span slot="prepend"  style="">
+<!--                <span slot="prepend"  style="">
                   <Icon :type="icon[k]" size="20" :color="iconColor"></Icon>
-                </span>
+                </span>-->
 
               </Input>
               <!--<Input v-model="userInputValue.name.value" placeholder=""></Input>-->
             </FormItem>
-          </template>
+
         </template>
 
 
-        <!--term of service-->
-        <div class="flex-flow-row-nowrap justify-content-flex-start marginV4">
-          <Checkbox v-model="rememberMe" @on-change="">
 
-          </Checkbox>
-          <span>记住我</span>
-
-        </div>
 
         <FormItem class="">
-          <Button long size="large" shape="circle" type="primary" @click="sendLoginInfo()" :style="submitButtonDisable ? buttonDisableStyle:''" :disabled="submitButtonDisable">登录</Button>
+          <Button size="large"  type="primary" @click="sendChangePasswordInfo()" :style="submitButtonDisable ? buttonDisableStyle:''" :disabled="submitButtonDisable">修改</Button>
           <!--<Button type="ghost" @click="handleReset('userInputValue')" style="margin-left: 8px">Reset</Button>-->
         </FormItem>
       </Form>
 
-      <span class="h4">already?<a>link</a></span>
+      <!--<span class="h4">already?<a>link</a></span>-->
     </div>
   </div>
 </template>
@@ -73,23 +61,19 @@
   import {inf,wrn,err} from 'awesomeprint'
 
   export default {
-    props:['loginInfo'], //
-    created(){
+    props:['changePasswordInfo'], //
+/*    created(){
       if(true===this.$cookies.isKey('account')){
         this.userInputValue.account=this.$cookies.get('account')
         this.userInputTempData.account[InputTempDataFieldName.VALID_RESULT]=''
       }
-    },
+    },*/
     methods: {
       /********************************************/
       /*                    view                  */
       /********************************************/
       //存储 单个input 的检测结果（null：为检测，非空字符：检测通过，空字符：检测通过）
       validSingleInputValue({formVariantName, fieldName}) {
-        // inf('validSingleInputValue in')
-        // inf('formVariantName',formVariantName)
-        // inf('type',type)
-        // inf('a',Object.keys(this.$refs))
         //formItem放在2层template中，所以大概需要数组来引用
         this.$refs[`${formVariantName}`].validateField(fieldName, (validResult) => {
           // inf('validResult',validResult)
@@ -136,13 +120,16 @@
       /********************************************/
       /*                    axios                 */
       /********************************************/
-      async sendLoginInfo(){
+      async sendChangePasswordInfo(){
         axios.defaults.withCredentials = true //带cookie
-        let result=await axios.post(this.url.login,
+        let result=await axios.post(this.url.changePassword,
           {
             values: {
-              [ValidatePart.METHOD]: Method.MATCH,
-              [ValidatePart.RECORD_INFO]: this.userInputValue
+              // [ValidatePart.METHOD]: Method.MATCH,
+              [ValidatePart.RECORD_INFO]: {
+                'oldPassword':this.userInputValue['password'],
+                'newPassword':this.userInputValue['newPassword'],
+              }
             }
           })
         // =await this.sendLoginInfo()
@@ -168,22 +155,15 @@
 
     },
     data(){
-      let usedFieldName=['account','password']
+      let usedFieldName=['password']
       let inputAttribute_tmp,userInputValue_tmp,userInputTempData_tmp,ruleForCreate_tmp
       let inputAttribute={},userInputValue={},userInputTempData={},ruleForCreate={}
 
-      inputAttribute_tmp=objectDeepCopy(this.loginInfo.inputAttribute)
-      inputAttribute_tmp.account[InputAttributeFieldName.PLACE_HOLDER]=['请输入手机号或邮箱']
-      inputAttribute_tmp.account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=['请输入手机号或邮箱']
-
-      userInputValue_tmp=objectDeepCopy(this.loginInfo.initInputValue)
-      userInputTempData_tmp=objectDeepCopy(this.loginInfo.inputTempData)
-
-      ruleForCreate_tmp=objectDeepCopy(this.loginInfo.ruleForCreate)
-      ruleForCreate_tmp.account[0].message='账号不能为空'
-      ruleForCreate_tmp.account[1].message='账号必须是有效的手机号或邮箱'
-      ruleForCreate_tmp.account[1].pattern=this.loginInfo.ruleForCreate.account[1].pattern
-      ruleForCreate_tmp.password[1].pattern=this.loginInfo.ruleForCreate.password[1].pattern
+      inputAttribute_tmp=objectDeepCopy(this.changePasswordInfo.inputAttribute)
+      userInputValue_tmp=objectDeepCopy(this.changePasswordInfo.initInputValue)
+      userInputTempData_tmp=objectDeepCopy(this.changePasswordInfo.inputTempData)
+      ruleForCreate_tmp=objectDeepCopy(this.changePasswordInfo.ruleForCreate)
+      ruleForCreate_tmp.password[1].pattern=this.changePasswordInfo.ruleForCreate.password[1].pattern
 
 // inf('1',this.loginInfo.ruleForCreate.account)
       for(let singleUsedFieldName of usedFieldName){
@@ -192,7 +172,55 @@
         userInputValue[singleUsedFieldName]=userInputValue_tmp[singleUsedFieldName]
         userInputTempData[singleUsedFieldName]=userInputTempData_tmp[singleUsedFieldName]
         ruleForCreate[singleUsedFieldName]=ruleForCreate_tmp[singleUsedFieldName]
+
       }
+
+      let newFieldNames=['newPassword','againPassword']
+      for(let singleNewFieldName of newFieldNames){
+        inputAttribute[singleNewFieldName]=objectDeepCopy(inputAttribute['password'])
+        userInputValue[singleNewFieldName]=objectDeepCopy(userInputValue['password'])
+        userInputTempData[singleNewFieldName]=objectDeepCopy(userInputTempData['password'])
+        ruleForCreate[singleNewFieldName]=objectDeepCopy(ruleForCreate['password'])
+        ruleForCreate[singleNewFieldName][1].pattern=this.changePasswordInfo.ruleForCreate.password[1].pattern
+      }
+
+      //newPassword的validator
+      const newPasswordCantSameAsOldPassword = (rule, value, callback) => {
+        if(null!==this.userInputValue.password && ''!==this.userInputValue.password){
+          if(value===this.userInputValue.password ){
+            callback(new Error('新密码不能和旧密码一样'));
+          }else{
+            callback()
+          }
+        }
+
+      };
+      //againPassword的validator
+      const  againPasswordMustSameAsNewPassword= (rule, value, callback) => {
+        if(null!==this.userInputValue.newPassword && ''!==this.userInputValue.newPassword){
+          if(value!==this.userInputValue.newPassword ){
+            callback(new Error('两次输入密码不一致'));
+          }else{
+            callback()
+          }
+        }
+
+      };
+
+      ruleForCreate['newPassword'].push({ validator: newPasswordCantSameAsOldPassword, trigger: 'blur' })
+      ruleForCreate['againPassword'].push({ validator: againPasswordMustSameAsNewPassword, trigger: 'blur' })
+
+
+      inputAttribute['password'][InputAttributeFieldName.PLACE_HOLDER][0]='请输入旧密码'
+      inputAttribute['password'][InputAttributeFieldName.PLACE_HOLDER_BKUP][0]='请输入旧密码'
+      inputAttribute['newPassword'][InputAttributeFieldName.PLACE_HOLDER][0]='请输入新密码'
+      inputAttribute['newPassword'][InputAttributeFieldName.PLACE_HOLDER_BKUP][0]='请输入新密码'
+      inputAttribute['againPassword'][InputAttributeFieldName.PLACE_HOLDER][0]='请再次输入密码'
+      inputAttribute['againPassword'][InputAttributeFieldName.PLACE_HOLDER_BKUP][0]='请再次输入密码'
+
+      inputAttribute['password'][InputAttributeFieldName.LABEL]='旧密码'
+      inputAttribute['newPassword'][InputAttributeFieldName.LABEL]='新密码'
+      inputAttribute['againPassword'][InputAttributeFieldName.LABEL]='再输一次'
       // inf('2',ruleForCreate)
       return {
         ruleForInput:ruleForCreate,
@@ -200,17 +228,17 @@
         userInputTempData:userInputTempData,
         userInputValue:userInputValue,
 
-        loginResultMsg:'显示登录结果',//预先设置，用来占位
+        loginResultMsg:'显示修改结果',//预先设置，用来占位
         showResultFlag:false,//判断登录结果
         buttonDisableStyle:{'background-color':`#8cc0f7`,'color':`white`},
-        icon:{name:'person',account:'person',password:'locked'},
-        iconColor:'#5cadff',
+        // icon:{name:'person',account:'person',password:'locked'},
+        // iconColor:'#5cadff',
         hideOccupySpace:{visibility:'hidden'},
-        rememberMe:false, //记住用户名
+        // rememberMe:false, //记住用户名
         submitButtonDisable:true,
 
         url:{
-          login:'/user',
+          changePassword:'/user/changePassword',
           // unique:'/user/uniqueCheck_async',
         }
       }

@@ -5,6 +5,9 @@
       <Col span="7">
       <router-view />
       <!--<selfLogin :login-info="loginInfo"></selfLogin>-->
+      <!--<selfRegister :register-info="registerInfo"></selfRegister>-->
+      <!--<selfChangePassword :change-password-info="changePasswordInfo"></selfChangePassword>-->
+
       </Col>
     </Row>
 
@@ -64,9 +67,9 @@
 </template>
 
 <script>
-  // import selfRegister from '../components/subComponents/register.vue'
+  import selfRegister from '../components/subComponents/register.vue'
   import selfLogin from '../components/subComponents/login.vue'
-
+  import selfChangePassword from '../components/subComponents/changePassword.vue'
   // import sidebar from '../subLayoutComponents/sidebar.vue'
   import selfFooter from '../components/subLayoutComponents/footer.vue'
   import {inputValueForCreate,inputValueForUpdate} from '../constant/inputValue/inputValue'
@@ -76,25 +79,9 @@
   //
   // import selfModalResult from '../subLayoutComponents/modalResult.vue'
   export default {
-      components:{selfLogin},
+      components:{selfLogin,selfRegister,selfChangePassword},
       computed:{
 
-//                 isFixed(){
-// //                  this.$store.commit('initAllFieldInInputAttr')
-//                   return this.$store.state.htmlState.ifFooterFixed
-//       //            console.log(`result is ${result}`)
-//       //            return result
-//                 },
-//         sidebarActiveMenu(){
-//                     return this.$store.state.sidebarState.sidebarActiveMenu
-//       },
-//         sidebarActiveMenuChineseName(){
-//           return this.$store.state.sidebarState.sidebarActiveMenuChineseName
-//         }
-      /*        browserHeight(){
-                  console.log(`height is ${this.$store.state.mainState.screenHeight}`)
-                  return this.$store.state.mainState.screenHeight
-              }*/
       },
     data () {
       return {
@@ -113,6 +100,13 @@
             // ruleForUpdate:ruleForUpdate.user,
             inputTempData:inputTempData.user,
 
+        },
+        changePasswordInfo:{
+          initInputValue:inputValueForCreate.user,
+          inputAttribute:inputAttribute.user,
+          ruleForCreate:ruleForCreate.user,
+          // ruleForUpdate:ruleForUpdate.user,
+          inputTempData:inputTempData.user,
         },
         footerInfo:{
           year:this.$store.state.footerInfo.year

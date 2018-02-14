@@ -4,6 +4,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+/*                    引入cookies               */
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies)
+
 /*  引入iview（需npm install --save iview）     */
 import iView from 'iview'
 import 'iview/dist/styles/iview.css'

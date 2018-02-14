@@ -5,6 +5,8 @@ import registerAndLogin from '@/layout/registerAndLogin'
 
 import register from '../components/subComponents/register'
 import login from '../components/subComponents/login'
+import changePassword from '../components/subComponents/changePassword'
+
 
 import {inputValueForCreate,inputValueForUpdate} from '../constant/inputValue/inputValue'
 import {ruleForCreate,ruleForUpdate} from '../constant/rule/rule'
@@ -20,7 +22,7 @@ export default new Router({
       path: '/',
       name: 'mainPage',
       component: mainPage
-    }*/
+    },*/
     {
       path: '/',
       name: 'registerAndLogin',
@@ -55,8 +57,25 @@ export default new Router({
             },
 
           },
+        },
+        {
+          path: '/changePassword',
+          name: 'changePassword',
+          component: changePassword,
+          props: {
+            changePasswordInfo: {
+              initInputValue: inputValueForCreate.user,
+              inputAttribute: inputAttribute.user,
+              ruleForCreate: ruleForCreate.user,
+              // ruleForUpdate:ruleForUpdate.user,
+              inputTempData: inputTempData.user,
+            },
+          },
         }
       ]
     }
+
+
+
   ]
 })
