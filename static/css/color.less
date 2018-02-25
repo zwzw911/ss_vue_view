@@ -24,12 +24,46 @@
 .darkener(@color){
   color: darken(@color,20%);
 }
+.darkenest(@color){
+  color: darken(@color,30%);
+}
+
 .lighten(@color){
   color: lighten(@color,10%);
 }
 .lightener(@color){
   color: lighten(@color,20%);
 }
+.lightenest(@color){
+  color: lighten(@color,30%);
+}
+
+.bg-darken(@color){
+  background-color: darken(@color,10%);
+}
+.bg-darkener(@color){
+  background-color: darken(@color,20%);
+}
+.bg-darkenest(@color){
+  background-color: darken(@color,30%);
+}
+.bg-lighten(@color){
+  background-color: lighten(@color,10%);
+}
+.bg-lightener(@color){
+  background-color: lighten(@color,20%);
+}
+.bg-lightenest(@color){
+  background-color: lighten(@color,30%);
+}
+
+
+
+.bg-silver{
+  background-color: silver;
+}
+
+
 
 .bg-primary{
   background-color: @primary;
@@ -40,6 +74,20 @@
 .bg-darken-primary{
   background-color: @dark-primary;
 }
+
+bg-color-lightener-black{
+  .bg-lightener(@black)
+}
+bg-color-lightenest-black{
+  .bg-lightenest(@black)
+}
+
+
+
+
+
+
+
 
 .color-white{
   color:@white;
@@ -57,6 +105,10 @@
 
 .color-lightener-primary{
   .lightener(@primary)
+}
+
+color-lightener-black{
+  .lightener(@black)
 }
 
 

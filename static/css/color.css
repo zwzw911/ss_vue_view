@@ -4,6 +4,9 @@
 /**************************************************************/
 /**************** color  ************************/
 /**************************************************************/
+.bg-silver {
+  background-color: silver;
+}
 .bg-primary {
   background-color: #2d8cf0;
 }
@@ -12,6 +15,12 @@
 }
 .bg-darken-primary {
   background-color: #2b85e4;
+}
+bg-color-lightener-black {
+  background-color: #333333;
+}
+bg-color-lightenest-black {
+  background-color: #4d4d4d;
 }
 .color-white {
   color: #ffffff;
@@ -27,4 +36,7 @@
 }
 .color-lightener-primary {
   color: #8cc0f7;
+}
+color-lightener-black {
+  color: #333333;
 }
