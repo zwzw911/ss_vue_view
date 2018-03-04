@@ -42,7 +42,7 @@
           </template>
         </template>
 
-
+        <img :src="captchaImg" width="78px" height="28px">
         <!--term of service-->
         <div class="flex-flow-row-nowrap justify-content-flex-start marginV4">
           <Checkbox v-model="rememberMe" @on-change="">
@@ -75,10 +75,44 @@
   export default {
     props:['loginInfo'], //
     created(){
+
       if(true===this.$cookies.isKey('account')){
         this.userInputValue.account=this.$cookies.get('account')
         this.userInputTempData.account[InputTempDataFieldName.VALID_RESULT]=''
       }
+
+      this.getCaptcha()
+      /*axios.defaults.withCredentials = true //带cookie
+      let result=axios.post('/user/captcha',
+        {
+          /!*          values: {
+                      [ValidatePart.METHOD]: Method.MATCH,
+                      [ValidatePart.RECORD_INFO]: this.userInputValue
+                    }*!/
+        })
+        .then(function(result){
+          inf('result',result)
+          if(result.data.rc>0){
+            that.loginResultMsg=result.data.msg
+            that.showResultFlag=true
+          }else{
+            inf('result correct in')
+            that.showResultFlag=false
+            inf('after setr flag')
+            that.captchaImg=result.data.msg
+
+
+          }
+        },function(err){})*/
+    },
+    mounted(){
+      //获得captcha
+      // this.$nextTick(function () {
+      //   this.getCaptcha()
+      // })
+      // this.getCaptcha()
+      // =await this.sendLoginInfo()
+      // this.getCaptcha()
     },
     methods: {
       /********************************************/
@@ -160,7 +194,26 @@
 
         }
       },
+      //应用在created中，只能使用Promise，而不能使用async/await
+      //应用在created中，如果要设置data中的数据，需要使用别名that而不能使用this
+      getCaptcha(){
+        const that=this
+        axios.defaults.withCredentials = true //带cookie
+        let result=axios.post('/user/captcha', {})
+          .then(function(result){
+        // inf('result',result)
+          if(result.data.rc>0){
+            that.loginResultMsg=result.data.msg
+            that.showResultFlag=true
+          }else{
+            // inf('result correct in')
+            that.showResultFlag=false
+            // inf('after setr flag')
+            that.captchaImg=result.data.msg
 
+          }
+        },function(err){})
+      },
 
 
     },
@@ -212,7 +265,8 @@
         url:{
           login:'/user',
           // unique:'/user/uniqueCheck_async',
-        }
+        },
+        captchaImg:'',
       }
     }
   }

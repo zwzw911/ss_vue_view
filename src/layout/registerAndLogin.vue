@@ -5,13 +5,13 @@
       <Col span="7">
 
       <!--<router-view />-->
-      <!--<selfLogin :login-info="loginInfo"></selfLogin>-->
-      <!--<selfRegister :register-info="registerInfo"></selfRegister>-->
+      <selfLogin :login-info="loginInfo"></selfLogin>
+      <selfRegister :register-info="registerInfo"></selfRegister>
       <!--<selfChangePassword :change-password-info="changePasswordInfo"></selfChangePassword>-->
 <!--      <Button @click="startCrop">裁剪</Button>
       <selfCrop :crop-info="cropInfo" @getCropImg="cropDone" :style="{display: showCropComponent? '':'none'}"></selfCrop>
       <img :src="cropImgDataURL" :style="{visibility:showCropImg?'':'hidden'}">-->
-      <selfUserInfo  :user-info="userInfo"></selfUserInfo>
+      <!--<selfUserInfo  :user-info="userInfo"></selfUserInfo>-->
       </Col>
     </Row>
 
@@ -93,18 +93,17 @@
       },
     data () {
       return {
-        userInfo:{
+/*        userInfo:{
           initInputValue:inputValueForCreate.user,
           inputAttribute:inputAttribute.user,
           // ruleForCreate:ruleForCreate.user,
           ruleForUpdate:ruleForUpdate.user,
           inputTempData:inputTempData.user,
-        },
+        },*/
+
         /*showCropComponent:false,//显示组件
         showCropImg:false,//显示裁剪结果
         cropImgDataURL:'',
-
-
         cropInfo:{
           maxFileSize:2*1024*1024, //原始图片最大size
           L1OrigImgMaxWH:{
@@ -126,7 +125,9 @@
             vertical:5,//上下每边
           },
         },*/
-/*        registerInfo:{
+
+
+        registerInfo:{
           initInputValue:inputValueForCreate.user,
           inputAttribute:inputAttribute.user,
           ruleForCreate:ruleForCreate.user,
@@ -142,14 +143,15 @@
             inputTempData:inputTempData.user,
 
         },
-        changePasswordInfo:{
+
+/*        changePasswordInfo:{
           initInputValue:inputValueForCreate.user,
           inputAttribute:inputAttribute.user,
           ruleForCreate:ruleForCreate.user,
           // ruleForUpdate:ruleForUpdate.user,
           inputTempData:inputTempData.user,
-        },
-        footerInfo:{
+        },*/
+/*        footerInfo:{
           year:this.$store.state.footerInfo.year
         },*/
       }

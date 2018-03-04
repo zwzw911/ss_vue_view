@@ -1,4 +1,4 @@
-/*    gene by D:\ss_vue_express\server_common\maintain\convert2Client\generateVueProxyTable.js  @ 1518507722370* 开发时候的一些运行环境的配置 
+/*    gene by D:\ss_vue_express\server_common\maintain\convert2Client\generateVueProxyTable.js  @ 1519973262640* 开发时候的一些运行环境的配置 
 */
 
 "use strict"
