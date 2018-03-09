@@ -6,144 +6,97 @@
     <div>
       <p class="h4 font-fantasy">修改密码</p>
     </div>
-    <div>
+
+    <div class="flex-flow-row-nowrap justify-content-flex-start paddingH4 marginV2">
+      <p style="" class="color-red h5">
+        <span>{{globalResultMsg}}</span>
+        <span style="visibility:hidden">1</span>
+      </p>
+    </div>
+
+    <!--:label-width="80"-->
+    <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4 "  label-position="left"
+          :ref="ref.form.formForChangePassword" :model="formItemInfo.inputValue" :rules="formItemInfo.rule"
+          :label-width="undefined===formItemInfo.labelWidth ? 0:formItemInfo.labelWidth">
+      <self-form-item :ref="ref.formItem.formItemChangePassword" :form-item-info="formItemInfo" @validateAllItemResult="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
 
 
-
-      <div class="flex-flow-row-nowrap justify-content-flex-start paddingH4 marginV2">
-        <p :style="showResultFlag ? '':hideOccupySpace" class="color-red h5">{{loginResultMsg}}</p>
-      </div>
-
-
-      <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4 " :label-width="80" ref="userInputValue" :model="userInputValue" :rules="ruleForInput">
-        <template v-for="(v,k) in userInputValue">
-
-
-            <FormItem  :prop="k" :key="k"  class="" :error="userInputTempData[k]['validResult']" :label="inputAttribute[k]['label']">
-              <!---->
-              <Input
-                @on-focus="focusInputPlaceHolderDisappear({keyName:k});"
-                @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValue({formVariantName:'userInputValue',fieldName:k});checkSubmitButtonStatus({})"
-                @on-change="validSingleInputValue({formVariantName:'userInputValue',fieldName:k});checkSubmitButtonStatus({});"
-                :type="inputAttribute[k]['inputType']" v-model="userInputValue[k]" :placeholder="inputAttribute[k]['placeHolder'][0]"
-              >
-<!--                <span slot="prepend"  style="">
-                  <Icon :type="icon[k]" size="20" :color="iconColor"></Icon>
-                </span>-->
-
-              </Input>
-              <!--<Input v-model="userInputValue.name.value" placeholder=""></Input>-->
-            </FormItem>
-
-        </template>
-
-
-
-
-        <FormItem class="">
-          <Button size="large"  type="primary" @click="sendChangePasswordInfo()" :style="submitButtonDisable ? buttonDisableStyle:''" :disabled="submitButtonDisable">修改</Button>
-          <!--<Button type="ghost" @click="handleReset('userInputValue')" style="margin-left: 8px">Reset</Button>-->
-        </FormItem>
-      </Form>
+      <!--<FormItem class="">-->
+        <Button long size="large" shape="circle" type="primary" @click="sendChangePasswordInfo_async()" :style="submitButtonDisable ? buttonDisableStyle:''" :disabled="submitButtonDisable">修改</Button>
+        <!--<Button type="ghost" @click="handleReset('userInputValue')" style="margin-left: 8px">Reset</Button>-->
+      <!--</FormItem>-->
+    </Form>
 
       <!--<span class="h4">already?<a>link</a></span>-->
-    </div>
+
   </div>
 </template>
 
 <script>
   'use strict'
   // import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
-  import {objectDeepCopy} from  '../../function/misc'
+  import {objectDeepCopy,objectPartlyDeepCopy} from  '../../function/misc'
   import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
-  // import {regex} from '../../constant/regex/regex'
-  import axios from 'axios'
+  import {myAxios,mergeAdditionalField} from '../helperLib/componentsHelperLib'
   import {inf,wrn,err} from 'awesomeprint'
-
+  import selfFormItem from './formItem'
   export default {
+    components:{selfFormItem},
     props:['changePasswordInfo'], //
-/*    created(){
-      if(true===this.$cookies.isKey('account')){
-        this.userInputValue.account=this.$cookies.get('account')
-        this.userInputTempData.account[InputTempDataFieldName.VALID_RESULT]=''
-      }
-    },*/
     methods: {
       /********************************************/
-      /*                    view                  */
+      /*                    formItem              */
       /********************************************/
-      //存储 单个input 的检测结果（null：为检测，非空字符：检测通过，空字符：检测通过）
-      validSingleInputValue({formVariantName, fieldName}) {
-        //formItem放在2层template中，所以大概需要数组来引用
-        this.$refs[`${formVariantName}`].validateField(fieldName, (validResult) => {
-          // inf('validResult',validResult)
-          this.userInputTempData[fieldName][InputTempDataFieldName.VALID_RESULT] = validResult
-        })
+      setFormItemResult(result){
+        // inf('setFormItemResult in',result)
+        this.validateFormItemResult=result
       },
+
       //每个input blur或者check box click，都要检查素有input valida的状态以及check box的状态，以便决定是否enable 注册按钮
-      checkSubmitButtonStatus({}) {
+      checkSubmitButtonStatus() {
         // inf('checkSubmitButtonStatus in')
-        for (let singleFieldName in this.userInputTempData) {
-          let singleFieldValidResult = this.userInputTempData[singleFieldName][InputTempDataFieldName.VALID_RESULT]
-          if (null === singleFieldValidResult || '' !== singleFieldValidResult) {
-            this.submitButtonDisable = true
-            return
-          }
-        }
-/*        if (false === this.agreeTOS[type]) {
+        if(false===this.validateFormItemResult){
+          // inf('forminte  box in')
           this.submitButtonDisable = true
           return
-        }*/
+        }
         // inf('checkSubmitButtonStatus successful')
         this.submitButtonDisable = false
       },
-      //模拟safiri，点击input时，placeHolder内容消失
-      focusInputPlaceHolderDisappear({keyName}) {
-        if (null === this.userInputValue[keyName] || '' === this.userInputValue[keyName]) {
-          this.inputAttribute[keyName][InputAttributeFieldName.PLACE_HOLDER] = ['']
-        }
-        // inf('after this.userInputValue[this.currentType]',this.inputAttribute[this.currentType][keyName][InputAttributeFieldName.PLACE_HOLDER])
-      },
-      //如果离开input时，inputValue为空，需要恢复placeholder内容
-      blurInputPlaceHolderRestore({keyName}) {
-        // inf('blurInputPlaceHolderRestore in')
-        // inf('blurInputPlaceHolderRestore keyName',keyName)
-        if (null === this.userInputValue[keyName] || '' === this.userInputValue[keyName]) {
-          this.inputAttribute[keyName][InputAttributeFieldName.PLACE_HOLDER] = this.inputAttribute[keyName][InputAttributeFieldName.PLACE_HOLDER_BKUP]
-        }
-      },
-      focusResetLoginResult(){
-        this.showResultFlag=false
-      },
-
 
       /********************************************/
       /*                    axios                 */
       /********************************************/
-      async sendChangePasswordInfo(){
-        axios.defaults.withCredentials = true //带cookie
-        let result=await axios.post(this.url.changePassword,
+      async sendChangePasswordInfo_async(){
+        // axios.defaults.withCredentials = true //带cookie
+        let result=await myAxios.post(this.url.changePassword,
           {
             values: {
               // [ValidatePart.METHOD]: Method.MATCH,
               [ValidatePart.RECORD_INFO]: {
-                'oldPassword':this.userInputValue['password'],
-                'newPassword':this.userInputValue['newPassword'],
+                'oldPassword':this.formItemInfo.inputValue['password'],
+                'newPassword':this.formItemInfo.inputValue['newPassword'],
               }
             }
           })
         // =await this.sendLoginInfo()
         if(result.data.rc>0){
-          this.loginResultMsg=result.data.msg
-          this.showResultFlag=true
-        }else{
-          this.showResultFlag=false
-          if(true===this.rememberMe){
-
-            this.$cookies.set('account', this.userInputValue.account,'14d')
-          }else{
-            this.$cookies.remove('account')
+          // captcha错误显示在input下
+          let setCaptchaResult=this.$refs[this.ref.formItem.formItemChangePassword].checkIfCaptchaErrAndShow({data:result.data})
+          //否则，显示在最顶上
+          if(false===setCaptchaResult){
+            let set99999Result=this.$refs[this.ref.formItem.formItemChangePassword].checkIf99999ErrAndShow({data:result.data})
+            if(false===set99999Result){
+              this.globalResultMsg=result.data.msg
+            }
           }
+
+          if(undefined!==this.formItemInfo.captchaInfo){
+            await this.$refs[this.ref.formItem.formItemChangePassword].getCaptchaImg_async()
+          }
+          // this.showResultFlag=true
+        }else{
+
 
         }
       },
@@ -156,38 +109,30 @@
     },
     data(){
       let usedFieldName=['password']
-      let inputAttribute_tmp,userInputValue_tmp,userInputTempData_tmp,ruleForCreate_tmp
-      let inputAttribute={},userInputValue={},userInputTempData={},ruleForCreate={}
+      let propName='changePasswordInfo'
+      // let inputAttribute_tmp,userInputValue_tmp,userInputTempData_tmp,ruleForCreate_tmp,icon_tmp
+      let inputAttribute={},inputValue={},inputTempData={},ruleForCreate={}
 
-      inputAttribute_tmp=objectDeepCopy(this.changePasswordInfo.inputAttribute)
-      userInputValue_tmp=objectDeepCopy(this.changePasswordInfo.initInputValue)
-      userInputTempData_tmp=objectDeepCopy(this.changePasswordInfo.inputTempData)
-      ruleForCreate_tmp=objectDeepCopy(this.changePasswordInfo.ruleForCreate)
-      ruleForCreate_tmp.password[1].pattern=this.changePasswordInfo.ruleForCreate.password[1].pattern
+      inputAttribute=objectPartlyDeepCopy({sourceObj:this[propName].inputAttribute,expectedKey:usedFieldName})
+      inputValue=objectPartlyDeepCopy({sourceObj:this[propName].initInputValue,expectedKey:usedFieldName})
+      inputTempData=objectPartlyDeepCopy({sourceObj:this[propName].inputTempData,expectedKey:usedFieldName})
+      ruleForCreate=objectPartlyDeepCopy({sourceObj:this[propName].ruleForCreate,expectedKey:usedFieldName})
 
-// inf('1',this.loginInfo.ruleForCreate.account)
-      for(let singleUsedFieldName of usedFieldName){
-        //Object.assign在browser似乎无法正常运行，只能得到最后一次赋值
-        inputAttribute[singleUsedFieldName]=inputAttribute_tmp[singleUsedFieldName]
-        userInputValue[singleUsedFieldName]=userInputValue_tmp[singleUsedFieldName]
-        userInputTempData[singleUsedFieldName]=userInputTempData_tmp[singleUsedFieldName]
-        ruleForCreate[singleUsedFieldName]=ruleForCreate_tmp[singleUsedFieldName]
-
-      }
+      ruleForCreate.password[1].pattern=this.changePasswordInfo.ruleForCreate.password[1].pattern
 
       let newFieldNames=['newPassword','againPassword']
       for(let singleNewFieldName of newFieldNames){
         inputAttribute[singleNewFieldName]=objectDeepCopy(inputAttribute['password'])
-        userInputValue[singleNewFieldName]=objectDeepCopy(userInputValue['password'])
-        userInputTempData[singleNewFieldName]=objectDeepCopy(userInputTempData['password'])
+        inputValue[singleNewFieldName]=objectDeepCopy(inputValue['password'])
+        inputTempData[singleNewFieldName]=objectDeepCopy(inputTempData['password'])
         ruleForCreate[singleNewFieldName]=objectDeepCopy(ruleForCreate['password'])
         ruleForCreate[singleNewFieldName][1].pattern=this.changePasswordInfo.ruleForCreate.password[1].pattern
       }
 
       //newPassword的validator
       const newPasswordCantSameAsOldPassword = (rule, value, callback) => {
-        if(null!==this.userInputValue.password && ''!==this.userInputValue.password){
-          if(value===this.userInputValue.password ){
+        if(null!==this.formItemInfo.inputValue.password && ''!==this.formItemInfo.inputValue.password){
+          if(value===this.formItemInfo.inputValue.password ){
             callback(new Error('新密码不能和旧密码一样'));
           }else{
             callback()
@@ -197,8 +142,8 @@
       };
       //againPassword的validator
       const  againPasswordMustSameAsNewPassword= (rule, value, callback) => {
-        if(null!==this.userInputValue.newPassword && ''!==this.userInputValue.newPassword){
-          if(value!==this.userInputValue.newPassword ){
+        if(null!==this.formItemInfo.inputValue.newPassword && ''!==this.formItemInfo.inputValue.newPassword){
+          if(value!==this.formItemInfo.inputValue.newPassword ){
             callback(new Error('两次输入密码不一致'));
           }else{
             callback()
@@ -209,7 +154,6 @@
 
       ruleForCreate['newPassword'].push({ validator: newPasswordCantSameAsOldPassword, trigger: 'blur' })
       ruleForCreate['againPassword'].push({ validator: againPasswordMustSameAsNewPassword, trigger: 'blur' })
-
 
       inputAttribute['password'][InputAttributeFieldName.PLACE_HOLDER][0]='请输入旧密码'
       inputAttribute['password'][InputAttributeFieldName.PLACE_HOLDER_BKUP][0]='请输入旧密码'
@@ -223,23 +167,37 @@
       inputAttribute['againPassword'][InputAttributeFieldName.LABEL]='再输一次'
       // inf('2',ruleForCreate)
       return {
-        ruleForInput:ruleForCreate,
-        inputAttribute:inputAttribute,
-        userInputTempData:userInputTempData,
-        userInputValue:userInputValue,
+        formItemInfo:{
+          rule:ruleForCreate,
+          inputAttribute:inputAttribute,
+          inputTempData:inputTempData,
+          inputValue:inputValue,
+          icon:undefined,
+          iconColor:undefined,
+          //如果未设置captchaInfo，就不会出现captcha
+          captchaInfo:undefined,
+          labelWidth:this.changePasswordInfo.labelWidth,//0或者undefined，则不显示label；其他数值，显示label
 
-        loginResultMsg:'显示修改结果',//预先设置，用来占位
-        showResultFlag:false,//判断登录结果
+          span:this.changePasswordInfo.span, //formItem的宽度和offset
+        },
+        validateFormItemResult:'', //存储forItem整体验证结果
+        ref:{
+          formItem:{
+            formItemChangePassword:'formItemChangePassword',
+          },
+          form:{
+            formForChangePassword:'formForChangePassword',
+          },
+        },
+
+
+        globalResultMsg:'',//全局错误信息
         buttonDisableStyle:{'background-color':`#8cc0f7`,'color':`white`},
-        // icon:{name:'person',account:'person',password:'locked'},
-        // iconColor:'#5cadff',
-        hideOccupySpace:{visibility:'hidden'},
-        // rememberMe:false, //记住用户名
         submitButtonDisable:true,
 
         url:{
           changePassword:'/user/changePassword',
-          // unique:'/user/uniqueCheck_async',
+
         }
       }
     }

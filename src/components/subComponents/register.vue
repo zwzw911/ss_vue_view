@@ -8,103 +8,70 @@
     </div>
     <div>
       <!--<input placeholder="test"/>-->
-      <Tabs :animated="false" class="flex-flow-column-nowrap marginT6" @on-click="clickTab">
+      <Tabs :animated="false" class="flex-flow-column-nowrap marginT6" @on-click="clickTab" :value="currentType">
         <!--<template v-for="(tabValue,tabName,index) in tabInfo" >-->
           <TabPane :label="tabInfo.phone['label']"  :icon="tabInfo.phone['icon']" :name="tabInfo.phone['name']">
             <!--:label-width="80"-->
-            <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4" ref="userInputValue.phone" :model="userInputValue.phone" :rules="ruleForCreate.phone">
-              <template v-for="(v,k) in userInputValue.phone">
-                <template v-if="undefined!==inputAttribute.phone[k]['enum']">
-                  <FormItem :prop="k" :key="k" >
-                    <Select v-model="userInputValue.phone[k]" :placeholder="inputAttribute['phone'][k]['placeHolder'][0]">
-                      <Option v-for="(enumValue,enumKey) in inputAttribute[currentType][k]['enum']" :value="enumKey" :key="enumKey">{{enumValue}}</Option>
+            <div class="flex-flow-row-nowrap justify-content-flex-start paddingH4 marginV2">
+              <p style="" class="color-red h5">
+                <span>{{globalResultMsg[currentType]}}</span>
+                <span style="visibility:hidden">1</span>
+              </p>
+            </div>
 
-                    </Select>
-                  </FormItem>
-                </template>
-                <template v-else="">
-                  <FormItem  :prop="k" :key="k"  class="" :error="userInputTempData['phone'][k]['validResult']">
-                    <!---->
-                    <Input
-                      @on-focus="focusInputPlaceHolderDisappear({keyName:k,type:'phone'})"
-                      @on-blur="blurInputPlaceHolderRestore({keyName:k,type:currentType});validSingleInputValue({formVariantName:'userInputValue',fieldName:k,type:'phone'});checkSubmitButtonStatus({type:'phone'});validateNameUnique({type:'phone',fieldName:k,userInputTempData:userInputTempData})"
-                      @on-change="validSingleInputValue({formVariantName:'userInputValue',fieldName:k,type:'phone'});checkSubmitButtonStatus({type:currentType});"
-                      :type="inputAttribute[[currentType]][k]['inputType']" v-model="userInputValue.phone[k]" :placeholder="inputAttribute.phone[k]['placeHolder'][0]"
-                    >
-                      <span slot="prepend"  style="border-left: 0px">
-                        <Icon :type="icon[currentType][k]" size="20" :color="icon[currentType].color"></Icon>
-                      </span>
+            <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4" label-position="left"
+                  :label-width="undefined===formItemInfo[currentType].labelWidth ? 0:formItemInfo[currentType].labelWidth"
+                  :ref="ref.form.phone" :model="formItemInfo.phone.inputValue" :rules="formItemInfo.phone.rule">
 
-                    </Input>
-                    <!--<Input v-model="userInputValue.name.value" placeholder=""></Input>-->
-                  </FormItem>
-                </template>
-              </template>
-
-
+              <self-form-item :ref="ref.formItem.phone" :form-item-info="formItemInfo.phone" @validateAllItemResult="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
+              <!--<selfCaptcha ref="selfCaptchaForEmail" :captcha-info="captchaInfo"></selfCaptcha>-->
               <!--term of service-->
               <div class="flex-flow-row-nowrap justify-content-flex-start marginV4">
-                <Checkbox v-model="agreeTOS[currentType]" @on-change="checkSubmitButtonStatus({type:currentType})">
+                <Checkbox v-model="agreeTOS[currentType]" @on-change="checkSubmitButtonStatus()">
 
                 </Checkbox>
                 <span>asdf<a>trew</a></span>
 
               </div>
 
-              <FormItem class="">
+<!--              <FormItem class="">
                 <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">注册</Button>
-                <!--<Button type="ghost" @click="handleReset('userInputValue')" style="margin-left: 8px">Reset</Button>-->
-              </FormItem>
+                &lt;!&ndash;<Button type="ghost" @click="handleReset('userInputValue')" style="margin-left: 8px">Reset</Button>&ndash;&gt;
+              </FormItem>-->
+              <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">注册</Button>
             </Form>
+
           </TabPane>
 
 
           <!--<template v-for="(tabValue,tabName,index) in tabInfo" >-->
           <TabPane :label="tabInfo.email['label']"  :icon="tabInfo.email['icon']" :name="tabInfo.email['name']">
             <!--:label-width="80"-->
-            <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4" ref="userInputValue.email" :model="userInputValue.email" :rules="ruleForCreate.email">
-              <template v-for="(v,k) in userInputValue.email">
-                <template v-if="undefined!==inputAttribute[currentType][k]['enum']">
-                  <FormItem :prop="k" :key="k" >
-                    <Select v-model="userInputValue[currentType][k]" :placeholder="inputAttribute[currentType][k]['placeHolder'][0]">
-                      <Option v-for="(enumValue,enumKey) in inputAttribute[currentType][k]['enum']" :value="enumKey" :key="enumKey">{{enumValue}}</Option>
+            <div class="flex-flow-row-nowrap justify-content-flex-start paddingH4 marginV2">
+              <p style="" class="color-red h5">
+                <span>{{globalResultMsg[currentType]}}</span>
+                <span style="visibility:hidden">1</span>
+              </p>
+            </div>
 
-                    </Select>
-                  </FormItem>
-                </template>
-                <template v-else="">
-                  <FormItem  :prop="k" :key="k"  :error="userInputTempData['email'][k]['validResult']">
-                    <!---->
-                    <Input
-                      @on-focus="focusInputPlaceHolderDisappear({keyName:k,type:'email'})"
-                      @on-blur="blurInputPlaceHolderRestore({keyName:k,type:currentType});validSingleInputValue({formVariantName:'userInputValue',fieldName:k,type:'email'});checkSubmitButtonStatus({type:'email'});validateNameUnique({type:'email',fieldName:k,userInputTempData:userInputTempData})"
-                      @on-change="validSingleInputValue({formVariantName:'userInputValue',fieldName:k,type:'email'});checkSubmitButtonStatus({type:currentType});"
-                      :type="inputAttribute['email'][k]['inputType']" v-model="userInputValue['email'][k]" :placeholder="inputAttribute['email'][k]['placeHolder'][0]"
-                    >
-                      <span slot="prepend" >
-                        <Icon :type="icon[currentType][k]" size="20" :color="icon[currentType].color"></Icon>
-                      </span>
-                    </Input>
-                    <!--<Input v-model="userInputValue.name.value" placeholder=""></Input>-->
-                  </FormItem>
-                </template>
-              </template>
-
-
+            <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4" label-position="left" :label-width="undefined===formItemInfo[currentType].labelWidth ? 0:formItemInfo[currentType].labelWidth" :ref="ref.form.email" :model="formItemInfo.email.inputValue" :rules="formItemInfo.email.rule">
+              <self-form-item :ref="ref.formItem.email" :form-item-info="formItemInfo.email"></self-form-item>
               <!--term of service-->
               <div class="flex-flow-row-nowrap justify-content-flex-start marginV4">
-                <Checkbox v-model="agreeTOS[currentType]" @on-change="checkSubmitButtonStatus({type:currentType})">
+                <Checkbox v-model="agreeTOS[currentType]" @on-change="checkSubmitButtonStatus()">
 
                 </Checkbox>
                 <span>asdf<a>trew</a></span>
 
               </div>
 
-              <FormItem class="">
+<!--              <FormItem class="">
                 <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" long :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">注册</Button>
-                <!--<Button type="ghost" @click="handleReset('userInputValue')" style="margin-left: 8px">Reset</Button>-->
-              </FormItem>
+                &lt;!&ndash;<Button type="ghost" @click="handleReset('userInputValue')" style="margin-left: 8px">Reset</Button>&ndash;&gt;
+              </FormItem>-->
+              <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" long :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">注册</Button>
             </Form>
+
           </TabPane>
       </Tabs>
 
@@ -115,201 +82,222 @@
 </template>
 
 <script>
+  // import selfCaptcha from './cpatcha'
   // import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
-  import {objectDeepCopy} from  '../../function/misc'
+  import {objectDeepCopy,objectPartlyDeepCopy} from  '../../function/misc'
   import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
   // import {regex} from '../../constant/regex/regex'
-  import axios from 'axios'
+  import {myAxios,mergeAdditionalField} from '../helperLib/componentsHelperLib'
   import {inf,wrn,err} from 'awesomeprint'
 
+  import selfFormItem from './formItem'
+
   export default {
+    components:{selfFormItem},
     props:['registerInfo'], //
+    mounted(){
+    },
     methods: {
-      /********************************************/
-      /*                    view                  */
-      /********************************************/
-      //存储 单个input 的检测结果（null：为检测，非空字符：检测通过，空字符：检测通过）
-      validSingleInputValue({formVariantName, fieldName, type}) {
-        // inf('validSingleInputValue in')
-        // inf('formVariantName',formVariantName)
-        // inf('type',type)
-        // inf('a',Object.keys(this.$refs))
-        //formItem放在2层template中，所以大概需要数组来引用
-        this.$refs[`${formVariantName}.${type}`].validateField(fieldName, (validResult) => {
-          // inf('validResult',validResult)
-          this.userInputTempData[type][fieldName][InputTempDataFieldName.VALID_RESULT] = validResult
-        })
+      setFormItemResult(result){
+        let type=this.currentType
+        this.validateFormItemResult[type]=result
       },
+
       //每个input blur或者check box click，都要检查素有input valida的状态以及check box的状态，以便决定是否enable 注册按钮
-      checkSubmitButtonStatus({type}) {
-        inf('checkSubmitButtonStatus in')
-        for (let singleFieldName in this.userInputTempData[type]) {
-          let singleFieldValidResult = this.userInputTempData[type][singleFieldName][InputTempDataFieldName.VALID_RESULT]
-          if (null === singleFieldValidResult || '' !== singleFieldValidResult) {
+      checkSubmitButtonStatus() {
+          let type=this.currentType
+
+          if(false===this.validateFormItemResult[type]){
+            // inf('forminte  box in')
             this.submitButtonDisable[type] = true
             return
           }
-        }
-        if (false === this.agreeTOS[type]) {
-          this.submitButtonDisable[type] = true
-          return
-        }
-        inf('checkSubmitButtonStatus successful')
-        this.submitButtonDisable[type] = false
-      },
-      //模拟safiri，点击input时，placeHolder内容消失
-      focusInputPlaceHolderDisappear({keyName,type}) {
-        if (null === this.userInputValue[type][keyName] || '' === this.userInputValue[type][keyName]) {
-          this.inputAttribute[type][keyName][InputAttributeFieldName.PLACE_HOLDER] = ['']
-        }
-        // inf('after this.userInputValue[this.currentType]',this.inputAttribute[this.currentType][keyName][InputAttributeFieldName.PLACE_HOLDER])
-      },
-      //如果离开input时，inputValue为空，需要恢复placeholder内容
-      blurInputPlaceHolderRestore({keyName,type}) {
-        // inf('blurInputPlaceHolderRestore in')
-        // inf('blurInputPlaceHolderRestore keyName',keyName)
-        if (null === this.userInputValue[type][keyName] || '' === this.userInputValue[type][keyName]) {
-          this.inputAttribute[type][keyName][InputAttributeFieldName.PLACE_HOLDER] = this.inputAttribute[type][keyName][InputAttributeFieldName.PLACE_HOLDER_BKUP]
-        }
+          if (false === this.agreeTOS[type]) {
+          // inf('chekc box in')
+            this.submitButtonDisable[type] = true
+            return
+          }
+          // inf('checkSubmitButtonStatus successful')
+          this.submitButtonDisable[type] = false
+        // }
 
       },
 
       //点击tab，如果任意一个字段有对应的validResult,则执行resetFields的操作
       clickTab(name){
         this.currentType=name
+
+        //刷新captcha
+        this.$refs[this.ref.formItem[this.currentType]].getCaptchaImg_async()
+
         //获得除了当前点击tab的其他tab的名字，以便及时消除可能存在的错误信息（而不是等到点击此tab才消除，这样消除的过程会被观测到，体验差）
         for(let singleTabName of this.allTabNames){
+          //非当前点击的tab，则提前进行判断，是否需要reset
           if(name!==singleTabName){
             let resetFlag=false
-            for(let singleFieldName in this.userInputTempData[singleTabName]){
-              if(null!==this.userInputTempData[singleTabName][singleFieldName][InputTempDataFieldName.VALID_RESULT]){
+            for(let singleFieldName in this.formItemInfo[singleTabName].inputTempData){
+              if(null!==this.formItemInfo[singleTabName].inputTempData[singleFieldName][InputTempDataFieldName.VALID_RESULT]){
                 resetFlag=true
               }
             }
+            // inf('resetFlag',resetFlag)
+            // inf('singleTabName',singleTabName)
             if(true===resetFlag){
-
-              this.$refs[`userInputValue.${singleTabName}`].resetFields()
-              // inf('restore ph')
-              // inf('currtne tyep',singleTabName)
-              for(let singleFieldName in this.userInputTempData[singleTabName]){
-                // inf('restore singleFieldName',singleFieldName)
-                this.blurInputPlaceHolderRestore({keyName:singleFieldName,type:singleTabName})
+                this.$refs[this.ref.form[this.currentType]].resetFields()
+                // inf('after formPhone reset ')
+                for(let singleFieldName in this.formItemInfo[singleTabName].inputTempData){
+                  // inf('singleTabName to restore',singleFieldName)
+                  this.$refs[this.ref.formItem[this.currentType]].restorePlaceHolder({keyName:singleFieldName})
+                  // this.$refs[`formItemForPhone`].blurInputPlaceHolderRestore({keyName:singleFieldName})
+                }
               }
             }
-
           }
-        }
+        },
 
-      },
 
       /********************************************/
       /*                    axios                 */
       /********************************************/
-      sendRegInfo({type}) {
-        axios.post(this.url.user,
+      async sendRegInfo() {
+        let captcha=objectPartlyDeepCopy({sourceObj:this.formItemInfo[this.currentType].inputValue,expectedKey:['captcha']})
+        let tmpInputValue= objectDeepCopy(this.formItemInfo[this.currentType].inputValue)
+        delete tmpInputValue[ValidatePart.CAPTCHA]
+        // delete this.formItemInfo[this.currentType].inputValue['captcha']
+        let result=await myAxios.post(this.url.user,
           {
             values: {
               [ValidatePart.METHOD]: Method.CREATE,
-              [ValidatePart.RECORD_INFO]: this.userInputValue[type]
+              [ValidatePart.RECORD_INFO]: tmpInputValue,
+              [ValidatePart.CAPTCHA]:captcha.captcha,
             }
           })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      },
-      //不知道为啥，data和computed中的数据，不能放在promise的then中使用，所以只能通过参数传递
-      validateNameUnique({type,fieldName,userInputTempData}) {
-        // inf('this.registerInfo.inputAttribute[fieldName]', this.registerInfo.inputAttribute[fieldName])
-
-        if (undefined !== this.inputAttribute[type][fieldName][InputAttributeFieldName.UNIQUE]
-            && true === this.inputAttribute[type][fieldName][InputAttributeFieldName.UNIQUE]
-            && null!==this.userInputValue[type][fieldName] && ''!==this.userInputValue[type][fieldName]
-            && ''===this.userInputTempData[type][fieldName]['validResult']  //说明验证通过
-        ) {
-          axios.post(this.url.unique,
-            {
-              values: {
-                // [ValidatePart.METHOD]: Method.CREATE,
-                [ValidatePart.SINGLE_FIELD]: {[fieldName]: this.userInputValue[type][fieldName]},
-              }
-            })
-            .then(function (response) {
-              if(response.data.rc>0){
-                userInputTempData[type][fieldName]['validResult']=response.data.msg
-              }else{
-                userInputTempData[type][fieldName]['validResult']=''
+          // .then(function (result) {
+            if(result.data.rc>0){
+              // captcha错误显示在input下
+              let setCaptchaResult=this.$refs[this.ref.formItem[this.currentType]].checkIfCaptchaErrAndShow({data:result.data})
+              //否则，显示在最顶上
+              if(false===setCaptchaResult){
+                let set99999Result=this.$refs[this.ref.formItem[this.currentType]].checkIf99999ErrAndShow({data:result.data})
+                if(false===set99999Result){
+                  this.globalResultMsg[this.currentType]=result.data.msg
+                }
               }
 
-            })
-            .catch(function (error) {
-              // console.log(error);
-            });
-        }
+              if(undefined!==this.formItemInfo.captchaInfo){
+                await this.$refs[this.ref.formItem[this.currentType]].getCaptchaImg_async()
+              }
+            }else{
+
+            }
+
+
       },
 
     },
+
     computed:{
-      //因为分成2中方式注册，所以对应的错误信息也要分开设置，并根据实际情况进行对应的修改
-      ruleForCreate(){
-        let phone=objectDeepCopy(this.registerInfo.ruleForCreate)
-        let email=objectDeepCopy(this.registerInfo.ruleForCreate)
-        phone.name[1].pattern=this.registerInfo.ruleForCreate.name[1].pattern
-        phone.account[0].message='手机号不能为空'
-        phone.account[1].message='无效的手机号'
-        phone.account[1].pattern=this.registerInfo.ruleForCreate.account[1].pattern //正则无法通过JSON.stringify转换，所以需要直接赋值
-        phone.account[1].trigger='blur'   //patter的检测在blur才触发
-        phone.password[1].pattern=this.registerInfo.ruleForCreate.password[1].pattern
-        // //添加自定义unique的check
-        // phone.name.push({{ validator: validateNameUnique, trigger: 'blur' }})
 
-        email.name[1].pattern=this.registerInfo.ruleForCreate.name[1].pattern
-        email.account[0].message='电子邮件地址不能为空'
-        //email的检测不使用正则，而使用async_validator的方式
-        email.account[1]={ type: 'email', message: '无效电子邮件', trigger: 'blur' }
-        email.password[1].pattern=this.registerInfo.ruleForCreate.password[1].pattern
-
-        return {phone:phone,email:email}
-      },
-
-      refString(){
-        // inf('this.currentType',this.currentType)
-        return `userInputValue.${this.currentType}`
-      },
 
     },
       data(){
-        let phone=objectDeepCopy(this.registerInfo.inputAttribute)
-        let email=objectDeepCopy(this.registerInfo.inputAttribute)
-        phone.account[InputAttributeFieldName.PLACE_HOLDER]=[this.registerInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER][0]]
-        phone.account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=[this.registerInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER_BKUP][0]]
+        let phone={},email={}
+        let usedFieldName=['name','account','password']
+        phone['inputAttribute']=objectPartlyDeepCopy({sourceObj:this.registerInfo.inputAttribute,expectedKey:usedFieldName})
+        email['inputAttribute']=objectPartlyDeepCopy({sourceObj:this.registerInfo.inputAttribute,expectedKey:usedFieldName})
+        phone['inputAttribute'].account[InputAttributeFieldName.PLACE_HOLDER]=[this.registerInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER][0]]
+        phone['inputAttribute'].account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=[this.registerInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER_BKUP][0]]
+        email['inputAttribute'].account[InputAttributeFieldName.PLACE_HOLDER]=[this.registerInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER][1]]
+        email['inputAttribute'].account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=[this.registerInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER_BKUP][1]]
 
-        email.account[InputAttributeFieldName.PLACE_HOLDER]=[this.registerInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER][1]]
-        email.account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=[this.registerInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER_BKUP][1]]
+        phone['inputTempData']=objectPartlyDeepCopy({sourceObj:this.registerInfo.inputTempData,expectedKey:usedFieldName})
+        email['inputTempData']=objectPartlyDeepCopy({sourceObj:this.registerInfo.inputTempData,expectedKey:usedFieldName})
 
-        // return {phone:phone,email:email}
+        phone['inputValue']=objectPartlyDeepCopy({sourceObj:this.registerInfo.initInputValue,expectedKey:usedFieldName})
+        email['inputValue']=objectPartlyDeepCopy({sourceObj:this.registerInfo.initInputValue,expectedKey:usedFieldName})
+
+        phone['icon']={name:'person',account:'android-phone-portrait',password:'locked'}
+        email['icon']={name:'person',account:'android-mail',password:'locked'}
+
+        phone['rule']=objectPartlyDeepCopy({sourceObj:this.registerInfo.ruleForCreate,expectedKey:usedFieldName})
+        phone['rule'].name[1].pattern=this.registerInfo.ruleForCreate.name[1].pattern
+        phone['rule'].account[0].message='手机号不能为空'
+        phone['rule'].account[1].message='无效的手机号'
+        phone['rule'].account[1].pattern=this.registerInfo.ruleForCreate.account[1].pattern //正则无法通过JSON.stringify转换，所以需要直接赋值
+        phone['rule'].account[1].trigger='blur'   //patter的检测在blur才触发
+        phone['rule'].password[1].pattern=this.registerInfo.ruleForCreate.password[1].pattern
+        email['rule']=objectPartlyDeepCopy({sourceObj:this.registerInfo.ruleForCreate,expectedKey:usedFieldName})
+        email['rule'].name[1].pattern=this.registerInfo.ruleForCreate.name[1].pattern
+        email['rule'].account[0].message='电子邮件地址不能为空'
+        //email的检测不使用正则，而使用async_validator的方式
+        email['rule'].account[1]={ type: 'email', message: '无效电子邮件', trigger: 'blur' }
+        email['rule'].password[1].pattern=this.registerInfo.ruleForCreate.password[1].pattern
+
+        mergeAdditionalField({arr_fieldName:['captcha'],inputAttribute:phone['inputAttribute'],inputTempData:phone['inputTempData'],inputValue:phone['inputValue'],icon:phone['icon'],ruleForCreate:phone['rule'],ruleForUpdate:undefined})
+        mergeAdditionalField({arr_fieldName:['captcha'],inputAttribute:email['inputAttribute'],inputTempData:email['inputTempData'],inputValue:email['inputValue'],icon:email['icon'],ruleForCreate:email['rule'],ruleForUpdate:undefined})
+
+        phone['unique']=objectPartlyDeepCopy({sourceObj:this.registerInfo.unique,expectedKey:usedFieldName})
+        email['unique']=objectPartlyDeepCopy({sourceObj:this.registerInfo.unique,expectedKey:usedFieldName})
+
+        phone['iconColor']='#5cadff'
+        email['iconColor']='#5cadff'
+
+        phone['captchaInfo']={
+          captchaImgWidth:80, //px。事先确定好长宽，以便刷新时，如果有refreshIcon存在，此icon位置不会变化
+          captchaImgHeight:33,
+          refreshIcon:'refresh',//空：无刷新icon；否则显示
+          captchaImgId:'phone',//防止多个子组件的img的id重复
+          captchaURL:'/user/captcha',
+
+        }
+        email['captchaInfo']={
+          captchaImgWidth:80, //px。事先确定好长宽，以便刷新时，如果有refreshIcon存在，此icon位置不会变化
+          captchaImgHeight:33,
+          refreshIcon:'refresh',//空：无刷新icon；否则显示
+          captchaImgId:'phone',//防止多个子组件的img的id重复
+          captchaURL:'/user/captcha',
+          getAfterMounted:false,
+        }
+
+        phone['labelWidth']=this.registerInfo.labelWidth//0或者undefined，则不显示label；其他数值，显示label
+        email['labelWidth']=this.registerInfo.labelWidth//0或者undefined，则不显示label；其他数值，显示label
+
+        phone['span']=this.registerInfo.span  //formItem的宽度和offset
+        email['span']=this.registerInfo.span  //formItem的宽度和offset
+
         return {
-          inputAttribute:{phone:phone,email:email},
-          // test:'ttdjkeat',
+          formItemInfo:{
+            phone:phone,
+            email:email,
+          },
+          //接收formItem检测结果
+          validateFormItemResult:{
+            phone:null,
+            email:null,
+          },
+          globalResultMsg:{
+            phone:"",
+            email:"",
+          },//全局错误信息
+          ref:{
+            formItem:{
+              phone:'formItemForPhone',
+              email:'formItemForEmail',
+            },
+            form:{
+              phone:'formForPhone',
+              email:'formForEmail',
+            },
+          },
           allTabNames:['phone','email'],
           currentType:'phone',
           buttonDisableStyle:{'background-color':`#8cc0f7`,'color':`white`},
-          icon:{
-            phone:{name:'person',account:'android-phone-portrait',password:'locked',color:'#5cadff'},
-            email:{name:'person',account:'android-mail',password:'locked',color:'#5cadff'},
-          },
+
           tabInfo:{
             phone:{label:'手机注册',icon:'android-phone-portrait',name:'phone'},
             email:{label:'邮件注册',icon:'android-mail',name:'email'},
           },
-          // contentInfo:this.contentInfo,
-          userInputValue:{
-            phone:objectDeepCopy(this.registerInfo.initInputValue),
-            email:objectDeepCopy(this.registerInfo.initInputValue)
-          },
-          // testInputValue:objectDeepCopy(this.registerInfo.initInputValue),
+
           agreeTOS:{//两种注册方式使用独立的数据
             phone:false,
             email:false,
@@ -318,14 +306,10 @@
             phone:true,
             email:true
           },
-          userInputTempData:{
-              phone:objectDeepCopy(this.registerInfo.inputTempData),
-              email:objectDeepCopy(this.registerInfo.inputTempData),
-          },
           url:{
             user:'/user',
-            unique:'/user/uniqueCheck_async',
-          }
+            // unique:'/user/uniqueCheck_async',
+          },
         }
       }
   }

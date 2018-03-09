@@ -80,15 +80,26 @@ function getPosPara(element){
   let result={}
   let pos=element.getBoundingClientRect()
 
-  if(undefined === pos.width){
-    pos.width=pos.right-pos.left
-    pos.height=pos.top-pos.bottom
+  if(undefined ===element.naturalWidth){
+    if(undefined === pos.width ){
+      result.width=pos.right-pos.left
+      result.height=pos.top-pos.bottom
+    }else{
+      result.width=pos.width
+      result.height=pos.height
+    }
+  }else{
+    result['width']=element.naturalWidth
+    result['height']=element.naturalHeight
   }
 
-  let posMember=['top','bottom','left','right','width','height']
+
+  let posMember=['top','bottom','left','right']
   for(let singlePosMember of posMember){
     result[singlePosMember]=Math.round(pos[singlePosMember])
   }
+
+
   return result
 }
 

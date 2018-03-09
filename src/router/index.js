@@ -8,10 +8,10 @@ import login from '../components/subComponents/login'
 import changePassword from '../components/subComponents/changePassword'
 
 
-import {inputValueForCreate,inputValueForUpdate} from '../constant/inputValue/inputValue'
-import {ruleForCreate,ruleForUpdate} from '../constant/rule/rule'
-import {inputAttribute} from '../constant/inputValue/inputAttribute'
-import {inputTempData} from '../constant/inputValue/inputTempData'
+import {inputValueForCreate,inputValueForUpdate} from '../constant/inputValue/gen/inputValue'
+import {ruleForCreate,ruleForUpdate} from '../constant/inputValue/gen/rule'
+import {inputAttribute} from '../constant/inputValue/gen/inputAttribute'
+import {inputTempData} from '../constant/inputValue/gen/inputTempData'
 
 Vue.use(Router)
 

@@ -5,9 +5,9 @@
       <Col span="7">
 
       <!--<router-view />-->
-      <selfLogin :login-info="loginInfo"></selfLogin>
-      <selfRegister :register-info="registerInfo"></selfRegister>
-      <!--<selfChangePassword :change-password-info="changePasswordInfo"></selfChangePassword>-->
+      <!--<selfLogin :login-info="loginInfo"></selfLogin>-->
+      <!--<selfRegister  :register-info="registerInfo"></selfRegister>-->
+      <selfChangePassword :change-password-info="changePasswordInfo"></selfChangePassword>
 <!--      <Button @click="startCrop">裁剪</Button>
       <selfCrop :crop-info="cropInfo" @getCropImg="cropDone" :style="{display: showCropComponent? '':'none'}"></selfCrop>
       <img :src="cropImgDataURL" :style="{visibility:showCropImg?'':'hidden'}">-->
@@ -78,10 +78,13 @@
   import selfUserInfo from '../components/subComponents/userInfo.vue'
   // import sidebar from '../subLayoutComponents/sidebar.vue'
   import selfFooter from '../components/subLayoutComponents/footer.vue'
-  import {inputValueForCreate,inputValueForUpdate} from '../constant/inputValue/inputValue'
-  import {ruleForCreate,ruleForUpdate} from '../constant/rule/rule'
-  import {inputAttribute} from '../constant/inputValue/inputAttribute'
-  import {inputTempData} from '../constant/inputValue/inputTempData'
+  import {inputValueForCreate,inputValueForUpdate} from '../constant/inputValue/gen/inputValue'
+  import {ruleForCreate,ruleForUpdate} from '../constant/inputValue/gen/rule'
+  import {inputAttribute} from '../constant/inputValue/gen/inputAttribute'
+  import {inputTempData} from '../constant/inputValue/gen/inputTempData'
+  import {icon} from '../constant/inputValue/manul/icon'
+  import {unique} from '../constant/inputValue/manul/uniqueCheck'
+  import {extraAttribute} from '../constant/inputValue/manul/extraAttribute'
   import {inf} from 'awesomeprint'
   import * as misc from "../function/misc"
   //
@@ -133,6 +136,10 @@
           ruleForCreate:ruleForCreate.user,
           ruleForUpdate:ruleForUpdate.user,
           inputTempData:inputTempData.user,
+          unique:unique.user,
+
+          labelWidth:60, //0或者undefined，则不显示label；其他数值，显示label
+          span:extraAttribute.user,
         },
         loginInfo:{
 
@@ -141,16 +148,25 @@
             ruleForCreate:ruleForCreate.user,
             // ruleForUpdate:ruleForUpdate.user,
             inputTempData:inputTempData.user,
+            icon:icon.user,
+            unique:unique.user,
 
+            labelWidth:80, //0或者undefined，则不显示label；其他数值，显示label
+
+            span:extraAttribute.user,
         },
 
-/*        changePasswordInfo:{
+        changePasswordInfo:{
           initInputValue:inputValueForCreate.user,
           inputAttribute:inputAttribute.user,
           ruleForCreate:ruleForCreate.user,
           // ruleForUpdate:ruleForUpdate.user,
           inputTempData:inputTempData.user,
-        },*/
+
+          labelWidth:80, //0或者undefined，则不显示label；其他数值，显示label
+
+          span:extraAttribute.user,
+        },
 /*        footerInfo:{
           year:this.$store.state.footerInfo.year
         },*/

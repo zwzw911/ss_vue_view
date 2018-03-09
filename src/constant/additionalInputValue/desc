@@ -1,0 +1,2 @@
+某些字段，例如captcha，不是server段定义的rule中字段，但是需要在client进行验证，且不是通过RECORDINFO传递到server，
+需要单独列出inputAttr,inputTemp，inputValue,以便在需要的时候，和到server产生的inputValue，完成client的验证

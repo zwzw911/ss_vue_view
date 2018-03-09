@@ -22,6 +22,20 @@ bg-color-lightener-black {
 bg-color-lightenest-black {
   background-color: #4d4d4d;
 }
+/*        iview basic color     */
+.color-error {
+  color: #ed3f14;
+}
+.color-info {
+  color: #2d8cf0;
+}
+.color-success {
+  color: #19be6b;
+}
+.color-warning {
+  color: #ff9900;
+}
+/*        self define color     */
 .color-white {
   color: #ffffff;
 }

@@ -38,6 +38,10 @@
   color: lighten(@color,30%);
 }
 
+
+
+
+
 .bg-darken(@color){
   background-color: darken(@color,10%);
 }
@@ -63,8 +67,6 @@
   background-color: silver;
 }
 
-
-
 .bg-primary{
   background-color: @primary;
 }
@@ -86,16 +88,27 @@ bg-color-lightenest-black{
 
 
 
-
-
-
+/*        iview basic color     */
+.color-error{
+  color:@error
+}
+.color-info{
+  color:@info
+}
+.color-success{
+  color:@success
+}
+.color-warning{
+  color:@warning
+}
+/*        self define color     */
 .color-white{
   color:@white;
 }
-
 .color-red{
   color:@red;
 }
+
 .color-lighten-red{
   .lighten(@red)
 }

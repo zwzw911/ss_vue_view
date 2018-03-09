@@ -12,6 +12,22 @@ function objectDeepCopy(sourceObj){
   return JSON.parse(JSON.stringify(sourceObj))
 }
 
+/*  部分copy对象
+* @expectedKey:需要copy的key
+* */
+function objectPartlyDeepCopy({sourceObj,expectedKey}){
+  if(undefined===sourceObj || null===sourceObj){
+    return sourceObj
+  }
+
+  let copyObject={}
+  for(let singleKey of expectedKey){
+    if(undefined!==sourceObj[singleKey]){
+      copyObject[singleKey]=JSON.parse(JSON.stringify(sourceObj[singleKey]))
+    }
+  }
+  return copyObject
+}
 /*  childArray中的每个元素都包含在parentArray中
 *
 * */
@@ -93,6 +109,7 @@ async function nativeReadFile_async({inputId,readType,maxSize}){
 
 }
 export {
+  objectPartlyDeepCopy,
   objectDeepCopy,
   ifArrayContainArray,
   nativeReadFile_async,
