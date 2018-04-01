@@ -7,16 +7,19 @@
 </style>
 
 <template>
-  <div class="marginT7">
+  <!--:style="{height:containerHeight+'px'}"-->
+  <div class="" style="background-color: rgba(255,255,255,0.9);" >
     <div class="flex-flow-row-nowrap justify-content-center align-items-center" style="z-index:4000;position:fixed;width:100%;height:100%;background: rgba(0, 0, 0, 0.8);top:0px;left:0px;" :style="{display:showPreviewFlag ? '':'none'}"
       @click="hidePreview"
     >
       <img id="croppedImg" style="padding:5px;border:1px solid rgb(200,200,200);border-radius:5px;"  :style="{width:cropImgWH.width+'px',height:cropImgWH.height+'px'}" class="" :src="cropImgDataUrl">
     </div>
-    <div id="cropContainer" class="flex-flow-row-nowrap justify-content-flex-start" style="z-index:3000;height:100%;">
+    <div id="cropContainer" class="flex-flow-row-nowrap justify-content-flex-start" style="z-index:3000"
+         :style="{margin:containerMargin.top+'px'+' '+containerMargin.right+'px'+' '+containerMargin.bottom+'px'+' '+containerMargin.left+'px',
+         }">
 
       <!--<div style="" class="">-->
-        <div class="marginR7 flex-flow-column-nowrap justify-content-space-between" style="height:200px;">
+        <div id="cmdButtonGroup" class="marginR7 flex-flow-column-nowrap justify-content-space-between" style="height:200px;">
           <!--        <Button type="primary" @click="" style="">选择图片</Button>
                   <form enctype="multipart/form-data" id="cropppedImgForm">
                     <img id="croppedImg" style="padding:5px;border:1px solid rgb(200,200,200);border-radius:5px;display:none"  class="marginT4">
@@ -26,7 +29,8 @@
           <Button id="btn_chooseImg" class="" @click="delegateClick();">选择图片</Button>
           <Button id="btn_cropImg" class="" @click="cropImg();" :disabled="btnDisableFlag.btn_cropImg">裁剪</Button>
 
-          <Button id='btn_cropImgOK' class="" :disabled="btnDisableFlag.btn_cropImgOK" @click="showPreview();">预览</Button>
+          <Button id='btn_cropImgPreview' class="" :disabled="btnDisableFlag.btn_cropImgPreview" @click="showPreview();">预览</Button>
+          <Button id='btn_cropImgOK' class=""  :disabled="btnDisableFlag.btn_cropImgOK" @click="exitWithCroppedImg">确定</Button>
           <Button id='btn_cropImgCancel' class="" @click="exit">退出</Button>
         </div>
       <!--</div>-->
@@ -74,6 +78,7 @@
   // import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
   import * as misc from  '../../function/misc'
   import * as helper from  './cropLib/helper'
+  import {getElementWH,getElementMargin} from '../helperLib/componentsHelperLib'
   // import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
   // import {regex} from '../../constant/regex/regex'
   import axios from 'axios'
@@ -84,13 +89,40 @@
 
   export default {
     props:['cropInfo'], //
-    created(
-
-    ){},
+    mounted(){
+      // let result=this.getComponentSize()
+      // inf('result',result)
+    },
     methods: {
-      exit(){
+      //获得cropContainer的WH（包括margin），共父组件调用
+      getComponentSize(){
+        //width
+        let wholeContainer=document.getElementById('cropContainer')
+        let wholeContainerWH=getElementWH(wholeContainer)
+        //width加上margin
+        wholeContainerWH['width']+=(this.containerMargin['left']+this.containerMargin['right'])
+        // inf('wholeContainerWH',wholeContainerWH)
+        //margin
+        // let wholeContainerMargin= getElementMargin(wholeContainer)
+        // wholeContainerWH['width']+=(wholeContainerMargin['left']+wholeContainerMargin['right'])
+        // inf('wholeContainerMargin',wholeContainerMargin)
+        //height
+        let eleCmdButtonGroup=document.getElementById('cmdButtonGroup')
+        let cmdButtonGroupWH=getElementWH(eleCmdButtonGroup)
+        // inf('cmdButtonGroupWH',cmdButtonGroupWH)
+        let L0_container_WH=getElementWH(this.element.L0_container)
+        // inf('L0_container_WH',L0_container_WH)
+        wholeContainerWH['height']= cmdButtonGroupWH['height']>L0_container_WH['height'] ? cmdButtonGroupWH['height']:L0_container_WH['height']
+        //加上margin
+        wholeContainerWH['height']+=(this.containerMargin['top']+this.containerMargin['bottom'])
+        // let tmp=helper.getPosPara(document.getElementById('cropContainer'))
+        this.containerHeight=wholeContainerWH['height']
+        // inf('wholeContainerWH',wholeContainerWH)
+        // wholeContainer.style.width=
+        return wholeContainerWH
+      },
+      exitWithCroppedImg(){
         if(this.L1OrigImgSrc!==''){
-          this.$emit('getCropImg',this.cropImgDataUrl)
           for(let singleBtnFlag in this.btnDisableFlag){
             this.btnDisableFlag[singleBtnFlag]=true
           }
@@ -99,9 +131,24 @@
           }
 
           this.L1OrigImgSrc=''
+
+          this.$emit('exitWithCroppedImg',this.cropImgDataUrl)
+
         }
       },
+      exit(){
+        for(let singleBtnFlag in this.btnDisableFlag){
+          this.btnDisableFlag[singleBtnFlag]=true
+        }
+        for(let singleFlag in this.elementHideFlag){
+          this.elementHideFlag[singleFlag]=true
+        }
 
+        this.L1OrigImgSrc=''
+        this.$parent.hideCrop()
+        this.$emit('exit')
+
+      },
       hideView(){
         for(let singleView in this.elementHideFlag){
           this.elementHideFlag[singleView]=true
@@ -132,6 +179,7 @@
       //裁剪图片
       cropImg(){
         this.cropImgDataUrl=helper.cropImg({cropImgWH:this.cropImgWH,L1OrigImagePos:this.L1OrigImagePos,visiblePartPos:this.visiblePartPos,L0ContainerPos:this.L0ContainerPos,ratio:this.ratio,ele_L1_origImg:this.element.L1_origImg})
+        this.btnDisableFlag.btn_cropImgPreview=false
         this.btnDisableFlag.btn_cropImgOK=false
         // return canvas.toDataURL('image/png');
       },
@@ -166,6 +214,7 @@
         helper.calcL3BoardPosBaseOnVisiblePartPos({visiblePartPos:this.visiblePartPos,L3_cropImgBorder:this.L3_cropImgBorder,L3BorderWidth:this.L3BorderWidth})
         helper.setL3_cropImgBorder({ele_L3_cropImgBorder:this.element.L3_cropImgBorder,para_L3_cropImgBorder:this.L3_cropImgBorder})
 
+        this.btnDisableFlag.btn_cropImgPreview=true
         this.btnDisableFlag.btn_cropImgOK=true
       },
       mouseMove(e){
@@ -189,6 +238,7 @@
           helper.calcL3BoardPosBaseOnVisiblePartPos({visiblePartPos:this.visiblePartPos,L3_cropImgBorder:this.L3_cropImgBorder,L3BorderWidth:this.L3BorderWidth})
           helper.setL3_cropImgBorder({ele_L3_cropImgBorder:this.element.L3_cropImgBorder,para_L3_cropImgBorder:this.L3_cropImgBorder})
 
+          this.btnDisableFlag.btn_cropImgPreview=true
           this.btnDisableFlag.btn_cropImgOK=true
         }
 
@@ -210,6 +260,7 @@
         this.L1OrigImgSrc=data.msg.fileContent
 
         this.btnDisableFlag.btn_cropImg=false
+        this.btnDisableFlag.btn_cropImgPreview=true
         this.btnDisableFlag.btn_cropImgOK=true
 
       },
@@ -274,6 +325,30 @@
       },
     },
     computed:{
+      // 计算这个container的高度（container是div，会自动计算width，但是height默认100%，需要计算height）
+      /*getComponentSize(){
+        //width
+        let wholeContainer=document.getElementById('cropContainer')
+        let wholeContainerWH=getElementWH(wholeContainer)
+        //width加上margin
+        wholeContainerWH['width']+=(this.containerMargin['left']+this.containerMargin['right'])
+inf('wholeContainerWH',wholeContainerWH)
+        //height去cmdButton和img中大值
+        let eleCmdButtonGroup=document.getElementById('cmdButtonGroup')
+        let cmdButtonGroupWH=getElementWH(eleCmdButtonGroup)
+        // inf('cmdButtonGroupWH',cmdButtonGroupWH)
+        let L0_container_WH=getElementWH(this.element.L0_container)
+        // inf('L0_container_WH',L0_container_WH)
+        wholeContainerWH['height']= cmdButtonGroupWH['height']>L0_container_WH['height'] ? cmdButtonGroupWH['height']:L0_container_WH['height']
+        //加上margin
+        wholeContainerWH['height']+=(this.containerMargin['top']+this.containerMargin['bottom'])
+        // let tmp=helper.getPosPara(document.getElementById('cropContainer'))
+        this.containerHeight=wholeContainerWH['height']
+        // inf('wholeContainerWH',wholeContainerWH)
+        return wholeContainerWH
+
+        return {width:700,height:600}
+      },*/
       element(){
         return {
           L0_container:document.getElementById('L0_container'),
@@ -288,6 +363,7 @@
         return {
           btn_chooseImg:document.getElementById('btn_chooseImg'),
           btn_cropImg:document.getElementById('btn_cropImg'),
+          btn_cropImgPreview:document.getElementById('btn_cropImgPreview'),
           btn_cropImgOK:document.getElementById('btn_cropImgOK'),
           btn_cropImgCancel:document.getElementById('btn_cropImgCancel'),
         }
@@ -304,7 +380,7 @@
 
     },
     data(){
-
+      // inf('this.cropInfo',this.cropInfo)
       let parameter=helper.loadParameter({props_cropInfo:this.cropInfo})
       // inf('parameter',parameter)
       return {
@@ -314,6 +390,8 @@
         L3BorderWidth:parameter.L3BorderWidth,
         cropImgWH:parameter.cropImgWH,
         zoomStep:parameter.zoomStep,
+        containerMargin:parameter.containerMargin,
+
         error:error,
 
         elementId:{
@@ -324,11 +402,13 @@
         btnId:{
           btn_chooseImg:'btn_chooseImg',
           btn_cropImg:'btn_cropImg',
+          btn_cropImgPreview:'btn_cropImgPreview',
           btn_cropImgOK:'btn_cropImgOK',
           btn_cropImgCancel:'btn_cropImgCancel'
         },
         btnDisableFlag:{
           btn_cropImg:true,
+          btn_cropImgPreview:true,
           btn_cropImgOK:true,
         },
         inputId:{
@@ -388,7 +468,8 @@
         cropImgDataUrl:'',//crop后的数据
 
         showPreviewFlag:false,
-        // L2BorderWidth:'',//设置4个方向的框宽
+
+        containerHeight:null,
       }
     }
   }

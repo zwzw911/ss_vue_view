@@ -10,9 +10,8 @@
       <self-user-icon :ref="ref.userIcon.userIconForUserInfo" :user-icon-info="userInfo.userIconInfo" class="marginL4"  @click="showCrop"></self-user-icon>
       <span @click="showCrop">修改头像</span>
 
-      <!--'border-width':cropBorderWidth.top+'px'+' '+cropBorderWidth.left+'px'-->
-      <self-crop id="selfCropId" :ref="ref.crop.cropForUserInfo" :style="{visibility:cropHidden,}"
-                 style=" position: fixed;width:100%;height:100%;top:0px;left:0px;border-style:solid;border-color:rgba(15,15,15,0.7);"
+      <self-crop :ref="ref.crop.cropForUserInfo" :style="{visibility:cropHidden,'border-width':cropBorderWidth.top+'px'+' '+cropBorderWidth.left+'px'}"
+                 style="position: fixed;width:100%;height:100%;top:0px;left:0px;border-style:solid;border-color:rgba(15,15,15,0.7);"
                  :crop-info="userInfo.cropInfo" @exitWithCroppedImg="getCroppedImg" z-index="2000"></self-crop>
     </div>
 
@@ -30,10 +29,8 @@
 </div>
 </template>
 <script>
-  // import {} from
   import * as misc from "../../function/misc"
-  // import
-  import {myAxios,pageViewWH,calcCenterParams} from "../helperLib/componentsHelperLib"
+  import {myAxios,pageViewWH,setCenter} from "../helperLib/componentsHelperLib"
   import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
   import {inf} from 'awesomeprint'
 
@@ -42,43 +39,20 @@
 
   export default {
     components:{selfUserIcon,selfCrop},
-    async mounted(){
+    mounted(){
       // this.$options.methods.setCropCenter.bind(this)()
       this.setCropCenter()
       window.onresize= ()=>{
         this.setCropCenter()
       }
-      await this.getUserInfo_async()
     },
     methods:{
-      async getUserInfo_async(){
-        let result=await myAxios.get(this.$store.state.url.user.getUserInfo)
-        if(result.rc>0){
-
-        }else{
-          this.userIconInfo.imgSrc  =result.data.msg['']
-        }
-
-        inf('get user result',result)
-      },
-      async getCroppedImg(croppedImg){
+      getCroppedImg(croppedImg){
         this.userIconInfo.imgSrc=croppedImg
         //隐藏crop组件
         this.$options.methods.hideCrop.bind(this)()
         //
         this.$refs[this.ref.userIcon.userIconForUserInfo].setImgSrc(croppedImg)
-        //上传dataUrl
-        let result=await myAxios.put(this.$store.state.url.user.uploadUserPhoto,{
-          values:{
-            // [ValidatePart.METHOD]:Method.UPLOAD,
-            [ValidatePart.RECORD_INFO]:{
-              'photoDataUrl':croppedImg,
-              // 'name':'test',
-            }
-          },
-        })
-        // inf('result',result)
-
       },
       showCrop(){
         this.cropHidden=''
@@ -87,13 +61,31 @@
         this.cropHidden='hidden'
       },
       setCropCenter(){
-        let result=this.$refs[this.ref.crop.cropForUserInfo].getComponentSize()
-        // inf('typeof result',typeof result)
-        //selfCropId是白色的背景(height根据页面的高度变化，需要设置borderwidth实现遮罩)，result是实际组件的元素（cmdButtonGroup和L0/L1/L2）
-        let elementCrop=document.getElementById('selfCropId')
-        calcCenterParams({element:elementCrop,elementWH:result,withCover:true})
+        setCenter({element:document.getElementById('cropContainer'),withPadding:true})
+        /*/!*    crop组件居中    *!/
+        //获得页面可视（不包括滚动条和工具栏）大小
+        let pageViewWHParam=pageViewWH()
+        // inf('pageViewWHParam',pageViewWHParam)
+        //计算crop居中需要的参数（crop的WH是cropInfo中定义的）
+        let cropWH=this.$refs[this.ref.crop.cropForUserInfo].getComponentSize()
+        // inf('cropWH',cropWH)
 
+        let WHMatch={
+          width:'left',
+          height:'top',
+        }
+        for(let singleWH in pageViewWHParam){
+          if(pageViewWHParam[singleWH]>cropWH[singleWH]){
+            this.cropVirtualPos[WHMatch[singleWH]]=parseInt((pageViewWHParam[singleWH]-cropWH[singleWH])/2)
+          }else{
+            this.cropVirtualPos[WHMatch[singleWH]]=0
+          }
+        }
+        // inf('this.cropVirtualPos',this.cropVirtualPos)
 
+        this.cropBorderWidth.top=this.cropVirtualPos.top
+        this.cropBorderWidth.left=this.cropVirtualPos.left
+        //计算padding*/
       },
     },
     computed:{
@@ -101,11 +93,10 @@
     },
     props:['userInfo'],
     data(){
-      let allowFields=[]
-      // inf('this.$store.state.globalState.inputRelatePropertyInfo',this.$store.state.inputRelatePropertyInfo)
-      misc.genNeedInput({source:this.$store.state.inputRelatePropertyInfo,collName:'user',allowFields:allowFields})
-      return {
 
+
+
+      return {
         ref:{
           formItem:{
             formItemForUserInfo:'formItemForUserInfo',

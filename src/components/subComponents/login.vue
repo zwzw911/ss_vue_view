@@ -46,7 +46,7 @@
 <script>
   'use strict'
   // import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
-  import selfCaptcha from './cpatcha'
+  // import selfCaptcha from './cpatcha'
   import {objectDeepCopy,objectPartlyDeepCopy} from  '../../function/misc'
   import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
 
@@ -114,10 +114,10 @@
         //不能直接删除，否则iview的验证会认为此字段的值不存在
         let tmpInputValue= objectDeepCopy(this.formItemInfo.inputValue)
         delete tmpInputValue[ValidatePart.CAPTCHA]
-        let result=await myAxios.post(this.url.login,
+        let result=await myAxios.post(this.$store.state.url.user.login,
           {
             values: {
-              [ValidatePart.METHOD]: Method.MATCH,
+              // [ValidatePart.METHOD]: Method.MATCH,
               [ValidatePart.RECORD_INFO]: tmpInputValue,
               [ValidatePart.CAPTCHA]:captcha,
             }
@@ -216,10 +216,10 @@
         rememberMe:false, //记住用户名
         submitButtonDisable:true,
 
-        url:{
-          login:'/user',
-          // unique:'/user/uniqueCheck_async',
-        },
+        // url:{
+        //   login:'',
+        //   // unique:'/user/uniqueCheck_async',
+        // },
 
 
 

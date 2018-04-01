@@ -24,6 +24,7 @@ let footerInfo={
   actions:{}
 }
 
+
 export {
   headerInfo,
   footerInfo,

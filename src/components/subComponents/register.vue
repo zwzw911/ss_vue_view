@@ -94,7 +94,7 @@
 
   export default {
     components:{selfFormItem},
-    props:['registerInfo'], //
+
     mounted(){
     },
     methods: {
@@ -164,10 +164,10 @@
         let tmpInputValue= objectDeepCopy(this.formItemInfo[this.currentType].inputValue)
         delete tmpInputValue[ValidatePart.CAPTCHA]
         // delete this.formItemInfo[this.currentType].inputValue['captcha']
-        let result=await myAxios.post(this.url.user,
+        let result=await myAxios.post(this.$store.state.url.user.register,
           {
             values: {
-              [ValidatePart.METHOD]: Method.CREATE,
+              // [ValidatePart.METHOD]: Method.CREATE,
               [ValidatePart.RECORD_INFO]: tmpInputValue,
               [ValidatePart.CAPTCHA]:captcha.captcha,
             }
@@ -188,7 +188,8 @@
                 await this.$refs[this.ref.formItem[this.currentType]].getCaptchaImg_async()
               }
             }else{
-
+              //消除global（最顶上）的错误
+              this.globalResultMsg[this.currentType]=''
             }
 
 
@@ -200,6 +201,7 @@
 
 
     },
+    props:['registerInfo'], //
       data(){
         let phone={},email={}
         let usedFieldName=['name','account','password']
@@ -306,10 +308,10 @@
             phone:true,
             email:true
           },
-          url:{
+/*          url:{
             user:'/user',
             // unique:'/user/uniqueCheck_async',
-          },
+          },*/
         }
       }
   }

@@ -76,7 +76,7 @@ example
           }
         },
         async getCaptchaImg_async(){
-          let result=await myAxios.post(this.captchaInfo.captchaURL, {})
+          let result=await myAxios.get(this.captchaInfo.captchaURL, {})
           this.captchaImgLoadedFlag=false
           if(result.data.rc===0){
             this.captchaImgHideFlag=false

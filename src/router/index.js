@@ -9,7 +9,7 @@ import changePassword from '../components/subComponents/changePassword'
 
 
 import {inputValueForCreate,inputValueForUpdate} from '../constant/inputValue/gen/inputValue'
-import {ruleForCreate,ruleForUpdate} from '../constant/inputValue/gen/rule'
+import {ruleForCreate,ruleForUpdate} from '../constant/rule/rule'
 import {inputAttribute} from '../constant/inputValue/gen/inputAttribute'
 import {inputTempData} from '../constant/inputValue/gen/inputTempData'
 

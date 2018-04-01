@@ -14,14 +14,22 @@ import 'iview/dist/styles/iview.css'
 Vue.use(iView)
 
 /*  引入vuex （需npm install --save vuex）    */
-import {headerInfo,footerInfo} from './globalState/headerFooterInfo'
+// import {headerInfo,footerInfo} from './globalState/headerFooterInfo'
+// import {inputRelatePropertyInfo} from './globalState/inputRelateProperty'
+import * as globalState from './globalState/globalState'
+// import {inputRelatePropertyInfo} from './globalState/globalState'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 //通过模块的方法载入vuex的配置
 var store=new Vuex.Store({
   modules:{
-    headerInfo,
-    footerInfo,
+    // inputRelatePropertyInfo,
+    // globalState,
+    // footerInfo,
+    headerInfo:globalState.headerInfo,
+    footerInfo:globalState.footerInfo,
+    inputRelatePropertyInfo:globalState.inputRelatePropertyInfo,
+    url:globalState.url,
   }
 })
 

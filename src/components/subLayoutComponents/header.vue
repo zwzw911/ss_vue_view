@@ -95,7 +95,7 @@
   export default {
       props:['headerInfo'],
       computed:{
-        userName(){return this.headerInfo.userName},
+        // userName(){return this.headerInfo.userName},
         userLogin(){
           return this.headerInfo.userName!==''
         }
@@ -106,6 +106,8 @@
           itemFontSize:'h5',
           transfer:true,
           theme:'light',
+
+          userName:this.$store.state.headerInfo.userName,
         }
 
     },

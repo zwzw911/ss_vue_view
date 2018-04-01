@@ -19,7 +19,7 @@
     props:['footerInfo'],
     computed:{
       year(){
-        return this.footerInfo.year
+        return this.$store.state.footerInfo.year
       },
     },
   }

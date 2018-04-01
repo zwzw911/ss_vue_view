@@ -25,41 +25,50 @@ function loadParameter({props_cropInfo}){
   let cropImgWH={width:100,height:100}
   //滚轮滚动时，每次增加的像素
   let zoomStep={horizontal:5,vertical:5}
-
+  let containerMargin={top:10,bottom:10,left:10,right:10}
 
   if(undefined!==props_cropInfo){
     if(undefined!==props_cropInfo.maxFileSize){
-      L1OrigImgMaxWH.width=props_cropInfo.maxFileSize
+      maxFileSize=props_cropInfo.maxFileSize
     }
 
-    if(undefined!==props_cropInfo.L1OrigImgMaxWH || undefined!==props_cropInfo.L1OrigImgMaxWH.width){
+    if(undefined!==props_cropInfo.L1OrigImgMaxWH && undefined!==props_cropInfo.L1OrigImgMaxWH.width){
       L1OrigImgMaxWH.width=props_cropInfo.L1OrigImgMaxWH.width
     }
-    if(undefined!==props_cropInfo.L1OrigImgMaxWH || undefined!==props_cropInfo.L1OrigImgMaxWH.height){
+    if(undefined!==props_cropInfo.L1OrigImgMaxWH && undefined!==props_cropInfo.L1OrigImgMaxWH.height){
       L1OrigImgMaxWH.height=props_cropInfo.L1OrigImgMaxWH.height
     }
 
 
-    if(undefined!==props_cropInfo.L3BorderWidth || undefined!==props_cropInfo.L3BorderWidth.left){
+    if(undefined!==props_cropInfo.L3BorderWidth && undefined!==props_cropInfo.L3BorderWidth.left){
       L3BorderWidth.left=props_cropInfo.L3BorderWidth.left
     }
-    if(undefined!==props_cropInfo.L3BorderWidth || undefined!==props_cropInfo.L3BorderWidth.top){
+    if(undefined!==props_cropInfo.L3BorderWidth && undefined!==props_cropInfo.L3BorderWidth.top){
       L3BorderWidth.top=props_cropInfo.L3BorderWidth.top
     }
 
-    if(undefined!==props_cropInfo.cropImgWH || undefined!==props_cropInfo.cropImgWH.width){
+    if(undefined!==props_cropInfo.cropImgWH && undefined!==props_cropInfo.cropImgWH.width){
       cropImgWH.width=props_cropInfo.cropImgWH.width
     }
-    if(undefined!==props_cropInfo.cropImgWH || undefined!==props_cropInfo.cropImgWH.height){
+    if(undefined!==props_cropInfo.cropImgWH && undefined!==props_cropInfo.cropImgWH.height){
       cropImgWH.height=props_cropInfo.cropImgWH.height
     }
 
 
-    if(undefined!==props_cropInfo.zoomStep || undefined!==props_cropInfo.zoomStep.horizontal){
+    if(undefined!==props_cropInfo.zoomStep && undefined!==props_cropInfo.zoomStep.horizontal){
       zoomStep.horizontal=props_cropInfo.zoomStep.horizontal
     }
-    if(undefined!==props_cropInfo.zoomStep || undefined!==props_cropInfo.zoomStep.vertical){
+    if(undefined!==props_cropInfo.zoomStep && undefined!==props_cropInfo.zoomStep.vertical){
       zoomStep.vertical=props_cropInfo.zoomStep.vertical
+    }
+
+    if(undefined!==props_cropInfo.containerMargin){
+      for(let singleDirection in containerMargin){
+        if(undefined!==props_cropInfo.containerMargin[singleDirection]){
+          containerMargin[singleDirection]=props_cropInfo.containerMargin[singleDirection]
+        }
+      }
+
     }
   }
 
@@ -70,6 +79,7 @@ function loadParameter({props_cropInfo}){
     L3BorderWidth,
     cropImgWH,
     zoomStep,
+    containerMargin,
   }
 }
 

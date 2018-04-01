@@ -3,6 +3,20 @@
  */
 'use strict'
 
+/*
+* source应该为globalstate->inputRelateProperty下所有
+* */
+function genNeedInput({source,collName,allowFields}) {
+  return{
+    inputValueForCreate:objectPartlyDeepCopy({sourceObj:source['inputValueForCreate'][collName],expectedKey:allowFields}),
+
+    inputValueForUpdate:objectPartlyDeepCopy({sourceObj:source['inputValueForUpdate'][collName],expectedKey:allowFields}),
+    inputAttribute:objectPartlyDeepCopy({sourceObj:source['inputAttribute'][collName],expectedKey:allowFields}),
+    inputTempData:objectPartlyDeepCopy({sourceObj:source['inputTempData'][collName],expectedKey:allowFields}),
+    ruleForCreate:objectPartlyDeepCopy({sourceObj:source['ruleForCreate'][collName],expectedKey:allowFields}),
+    ruleForUpdate:objectPartlyDeepCopy({sourceObj:source['ruleForUpdate'][collName],expectedKey:allowFields})
+  }
+}
 
 function objectDeepCopy(sourceObj){
   if(undefined===sourceObj || null===sourceObj){
@@ -109,6 +123,7 @@ async function nativeReadFile_async({inputId,readType,maxSize}){
 
 }
 export {
+  genNeedInput,
   objectPartlyDeepCopy,
   objectDeepCopy,
   ifArrayContainArray,
