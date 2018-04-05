@@ -6,6 +6,7 @@
 import {headerInfo,footerInfo} from './headerFooterInfo'
 import {inputRelatePropertyInfo} from './inputRelateProperty'
 import {url} from './url'
+import {style} from './style'
 
 export {
   headerInfo,
@@ -14,4 +15,5 @@ export {
   inputRelatePropertyInfo,
 
   url,
+  style,
 }

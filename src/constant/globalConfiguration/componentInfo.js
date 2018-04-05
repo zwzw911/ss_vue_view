@@ -9,9 +9,9 @@ import {inputValueForCreate,inputValueForUpdate} from '../inputValue/gen/inputVa
 import {ruleForCreate,ruleForUpdate} from '../rule/rule'
 import {inputAttribute} from '../inputValue/gen/inputAttribute'
 import {inputTempData} from '../inputValue/gen/inputTempData'
-import {icon} from '../inputValue/manul/icon'
-import {unique} from '../inputValue/manul/uniqueCheck'
-import {extraAttribute} from '../inputValue/manul/extraAttribute'
+import {icon} from '../inputValue/manual/icon'
+import {unique} from '../inputValue/manual/uniqueCheck'
+import {extraAttribute} from '../inputValue/manual/extraAttribute'
 
 let registerInfo={
   initInputValue:inputValueForCreate.user,

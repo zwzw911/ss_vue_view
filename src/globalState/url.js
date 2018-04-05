@@ -9,7 +9,7 @@ let url={
       register:'/user',
       uploadUserPhoto:'/user/uploadUserPhoto',
       getUserInfo:'/user',
-
+      saveUserInfo:'/user'
     },
   },
   getters:{},

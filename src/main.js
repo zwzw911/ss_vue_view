@@ -1,3 +1,4 @@
+'use strict'
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
@@ -21,7 +22,7 @@ import * as globalState from './globalState/globalState'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 //通过模块的方法载入vuex的配置
-var store=new Vuex.Store({
+let store=new Vuex.Store({
   modules:{
     // inputRelatePropertyInfo,
     // globalState,
@@ -30,6 +31,7 @@ var store=new Vuex.Store({
     footerInfo:globalState.footerInfo,
     inputRelatePropertyInfo:globalState.inputRelatePropertyInfo,
     url:globalState.url,
+    style:globalState.style,
   }
 })
 

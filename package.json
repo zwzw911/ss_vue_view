@@ -16,7 +16,7 @@
   "dependencies": {
     "awesomeprint": "^1.0.2",
     "axios": "^0.17.1",
-    "iview": "^2.9.1",
+    "iview": "^2.12.0",
     "lodash": "^4.17.5",
     "vue": "^2.5.2",
     "vue-cookies": "^1.5.4",

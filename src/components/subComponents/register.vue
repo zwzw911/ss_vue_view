@@ -90,7 +90,7 @@
   import {myAxios,mergeAdditionalField} from '../helperLib/componentsHelperLib'
   import {inf,wrn,err} from 'awesomeprint'
 
-  import selfFormItem from './formItem'
+  import selfFormItem from '../basicComponent/formItem'
 
   export default {
     components:{selfFormItem},
@@ -98,9 +98,11 @@
     mounted(){
     },
     methods: {
+      //获得整体验证结果后，立即设置button状态
       setFormItemResult(result){
         let type=this.currentType
         this.validateFormItemResult[type]=result
+        this.checkSubmitButtonStatus()
       },
 
       //每个input blur或者check box click，都要检查素有input valida的状态以及check box的状态，以便决定是否enable 注册按钮

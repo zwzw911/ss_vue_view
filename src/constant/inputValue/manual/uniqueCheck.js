@@ -5,7 +5,7 @@
 'use strict'
 
 const unique={
-  user:{name:'/user/uniqueCheck_async',account:'/user/uniqueCheck_async'},
+  user:{name:'/user/uniqueCheck',account:'/user/uniqueCheck'},
 }
 
 export {unique}

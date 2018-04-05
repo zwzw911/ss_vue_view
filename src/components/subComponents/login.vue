@@ -56,7 +56,7 @@
 
   // import axios from 'axios'
   import {inf,wrn,err} from 'awesomeprint'
-  import selfFormItem from './formItem'
+  import selfFormItem from '../basicComponent/formItem'
   export default {
     components:{selfFormItem},
     props:['loginInfo'], //
@@ -81,9 +81,11 @@
       /********************************************/
       /*                    formItem              */
       /********************************************/
+      //获得整体验证结果，然后设置button的状态
       setFormItemResult(result){
-
+// inf('change result',result)
         this.validateFormItemResult=result
+        this.checkSubmitButtonStatus()
       },
 
       //每个input blur或者check box click，都要检查素有input valida的状态以及check box的状态，以便决定是否enable 注册按钮
@@ -196,7 +198,7 @@
             captchaImgId:'captchaImgId',
             captchaURL:'/user/captcha',
           },
-          unique:undefined, //如果未设，将不执行unique check，否则根据inputValue/uniqueCheck.js中的设置，blur时执行unique
+          unique:undefined, //如果未设，将不执行unique check，否则根据inputValue/manual/uniqueCheck.js中的设置，blur时执行unique
           labelWidth:this.loginInfo.labelWidth, //0或者undefined，则不显示label；其他数值，显示label
 
           span:this.loginInfo.span, //formItem的宽度和offset
@@ -212,7 +214,7 @@
         },
         /*        self      */
         globalResultMsg:'',//全局错误信息
-        buttonDisableStyle:{'background-color':`#8cc0f7`,'color':`white`},
+        buttonDisableStyle:this.$store.state.style.button.primary.disable,
         rememberMe:false, //记住用户名
         submitButtonDisable:true,
 

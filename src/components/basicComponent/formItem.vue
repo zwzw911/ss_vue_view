@@ -1,12 +1,15 @@
 <!--
 formItemInfo:
+  rule
   inputValue:
   inputAttribute:
   inputTempData:
   icon: 数组，对每个需要设置icon的字段，设置一个icon字符；如果没有设置（undefined），或者是null或者''，则忽略图标
   iconColor: 字符
   unique：数组，指定对应字段，如果要进行unique的检测，对应的url
-  rule
+
+  labelWidth:40,  //undefined为0，不显示label
+  editable:{enable:true, saveUrl:}
 
   captchaInfo:子组件captcha需要的参数
 
@@ -27,8 +30,8 @@ formItemInfo:
             :offset="undefined===formItemInfo.span || undefined===formItemInfo.span[k] || undefined===formItemInfo.span[k]['span'] || undefined===formItemInfo.span[k]['span']['offset'] ? '0':formItemInfo.span[k]['span']['width']"
           >
             <template v-if="undefined!==formItemInfo.inputAttribute[k]['enum']">
-              <FormItem :prop="k" :key="k" :label="undefined!==formItemInfo.labelWidth && formItemInfo.labelWidth>0 ? formItemInfo.inputAttribute[k]['label']:''">
-                <Select v-model="formItemInfo.inputValue[k]" :placeholder="formItemInfo.inputAttribute[k]['placeHolder'][0]">
+              <FormItem :prop="k" :key="k" :label="undefined!==formItemInfo.labelWidth && formItemInfo.labelWidth>0 ? formItemInfo.inputAttribute[k]['label']:''" :error="formItemInfo.inputTempData[k]['validResult']">
+                <Select v-model="formItemInfo.inputValue[k]" :placeholder="formItemInfo.inputAttribute[k]['placeHolder'][0]" >
                   <Option v-for="(enumValue,enumKey) in formItemInfo.inputAttribute[k]['enum']" :value="enumKey" :key="enumKey">{{enumValue}}</Option>
 
                 </Select>
@@ -39,10 +42,11 @@ formItemInfo:
                 <!---->
                 <Input
                   @on-focus="focusInputPlaceHolderDisappear({keyName:k});onFocus()"
-                  @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValue({fieldName:k});validateNameUnique({fieldName:k,formItemInfo:formItemInfo});validateIfAllItemPass();onBlur();"
+                  @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValue({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});validateIfAllItemPass();onBlur();"
                   @on-change="validSingleInputValue({fieldName:k});validateIfAllItemPass();"
                   :type="formItemInfo.inputAttribute[k]['inputType']" v-model="formItemInfo.inputValue[k]" :placeholder="formItemInfo.inputAttribute[k]['placeHolder'][0]"
                 >
+                <!--:disabled="editable"-->
                 <span slot="prepend"  style="border-left: 0px" v-if="undefined!==formItemInfo.icon && undefined!==formItemInfo.icon[k] && null!==formItemInfo.icon[k] && ''!==formItemInfo.icon[k]">
                     <Icon :type="formItemInfo.icon[k]" size="20" :color="formItemInfo.iconColor"></Icon>
                   </span>
@@ -82,7 +86,7 @@ formItemInfo:
 </template>
 <script>
   import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
-  import selfCaptcha from './cpatcha'
+  import selfCaptcha from '../subComponents/cpatcha'
   import {myAxios,mergeAdditionalField} from '../helperLib/componentsHelperLib'
   import {inf} from 'awesomeprint'
     export default {
@@ -94,7 +98,7 @@ formItemInfo:
       methods: {
         //判断返回的值里是否为captcha的错误，是否话，错误信息显示在captcha的input下
         checkIfCaptchaErrAndShow({data}){
-          inf('checkIfCaptchaErrAndShow in')
+          // inf('checkIfCaptchaErrAndShow in')
           if(-1!==[60054,60056].indexOf(data.rc)){
             this.formItemInfo.inputTempData['captcha']['validResult']=data.msg
             return true
@@ -171,8 +175,8 @@ formItemInfo:
             let singleFieldRequired=this.formItemInfo.rule[singleFieldName][0]['required']
             // inf('singleFieldRequired',singleFieldRequired)
             //必须字段未经验证，或者字段验证失败
-            if ((true===singleFieldRequired && null === singleFieldValidResult) || '' !== singleFieldValidResult) {
-              // flag=false
+            if ((true===singleFieldRequired && (null === singleFieldValidResult) || '' !== singleFieldValidResult)) {
+              // inf('validateAllItemResult result false')
               this.$emit('validateAllItemResult',false)
               return
             }
@@ -182,7 +186,7 @@ formItemInfo:
         },
         //字段的unique检测
         //不知道为啥，props,data和computed中的数据，不能放在promise的then中使用，如果要做设置，只能通过参数传递
-        async validateNameUnique({fieldName,formItemInfo}) {
+        async validateUnique({fieldName,formItemInfo}) {
           //inputAttribute中定义了unique为true，且有value，并验证通过，且定义了unique check的URL，那么进行unique检测
           if (undefined !== this.formItemInfo.inputAttribute[fieldName][InputAttributeFieldName.UNIQUE]
             && true === this.formItemInfo.inputAttribute[fieldName][InputAttributeFieldName.UNIQUE]
@@ -198,11 +202,7 @@ formItemInfo:
                   [ValidatePart.SINGLE_FIELD]: {[fieldName]: this.formItemInfo.inputValue[fieldName]},
                 }
               })
-            // inf('')
-            //   .then(function (response) {
-                // inf('response',response)
-                // inf('fieldName',fieldName)
-                // let that=this
+
                 if(response.data.rc>0){
 
                   // inf('this.formItemInfo.inputTempData[fieldName]',formItemInfo)
@@ -217,7 +217,9 @@ formItemInfo:
                 this.$options.methods.validateIfAllItemPass.bind(this)()
                 // inf('err done')
                 // this.$options.methods.onBlur.bind(this)()
-                this.$emit('onBlur')
+            //如果需要对检查结果做特殊处理(例如，不需要显示错误结果)，此处为钩子
+            this.$emit('uniqueCheckResult',{fieldName:fieldName,data:response.data})
+                // this.$emit('onBlur')
             //     inf('err done')
 /*              })
               .catch(function (error) {
