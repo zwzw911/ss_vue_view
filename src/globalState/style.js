@@ -10,6 +10,9 @@ let style ={
         disable:{'background-color':`#8cc0f7`,'color':`white`},
       }
     },
+    input:{
+
+    },
   },
   getters:{},
   mutations:{

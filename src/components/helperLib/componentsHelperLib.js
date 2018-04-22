@@ -5,11 +5,7 @@
 import axios from 'axios'
 import * as ap from 'awesomeprint'
 
-import {additionalInputAttribute} from '../../constant/additionalInputValue/inputAttribute'
-import {additionalInputTempData} from '../../constant/additionalInputValue/inputTempData'
-import {additionalInputValue} from '../../constant/additionalInputValue/inputValue'
-import {additionalRuleForCreate,additionalRuleForUpdate} from '../../constant/additionalInputValue/rule'
-import {additionalIcon} from '../../constant/additionalInputValue/icon'
+
 
 import {inf,war,err} from 'awesomeprint'
 function getPosPara(element){
@@ -94,7 +90,7 @@ function getPosPara(element){
 * @arr_fieldName: 需要从addition中merge到普通中的字段名
 * @ruleForCreate/Update:
 * */
-function mergeAdditionalField({arr_fieldName,inputAttribute,inputTempData,inputValue,icon,ruleForCreate,ruleForUpdate}){
+/*function mergeAdditionalField({arr_fieldName,inputAttribute,inputTempData,inputValue,icon,ruleForCreate,ruleForUpdate}){
     //检测字段名是否在3个文件中都存在（additionalInputValue->additionalInputAttr/TempData/InputValue）
   // ap.inf('')
   for(let singleFieldName of arr_fieldName){
@@ -119,8 +115,34 @@ function mergeAdditionalField({arr_fieldName,inputAttribute,inputTempData,inputV
       ruleForUpdate[singleFieldName] = additionalRuleForUpdate[singleFieldName]
     }
   }
-}
+}*/
 
+/*function mergeAdditionalField({arr_fieldName,formItemInfo}){
+  //检测字段名是否在3个文件中都存在（additionalInputValue->additionalInputAttr/TempData/InputValue）
+  // ap.inf('')
+  for(let singleFieldName of arr_fieldName){
+/!*    if(undefined===additionalInputAttribute[singleFieldName]
+      || undefined===additionalInputTempData[singleFieldName]
+      || undefined===additionalInputValue[singleFieldName]
+      || (undefined===additionalRuleForCreate[singleFieldName] && undefined===additionalRuleForUpdate[singleFieldName])
+
+    ){
+      // ap.inf('continue in')
+      continue
+    }*!/
+    formItemInfo.inputAttribute[singleFieldName]=additionalInputAttribute[singleFieldName]
+    formItemInfo.inputTempData[singleFieldName]=additionalInputTempData[singleFieldName]
+    formItemInfo.inputValue[singleFieldName]=additionalInputValue[singleFieldName]
+    formItemInfo.icon[singleFieldName]=  additionalIcon[singleFieldName]
+    formItemInfo.rule[singleFieldName]=additionalRuleForCreate[singleFieldName]
+    // if(undefined!==ruleForCreate){
+    //   ruleForCreate[singleFieldName]=additionalRuleForCreate[singleFieldName]
+    // }
+    // if(undefined!==ruleForUpdate) {
+    //   ruleForUpdate[singleFieldName] = additionalRuleForUpdate[singleFieldName]
+    // }
+  }
+}*/
 /*    网页可见区域宽高，不包括工具栏和滚动条（浏览器窗口可视区域大小）      */
 function pageViewWH(){
   let w = document.documentElement.clientWidth || document.body.clientWidth;

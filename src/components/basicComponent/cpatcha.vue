@@ -50,7 +50,8 @@ example
 </template>
 <script>
     // import axios from 'axios'
-    import {getPosPara,myAxios} from '../helperLib/componentsHelperLib'
+    import {getPosPara} from '../helperLib/componentsHelperLib'
+    import {sendRequestGetResult_async} from '../../function/network'
     import {inf} from 'awesomeprint'
     export default {
       props: ['captchaInfo'],
@@ -76,23 +77,24 @@ example
           }
         },
         async getCaptchaImg_async(){
-          let result=await myAxios.get(this.captchaInfo.captchaURL, {})
+          // inf('captcha call getCaptchaImg_async')
+          let result=await sendRequestGetResult_async({urlOption:this.captchaInfo.captchaURL})
           this.captchaImgLoadedFlag=false
-          if(result.data.rc===0){
+          if(result.rc===0){
             this.captchaImgHideFlag=false
-            this.captchaImgDataURL=result.data.msg
+            this.captchaImgDataURL=result.msg
             this.captchaImgErrorMsg=''
           }else{
             // error/controller/helperError
             // 前一次POST未设session，需要重发来获得captcha
-            if(result.data.rc===60052){
+            if(result.rc===60052){
               this.getCaptchaImg_async()
             }
             else{
               //只有出错才会见错误信息传递给父组件
-              this.captchaImgErrorMsg=result.data.msg
-              this.$emit('genCaptchaFail',result.data.msg)
-              // this.$emit('getCaptchaImg_asyncFail',result.data)
+              this.captchaImgErrorMsg=result.msg
+              this.$emit('genCaptchaFail',result.msg)
+              // this.$emit('getCaptchaImg_asyncFail',result)
             }
 
           }

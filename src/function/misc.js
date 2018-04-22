@@ -2,28 +2,161 @@
  * Created by ada on 2018/2/7.
  */
 'use strict'
+import {inf,wrn,err} from 'awesomeprint'
+import {inputValueForCreate,inputValueForUpdate} from '../constant/inputValue/gen/inputValue'
+import {inputAttribute} from '../constant/inputValue/gen/inputAttribute'
+import {inputTempData} from '../constant/inputValue/gen/inputTempData'
+import {ruleForCreate,ruleForUpdate} from '../constant/rule/rule'
+import {icon} from '../constant/inputValue/manual/icon'
+import {extraAttribute} from '../constant/inputValue/manual/extraAttribute'
+import {InputAttributeFieldName} from '../constant/enum/nonValueEnum'
+import {numRange} from '../constant/inputValue/gen/numRange'
 
+import {additionalInputAttribute} from '../constant/additionalInputValue/inputAttribute'
+import {additionalInputTempData} from '../constant/additionalInputValue/inputTempData'
+import {additionalInputValue} from '../constant/additionalInputValue/inputValue'
+import {additionalRuleForCreate,additionalRuleForUpdate} from '../constant/additionalInputValue/rule'
+import {additionalIcon} from '../constant/additionalInputValue/icon'
+
+const source={
+  inputValueForCreate:inputValueForCreate,
+  inputValueForUpdate:inputValueForUpdate,
+  inputAttribute:inputAttribute,
+  inputTempData:inputTempData,
+  icon:icon,
+  // ruleForCreate:ruleForCreate,
+  // ruleForUpdate:ruleForUpdate,
+  rule:ruleForCreate,
+  extraAttribute:extraAttribute,
+  numRange:numRange,
+}
+
+// inf('before func',source['inputValueForCreate']['article'])
 /*
 * source应该为globalstate->inputRelateProperty下所有
 * 复制4个必须字段给字段编制
+* additionalFields: 非rule定义的字段（例如captcha）
 * */
-function genNeedInput({source,collName,allowFields}) {
-  return{
+function genNeedInput({collName,allowFields,additionalFields}) {
+  // inf('collName',collName)
+  // inf('source[\'icon\'][collName]',source['icon'][collName])
+  //1. 复制 自动生成的 数据
+  let finalResult={
     inputValue:objectPartlyDeepCopy({sourceObj:source['inputValueForCreate'][collName],expectedKey:allowFields}),
-
     // inputValueForUpdate:objectPartlyDeepCopy({sourceObj:source['inputValueForUpdate'][collName],expectedKey:allowFields}),
     inputAttribute:objectPartlyDeepCopy({sourceObj:source['inputAttribute'][collName],expectedKey:allowFields}),
     inputTempData:objectPartlyDeepCopy({sourceObj:source['inputTempData'][collName],expectedKey:allowFields}),
-    rule:objectPartlyDeepCopy({sourceObj:source['ruleForCreate'][collName],expectedKey:allowFields}),
-    // ruleForUpdate:objectPartlyDeepCopy({sourceObj:source['ruleForUpdate'][collName],expectedKey:allowFields})
+    rule:objectPartlyDeepCopy({sourceObj:source['rule'][collName],expectedKey:allowFields}),
+    icon:objectPartlyDeepCopy({sourceObj:source['icon'][collName],expectedKey:allowFields}),
+    /*      autoGen     */
+    inputArrayAttribute:{},//对于需要autoGen的字段，需要为每个元素存储attribute（使用attribute中的placeHolder）
+    inputArrayTempData:{},//对于需要autoGen的字段，需要为每个元素存储tempData（存储验证结果）
+
+    addItemButtonDisable:{},//每个可以autoGen的字段，addItemButton的状态
+    numRange:objectPartlyDeepCopy({sourceObj:source['numRange'][collName],expectedKey:allowFields}),//如果是autoGen，最多几个input
   }
+  // inf('finalResult。icon',finalResult.icon)
+
+  //2. 合并字段额外的定义（inputAttribute）
+  let sourceInputAttribute=finalResult['inputAttribute']
+  let extraInputAttribute=objectPartlyDeepCopy({sourceObj:source['extraAttribute'][collName],expectedKey:allowFields})
+
+  for(let singleField in sourceInputAttribute){
+    if(undefined!==extraInputAttribute[singleField]){
+      for(let singleExtraAttribute in extraInputAttribute[singleField]){
+        if(undefined!==extraInputAttribute[singleField][singleExtraAttribute]){
+          sourceInputAttribute[singleField][singleExtraAttribute]=extraInputAttribute[singleField][singleExtraAttribute]
+        }
+      }
+    }
+  }
+
+  //3. 合并额外的字段
+  //   inf('additionalFields',additionalFields)
+  if(undefined!==additionalFields && 0<additionalFields.length){
+    for(let singleFieldName of additionalFields){
+      finalResult.inputAttribute[singleFieldName]=objectDeepCopy(additionalInputAttribute[singleFieldName])
+      finalResult.inputTempData[singleFieldName]=objectDeepCopy(additionalInputTempData[singleFieldName])
+      finalResult.inputValue[singleFieldName]=objectDeepCopy(additionalInputValue[singleFieldName])
+      finalResult.icon[singleFieldName]=  objectDeepCopy(additionalIcon[singleFieldName])
+      finalResult.rule[singleFieldName]=objectDeepCopy(additionalRuleForCreate[singleFieldName])
+    }
+  }
+  // inf('additionalRuleForCreate[collName]',additionalRuleForCreate[collName])
+  // inf('finalResult.rule',finalResult.rule)
+  //4. rule中的正则无法复制，需要手工赋值
+  for(let singleFieldName in finalResult.rule){
+    for(let singleEle of finalResult.rule[singleFieldName]){
+      // inf('singleFieldName',singleFieldName)
+      if(undefined!==singleEle['pattern']){
+        //判断字段的rule原始定义在inputAttribute还是additional/inputAttribute
+        if(undefined!==source.rule[collName][singleFieldName]){
+          // inf('source.inputAttribute[collName][singleFieldName]',source.rule[collName][singleFieldName])
+          for(let originalSingleEle of source.rule[collName][singleFieldName]){
+            if(undefined!==originalSingleEle['pattern']){
+              singleEle['pattern']=originalSingleEle['pattern']
+            }
+          }
+        }
+        if(undefined!==additionalRuleForCreate[singleFieldName]){
+          for(let originalSingleEle of additionalRuleForCreate[singleFieldName]){
+            if(undefined!==originalSingleEle['pattern']){
+              singleEle['pattern']=originalSingleEle['pattern']
+            }
+          }
+        }
+      }
+    }
+  }
+  // inf('2finalResult.inputValue.tags',finalResult.inputValue.tags)
+  //5. 检查inputAttribute的autoGen属性，判断是否要生成autoGen字段对应的数据
+  for(let singleFieldName in finalResult.inputAttribute){
+    // inf(`singleFieldName`,singleFieldName)
+    // inf('inputAttribute[singleFieldName][InputAttributeFieldName.AUTO_GEN]',finalResult.inputAttribute[singleFieldName][InputAttributeFieldName.AUTO_GEN])
+
+    //字段是autoGen
+    if(undefined!==finalResult.inputAttribute[singleFieldName][InputAttributeFieldName.AUTO_GEN] && true===finalResult.inputAttribute[singleFieldName][InputAttributeFieldName.AUTO_GEN]){
+      // inf(`valida singleFieldName`,singleFieldName)
+      finalResult.inputArrayAttribute[singleFieldName]=[]
+      finalResult.inputArrayTempData[singleFieldName]=[]
+      finalResult.addItemButtonDisable[singleFieldName]=false //默认可以添加新元素
+      //检查字段的rule，其中是否有max，且type为array的元素
+      // finalResult.maxNum[singleFieldName]=singleEle['max']
+
+    }
+  }
+  // inf('3finalResult.maxNum.tags',finalResult.maxNum.tags)
+  return finalResult
+}
+
+
+function genAutoGenInfo(){}
+/*
+* collName
+* */
+function mergeInputAttribute({sourceCollInputAttribute,extraCollInputAttribute,allowFields}){
+  let resultInputAttribute=objectPartlyDeepCopy({sourceObj:sourceCollInputAttribute,expectedKey:allowFields})
+  let extraInputAttribute=objectPartlyDeepCopy({sourceObj:extraCollInputAttribute,expectedKey:allowFields})
+// inf('resultInputAttribute',resultInputAttribute)
+//   inf('extraInputAttribute',extraInputAttribute)
+  for(let singleField of allowFields){
+    if(undefined!==extraInputAttribute[singleField]){
+      // inf('')
+      for(let singleExtraAttribute in extraInputAttribute[singleField]){
+        if(undefined!==extraInputAttribute[singleField][singleExtraAttribute]){
+          resultInputAttribute[singleField][singleExtraAttribute]=extraInputAttribute[singleField][singleExtraAttribute]
+        }
+      }
+    }
+  }
+  // inf('after resultInputAttribute',resultInputAttribute)
+  return resultInputAttribute
 }
 
 function objectDeepCopy(sourceObj){
   if(undefined===sourceObj || null===sourceObj){
     return sourceObj
   }
-
   return JSON.parse(JSON.stringify(sourceObj))
 }
 
@@ -58,6 +191,31 @@ function ifArrayContainArray({parentArray,childArray}){
   return true
 }
 
+/*  搜索array中空值（null,undefined,{},[],''）
+* 返回数组
+* */
+function searchEmptyValueIdxInArray({array}){
+  let idxToBeDeleted=[]
+  for(let idx in array){
+    if(null===array[idx] || undefined===array[idx] || []===array[idx] || {}===array[idx] || ''===array[idx] ){
+      idxToBeDeleted.push(idx)
+    }
+  }
+
+  return idxToBeDeleted
+
+}
+
+/*  删除指定元素
+* */
+function deleteDefinedEleInArray({array,tobeDeletedIdx}){
+  if(tobeDeletedIdx.length>0){
+    tobeDeletedIdx.reverse()
+    for(let idx of tobeDeletedIdx){
+      array.splice(idx,1)
+    }
+  }
+}
 /*  使用html5原生的FileReader读取文件
 * @inputId：选择文件的inputId
 * @readType：以何种方式读取文件。text/dataURL/binary 3种
@@ -125,9 +283,12 @@ async function nativeReadFile_async({inputId,readType,maxSize}){
 }
 export {
   genNeedInput,
+  mergeInputAttribute,
   objectPartlyDeepCopy,
   objectDeepCopy,
   ifArrayContainArray,
+  searchEmptyValueIdxInArray,
+  deleteDefinedEleInArray,
   nativeReadFile_async,
 }
 

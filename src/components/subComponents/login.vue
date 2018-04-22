@@ -19,8 +19,10 @@
 
       <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4 "  label-position="left"
             :ref="ref.form.formForLogin" :model="formItemInfo.inputValue" :rules="formItemInfo.rule"
-            :label-width="undefined===formItemInfo.labelWidth ? 0:formItemInfo.labelWidth">
-        <self-form-item :ref="ref.formItem.formItemForLogin" :form-item-info="formItemInfo" @validateAllItemResult="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
+            :label-width="formItemInfo.labelWidth"
+            @submit.native.prevent
+      >
+        <self-form-item :ref="ref.formItem.formItemForLogin" :editable="editable" :form-item-info="formItemInfo" @validateAllItemResult="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
 
 
         <!--term of service-->
@@ -48,14 +50,15 @@
   // import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
   // import selfCaptcha from './cpatcha'
   import {objectDeepCopy,objectPartlyDeepCopy} from  '../../function/misc'
-  import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
+  import {InputAttributeFieldName,InputTempDataFieldName,ValidatePart} from '../../constant/enum/nonValueEnum'
 
+  import {sendRequestGetResult_async} from '../../function/network'
+  import {urlConfiguration} from '../../constant/url/url'
 
+  import {mergeAdditionalField} from '../helperLib/componentsHelperLib'
 
-  import {myAxios,mergeAdditionalField} from '../helperLib/componentsHelperLib'
-
-  // import axios from 'axios'
   import {inf,wrn,err} from 'awesomeprint'
+
   import selfFormItem from '../basicComponent/formItem'
   export default {
     components:{selfFormItem},
@@ -68,6 +71,7 @@
       }*/
       if(true===this.$cookies.isKey('account')){
         this.formItemInfo.inputValue.account=this.$cookies.get('account')
+        this.rememberMe=true
         this.formItemInfo.inputTempData.account[InputTempDataFieldName.VALID_RESULT]=''
       }
       // this.getCaptcha()
@@ -116,23 +120,23 @@
         //不能直接删除，否则iview的验证会认为此字段的值不存在
         let tmpInputValue= objectDeepCopy(this.formItemInfo.inputValue)
         delete tmpInputValue[ValidatePart.CAPTCHA]
-        let result=await myAxios.post(this.$store.state.url.user.login,
-          {
-            values: {
-              // [ValidatePart.METHOD]: Method.MATCH,
-              [ValidatePart.RECORD_INFO]: tmpInputValue,
-              [ValidatePart.CAPTCHA]:captcha,
-            }
-          })
+        let data={
+          values: {
+            // [ValidatePart.METHOD]: Method.MATCH,
+            [ValidatePart.RECORD_INFO]: tmpInputValue,
+            [ValidatePart.CAPTCHA]:captcha,
+          }
+        }
+        let result=await sendRequestGetResult_async({urlOption:urlConfiguration.user.login,data:data})
         // =await this.sendLoginInfo()
-        if(result.data.rc>0){
+        if(result.rc>0){
           // captcha错误显示在input下
-          let setCaptchaResult=this.$refs[this.ref.formItem.formItemForLogin].checkIfCaptchaErrAndShow({data:result.data})
+          let setCaptchaResult=this.$refs[this.ref.formItem.formItemForLogin].checkIfCaptchaErrAndShow({data:result})
           //否则，显示在最顶上
           if(false===setCaptchaResult){
-            let set99999Result=this.$refs[this.ref.formItem.formItemForLogin].checkIf99999ErrAndShow({data:result.data})
+            let set99999Result=this.$refs[this.ref.formItem.formItemForLogin].checkIf99999ErrAndShow({data:result})
             if(false===set99999Result){
-              this.globalResultMsg=result.data.msg
+              this.globalResultMsg=result.msg
             }
           }
 
@@ -159,50 +163,31 @@
 
     },
     data(){
-      let usedFieldName=['account','password']
-      let propName='loginInfo'
-      // let inputAttribute_tmp,userInputValue_tmp,userInputTempData_tmp,ruleForCreate_tmp,icon_tmp
-      let inputAttribute={},userInputValue={},userInputTempData={},ruleForCreate={},icon={}
+      // let usedFieldName=['account','password']
+      // let propName='loginInfo'
+      // // let inputAttribute_tmp,userInputValue_tmp,userInputTempData_tmp,ruleForCreate_tmp,icon_tmp
+      // let inputAttribute={},userInputValue={},userInputTempData={},ruleForCreate={},icon={}
+      //
+      // inputAttribute=objectPartlyDeepCopy({sourceObj:this[propName].inputAttribute,expectedKey:usedFieldName})
+      // userInputValue=objectPartlyDeepCopy({sourceObj:this[propName].initInputValue,expectedKey:usedFieldName})
+      // userInputTempData=objectPartlyDeepCopy({sourceObj:this[propName].inputTempData,expectedKey:usedFieldName})
+      // ruleForCreate=objectPartlyDeepCopy({sourceObj:this[propName].ruleForCreate,expectedKey:usedFieldName})
+      // icon=objectPartlyDeepCopy({sourceObj:this[propName].icon,expectedKey:usedFieldName})
 
-      inputAttribute=objectPartlyDeepCopy({sourceObj:this[propName].inputAttribute,expectedKey:usedFieldName})
-      userInputValue=objectPartlyDeepCopy({sourceObj:this[propName].initInputValue,expectedKey:usedFieldName})
-      userInputTempData=objectPartlyDeepCopy({sourceObj:this[propName].inputTempData,expectedKey:usedFieldName})
-      ruleForCreate=objectPartlyDeepCopy({sourceObj:this[propName].ruleForCreate,expectedKey:usedFieldName})
-      icon=objectPartlyDeepCopy({sourceObj:this[propName].icon,expectedKey:usedFieldName})
-
-      inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER]=['请输入手机号或邮箱']
-      inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=['请输入手机号或邮箱']
+      this.loginInfo.formItemInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER]=['请输入手机号或邮箱']
+      this.loginInfo.formItemInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=['请输入手机号或邮箱']
 
 
-      ruleForCreate.account[0].message='账号不能为空'
-      ruleForCreate.account[1].message='账号必须是有效的手机号或邮箱'
-      ruleForCreate.account[1].pattern=this.loginInfo.ruleForCreate.account[1].pattern
-      ruleForCreate.password[1].pattern=this.loginInfo.ruleForCreate.password[1].pattern
+      this.loginInfo.formItemInfo.rule.account[0].message='账号不能为空'
+      this.loginInfo.formItemInfo.rule.account[1].message='账号必须是有效的手机号或邮箱'
+      // this.loginInfo.formItemInfo.rule.account[1].pattern=this.loginInfo.formItemInfo.rule.account[1].pattern
+      // this.loginInfo.formItemInfo.rule.password[1].pattern=this.loginInfo.formItemInfo.rule.password[1].pattern
 
-      mergeAdditionalField({arr_fieldName:['captcha'],inputAttribute:inputAttribute,inputTempData:userInputTempData,inputValue:userInputValue,icon:icon,ruleForCreate:ruleForCreate,ruleForUpdate:undefined})
-
+      // mergeAdditionalField({arr_fieldName:['captcha'],inputAttribute:inputAttribute,inputTempData:userInputTempData,inputValue:userInputValue,icon:icon,ruleForCreate:ruleForCreate,ruleForUpdate:undefined})
+      // mergeAdditionalField({arr_fieldName:['captcha'],formItemInfo:this.loginInfo.formItemInfo})
       return {
         /*      formItemInfo      */
-        formItemInfo:{
-          rule:ruleForCreate,
-          inputAttribute:inputAttribute,
-          inputTempData:userInputTempData,
-          inputValue:userInputValue,
-          icon:icon,
-          iconColor:'#5cadff',
-          //如果未设置captchaInfo，就不会出现captcha
-          captchaInfo:{
-            captchaImgWidth:80, //px。事先确定好长宽，以便刷新时，如果有refreshIcon存在，此icon位置不会变化
-            captchaImgHeight:33,
-            refreshIcon:'refresh',//空：无刷新icon；否则显示
-            captchaImgId:'captchaImgId',
-            captchaURL:'/user/captcha',
-          },
-          unique:undefined, //如果未设，将不执行unique check，否则根据inputValue/manual/uniqueCheck.js中的设置，blur时执行unique
-          labelWidth:this.loginInfo.labelWidth, //0或者undefined，则不显示label；其他数值，显示label
-
-          span:this.loginInfo.span, //formItem的宽度和offset
-        },
+        formItemInfo:this.loginInfo.formItemInfo,
         validateFormItemResult:null, //存储forItem整体验证结果
         ref:{
           formItem:{
@@ -218,6 +203,7 @@
         rememberMe:false, //记住用户名
         submitButtonDisable:true,
 
+        editable:true,
         // url:{
         //   login:'',
         //   // unique:'/user/uniqueCheck_async',

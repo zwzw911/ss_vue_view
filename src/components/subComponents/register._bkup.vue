@@ -116,7 +116,7 @@
 </template>
 
 <script>
-  import selfCaptcha from './cpatcha'
+  import selfCaptcha from '../basicComponent/cpatcha'
   // import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
   import {objectDeepCopy} from  '../../function/misc'
   import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'

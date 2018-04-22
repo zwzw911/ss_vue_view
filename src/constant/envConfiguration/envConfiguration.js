@@ -1,5 +1,5 @@
-/*    gene by D:\ss_vue_express\server_common\maintain\convert2Client\generateVueProxyTable.js  
-* 开发时候的一些运行环境的配置 
+/*    gene by D:\ss_vue_express\server_common\maintain\convert2Client\generateVueProxyTable.js
+* 开发时候的一些运行环境的配置
 */
 
 "use strict"
@@ -26,6 +26,6 @@ const proxySetting={
 
 
 
-module.exports={
+exports={
     proxySetting,
 }

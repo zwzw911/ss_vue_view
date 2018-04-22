@@ -21,7 +21,9 @@
 
             <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4" label-position="left"
                   :label-width="undefined===formItemInfo[currentType].labelWidth ? 0:formItemInfo[currentType].labelWidth"
-                  :ref="ref.form.phone" :model="formItemInfo.phone.inputValue" :rules="formItemInfo.phone.rule">
+                  :ref="ref.form.phone" :model="formItemInfo.phone.inputValue" :rules="formItemInfo.phone.rule"
+                  @submit.native.prevent
+            >
 
               <self-form-item :ref="ref.formItem.phone" :form-item-info="formItemInfo.phone" @validateAllItemResult="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
               <!--<selfCaptcha ref="selfCaptchaForEmail" :captcha-info="captchaInfo"></selfCaptcha>-->
@@ -54,7 +56,12 @@
               </p>
             </div>
 
-            <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4" label-position="left" :label-width="undefined===formItemInfo[currentType].labelWidth ? 0:formItemInfo[currentType].labelWidth" :ref="ref.form.email" :model="formItemInfo.email.inputValue" :rules="formItemInfo.email.rule">
+            <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4"
+                  label-position="left"
+                  :label-width="undefined===formItemInfo[currentType].labelWidth ? 0:formItemInfo[currentType].labelWidth"
+                  :ref="ref.form.email" :model="formItemInfo.email.inputValue" :rules="formItemInfo.email.rule"
+                  @submit.native.prevent
+            >
               <self-form-item :ref="ref.formItem.email" :form-item-info="formItemInfo.email"></self-form-item>
               <!--term of service-->
               <div class="flex-flow-row-nowrap justify-content-flex-start marginV4">
@@ -86,8 +93,10 @@
   // import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
   import {objectDeepCopy,objectPartlyDeepCopy} from  '../../function/misc'
   import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
-  // import {regex} from '../../constant/regex/regex'
-  import {myAxios,mergeAdditionalField} from '../helperLib/componentsHelperLib'
+  import {sendRequestGetResult_async} from '../../function/network'
+  import {urlConfiguration} from '../../constant/url/url'
+
+  // import {mergeAdditionalField} from '../helperLib/componentsHelperLib'
   import {inf,wrn,err} from 'awesomeprint'
 
   import selfFormItem from '../basicComponent/formItem'
@@ -165,28 +174,31 @@
         let captcha=objectPartlyDeepCopy({sourceObj:this.formItemInfo[this.currentType].inputValue,expectedKey:['captcha']})
         let tmpInputValue= objectDeepCopy(this.formItemInfo[this.currentType].inputValue)
         delete tmpInputValue[ValidatePart.CAPTCHA]
-        // delete this.formItemInfo[this.currentType].inputValue['captcha']
-        let result=await myAxios.post(this.$store.state.url.user.register,
-          {
-            values: {
-              // [ValidatePart.METHOD]: Method.CREATE,
-              [ValidatePart.RECORD_INFO]: tmpInputValue,
-              [ValidatePart.CAPTCHA]:captcha.captcha,
-            }
-          })
+
+        let data={
+          values: {
+            // [ValidatePart.METHOD]: Method.CREATE,
+            [ValidatePart.RECORD_INFO]: tmpInputValue,
+            [ValidatePart.CAPTCHA]:captcha.captcha,
+          }
+        }
+        let result=await sendRequestGetResult_async({urlOption:urlConfiguration.user.register,data:data})
+        // inf('result',result)
           // .then(function (result) {
-            if(result.data.rc>0){
+            if(result.rc>0){
               // captcha错误显示在input下
-              let setCaptchaResult=this.$refs[this.ref.formItem[this.currentType]].checkIfCaptchaErrAndShow({data:result.data})
+              let setCaptchaResult=this.$refs[this.ref.formItem[this.currentType]].checkIfCaptchaErrAndShow({data:result})
               //否则，显示在最顶上
               if(false===setCaptchaResult){
-                let set99999Result=this.$refs[this.ref.formItem[this.currentType]].checkIf99999ErrAndShow({data:result.data})
+                let set99999Result=this.$refs[this.ref.formItem[this.currentType]].checkIf99999ErrAndShow({data:result})
                 if(false===set99999Result){
-                  this.globalResultMsg[this.currentType]=result.data.msg
+                  this.globalResultMsg[this.currentType]=result.msg
                 }
               }
 
-              if(undefined!==this.formItemInfo.captchaInfo){
+              //无论什么错误，都重新获得captcha
+              if(undefined!==this.formItemInfo[this.currentType].captchaInfo){
+                // inf('start call getCaptchaImg_async to regen')
                 await this.$refs[this.ref.formItem[this.currentType]].getCaptchaImg_async()
               }
             }else{
@@ -205,69 +217,63 @@
     },
     props:['registerInfo'], //
       data(){
-        let phone={},email={}
-        let usedFieldName=['name','account','password']
-        phone['inputAttribute']=objectPartlyDeepCopy({sourceObj:this.registerInfo.inputAttribute,expectedKey:usedFieldName})
-        email['inputAttribute']=objectPartlyDeepCopy({sourceObj:this.registerInfo.inputAttribute,expectedKey:usedFieldName})
-        phone['inputAttribute'].account[InputAttributeFieldName.PLACE_HOLDER]=[this.registerInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER][0]]
-        phone['inputAttribute'].account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=[this.registerInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER_BKUP][0]]
-        email['inputAttribute'].account[InputAttributeFieldName.PLACE_HOLDER]=[this.registerInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER][1]]
-        email['inputAttribute'].account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=[this.registerInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER_BKUP][1]]
 
-        phone['inputTempData']=objectPartlyDeepCopy({sourceObj:this.registerInfo.inputTempData,expectedKey:usedFieldName})
-        email['inputTempData']=objectPartlyDeepCopy({sourceObj:this.registerInfo.inputTempData,expectedKey:usedFieldName})
+        let phone=objectDeepCopy(this.registerInfo.formItemInfo),email=objectDeepCopy(this.registerInfo.formItemInfo)
+        // inf('phone',phone)
+        // inf('phone[\'inputAttribute\']',phone['inputAttribute'])
+        // let usedFieldName=['name','account','password']
+        // phone['inputAttribute']=objectDeepCopy({sourceObj:this.registerInfo.formItemInfo.inputAttribute})
+        // email['inputAttribute']=objectPartlyDeepCopy({sourceObj:this.registerInfo.formItemInfo.inputAttribute,expectedKey:usedFieldName})
+        phone['inputAttribute'].account[InputAttributeFieldName.PLACE_HOLDER]=[this.registerInfo.formItemInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER][0]]
+        phone['inputAttribute'].account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=[this.registerInfo.formItemInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER_BKUP][0]]
+        email['inputAttribute'].account[InputAttributeFieldName.PLACE_HOLDER]=[this.registerInfo.formItemInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER][1]]
+        email['inputAttribute'].account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=[this.registerInfo.formItemInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER_BKUP][1]]
 
-        phone['inputValue']=objectPartlyDeepCopy({sourceObj:this.registerInfo.initInputValue,expectedKey:usedFieldName})
-        email['inputValue']=objectPartlyDeepCopy({sourceObj:this.registerInfo.initInputValue,expectedKey:usedFieldName})
+        // phone['inputTempData']=objectPartlyDeepCopy({sourceObj:this.registerInfo.inputTempData,expectedKey:usedFieldName})
+        // email['inputTempData']=objectPartlyDeepCopy({sourceObj:this.registerInfo.inputTempData,expectedKey:usedFieldName})
+
+        // phone['inputValue']=objectPartlyDeepCopy({sourceObj:this.registerInfo.initInputValue,expectedKey:usedFieldName})
+        // email['inputValue']=objectPartlyDeepCopy({sourceObj:this.registerInfo.initInputValue,expectedKey:usedFieldName})
 
         phone['icon']={name:'person',account:'android-phone-portrait',password:'locked'}
         email['icon']={name:'person',account:'android-mail',password:'locked'}
 
-        phone['rule']=objectPartlyDeepCopy({sourceObj:this.registerInfo.ruleForCreate,expectedKey:usedFieldName})
-        phone['rule'].name[1].pattern=this.registerInfo.ruleForCreate.name[1].pattern
+        // phone['rule']=objectPartlyDeepCopy({sourceObj:this.registerInfo.formItemInfo.rule,expectedKey:usedFieldName})
+        phone['rule'].name[1].pattern=this.registerInfo.formItemInfo.rule.name[1].pattern
         phone['rule'].account[0].message='手机号不能为空'
         phone['rule'].account[1].message='无效的手机号'
-        phone['rule'].account[1].pattern=this.registerInfo.ruleForCreate.account[1].pattern //正则无法通过JSON.stringify转换，所以需要直接赋值
+        phone['rule'].account[1].pattern=this.registerInfo.formItemInfo.rule.account[1].pattern //正则无法通过JSON.stringify转换，所以需要直接赋值
         phone['rule'].account[1].trigger='blur'   //patter的检测在blur才触发
-        phone['rule'].password[1].pattern=this.registerInfo.ruleForCreate.password[1].pattern
-        email['rule']=objectPartlyDeepCopy({sourceObj:this.registerInfo.ruleForCreate,expectedKey:usedFieldName})
-        email['rule'].name[1].pattern=this.registerInfo.ruleForCreate.name[1].pattern
+        phone['rule'].password[1].pattern=this.registerInfo.formItemInfo.rule.password[1].pattern
+        // email['rule']=objectPartlyDeepCopy({sourceObj:this.registerInfo.formItemInfo.rule,expectedKey:usedFieldName})
+        email['rule'].name[1].pattern=this.registerInfo.formItemInfo.rule.name[1].pattern
         email['rule'].account[0].message='电子邮件地址不能为空'
         //email的检测不使用正则，而使用async_validator的方式
         email['rule'].account[1]={ type: 'email', message: '无效电子邮件', trigger: 'blur' }
-        email['rule'].password[1].pattern=this.registerInfo.ruleForCreate.password[1].pattern
+        email['rule'].password[1].pattern=this.registerInfo.formItemInfo.rule.password[1].pattern
 
-        mergeAdditionalField({arr_fieldName:['captcha'],inputAttribute:phone['inputAttribute'],inputTempData:phone['inputTempData'],inputValue:phone['inputValue'],icon:phone['icon'],ruleForCreate:phone['rule'],ruleForUpdate:undefined})
-        mergeAdditionalField({arr_fieldName:['captcha'],inputAttribute:email['inputAttribute'],inputTempData:email['inputTempData'],inputValue:email['inputValue'],icon:email['icon'],ruleForCreate:email['rule'],ruleForUpdate:undefined})
 
-        phone['unique']=objectPartlyDeepCopy({sourceObj:this.registerInfo.unique,expectedKey:usedFieldName})
-        email['unique']=objectPartlyDeepCopy({sourceObj:this.registerInfo.unique,expectedKey:usedFieldName})
+
+        // phone['unique']=objectPartlyDeepCopy({sourceObj:this.registerInfo.unique,expectedKey:usedFieldName})
+        // email['unique']=objectPartlyDeepCopy({sourceObj:this.registerInfo.unique,expectedKey:usedFieldName})
 
         phone['iconColor']='#5cadff'
         email['iconColor']='#5cadff'
 
-        phone['captchaInfo']={
-          captchaImgWidth:80, //px。事先确定好长宽，以便刷新时，如果有refreshIcon存在，此icon位置不会变化
-          captchaImgHeight:33,
-          refreshIcon:'refresh',//空：无刷新icon；否则显示
-          captchaImgId:'phone',//防止多个子组件的img的id重复
-          captchaURL:'/user/captcha',
+        phone['captchaInfo']['captchaImgId']='phone'
+        phone['captchaInfo']['getAfterMounted']=true
+        email['captchaInfo']['captchaImgId']='email'
+        email['captchaInfo']['getAfterMounted']=false
 
-        }
-        email['captchaInfo']={
-          captchaImgWidth:80, //px。事先确定好长宽，以便刷新时，如果有refreshIcon存在，此icon位置不会变化
-          captchaImgHeight:33,
-          refreshIcon:'refresh',//空：无刷新icon；否则显示
-          captchaImgId:'phone',//防止多个子组件的img的id重复
-          captchaURL:'/user/captcha',
-          getAfterMounted:false,
-        }
+        // mergeAdditionalField({arr_fieldName:['captcha'],inputAttribute:phone['inputAttribute'],inputTempData:phone['inputTempData'],inputValue:phone['inputValue'],icon:phone['icon'],ruleForCreate:phone['rule'],ruleForUpdate:undefined})
+        // mergeAdditionalField({arr_fieldName:['captcha'],inputAttribute:email['inputAttribute'],inputTempData:email['inputTempData'],inputValue:email['inputValue'],icon:email['icon'],ruleForCreate:email['rule'],ruleForUpdate:undefined})
+        // mergeAdditionalField({arr_fieldName:['captcha'],formItemInfo:phone})
+        // mergeAdditionalField({arr_fieldName:['captcha'],formItemInfo:email})
+        // phone['labelWidth']=this.registerInfo.labelWidth//0或者undefined，则不显示label；其他数值，显示label
+        // email['labelWidth']=this.registerInfo.labelWidth//0或者undefined，则不显示label；其他数值，显示label
 
-        phone['labelWidth']=this.registerInfo.labelWidth//0或者undefined，则不显示label；其他数值，显示label
-        email['labelWidth']=this.registerInfo.labelWidth//0或者undefined，则不显示label；其他数值，显示label
-
-        phone['span']=this.registerInfo.span  //formItem的宽度和offset
-        email['span']=this.registerInfo.span  //formItem的宽度和offset
+        // phone['span']=this.registerInfo.span  //formItem的宽度和offset
+        // email['span']=this.registerInfo.span  //formItem的宽度和offset
 
         return {
           formItemInfo:{

@@ -34,8 +34,8 @@
   import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
   import {inf} from 'awesomeprint'
 
-  import selfUserIcon from './userIcon'
-  import selfCrop from './crop'
+  import selfUserIcon from '../basicComponent/userIcon'
+  import selfCrop from '../basicComponent/crop'
 
   export default {
     components:{selfUserIcon,selfCrop},

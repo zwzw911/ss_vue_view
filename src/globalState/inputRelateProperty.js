@@ -7,7 +7,7 @@ import {inputValueForCreate,inputValueForUpdate} from '../constant/inputValue/ge
 import {inputAttribute} from '../constant/inputValue/gen/inputAttribute'
 import {inputTempData} from '../constant/inputValue/gen/inputTempData'
 import {ruleForCreate,ruleForUpdate} from '../constant/rule/rule'
-
+import {extraAttribute} from '../constant/inputValue/manual/extraAttribute'
 // inputRule/Attribute/Value/Tempdata，不可改变，实际copy副本，然后使用
 let inputRelatePropertyInfo={
   state:{
@@ -17,6 +17,7 @@ let inputRelatePropertyInfo={
     inputTempData:inputTempData,
     ruleForCreate:ruleForCreate,
     ruleForUpdate:ruleForUpdate,
+    extraAttribute:extraAttribute,
   },
   getters:{},
   mutations:{

@@ -89,7 +89,7 @@
 <script>
   'use strict'
   // import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
-  import selfCaptcha from './cpatcha'
+  import selfCaptcha from '../basicComponent/cpatcha'
   import {objectDeepCopy} from  '../../function/misc'
   import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
 

@@ -76,8 +76,8 @@
 <script>
   'use strict'
   // import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
-  import * as misc from  '../../function/misc'
-  import * as helper from  './cropLib/helper'
+  import * as misc from '../../function/misc'
+  import * as helper from '../subComponents/cropLib/helper'
   import {getElementWH,getElementMargin} from '../helperLib/componentsHelperLib'
   // import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
   // import {regex} from '../../constant/regex/regex'
@@ -85,7 +85,7 @@
   import {inf,wrn,err} from 'awesomeprint'
 
 
-  import {error} from './cropLib/data'
+  import {error} from '../subComponents/cropLib/data'
 
   export default {
     props:['cropInfo'], //

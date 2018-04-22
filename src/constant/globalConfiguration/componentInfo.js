@@ -10,49 +10,116 @@ import {ruleForCreate,ruleForUpdate} from '../rule/rule'
 import {inputAttribute} from '../inputValue/gen/inputAttribute'
 import {inputTempData} from '../inputValue/gen/inputTempData'
 import {icon} from '../inputValue/manual/icon'
-import {unique} from '../inputValue/manual/uniqueCheck'
+import {unique} from '../inputValue/manual/not_used_uniqueCheck'
 import {extraAttribute} from '../inputValue/manual/extraAttribute'
 
+import {mergeInputAttribute,objectPartlyDeepCopy,genNeedInput} from '../../function/misc'
+
+import * as globalConfiguration from './globalConfiguration'
+
+import {urlConfiguration} from '../url/url'
+
+const source={
+  inputValueForCreate:inputValueForCreate,
+  inputAttribute:inputAttribute,
+  inputTempData:inputTempData,
+  ruleForCreate:ruleForCreate,
+  extraAttribute:extraAttribute,
+}
+
+let collName='user'
+let allowFields=['account','name','password']
+let registerInput=genNeedInput({source:source,collName:'user',allowFields:allowFields,additionalFields:['captcha']})
 let registerInfo={
-  initInputValue:inputValueForCreate.user,
-    inputAttribute:inputAttribute.user,
-    ruleForCreate:ruleForCreate.user,
-    ruleForUpdate:ruleForUpdate.user,
-    inputTempData:inputTempData.user,
-    unique:unique.user,
-
+  formItemInfo:{
+    //data
+    inputValue:registerInput['inputValue'],
+    inputTempData:registerInput['inputTempData'],
+    inputAttribute:registerInput['inputAttribute'],
+    rule:registerInput['rule'],
+    icon:registerInput['icon'],
+    iconColor:'#5cadff',
+    showStarForRequire:true,
+    // inputLabelSize:'inputLabelH3',
+    // inputSize:'inputH3',
     labelWidth:60, //0或者undefined，则不显示label；其他数值，显示label
-    span:extraAttribute.user,
+    captchaInfo:{
+      captchaImgWidth:80, //px。事先确定好长宽，以便刷新时，如果有refreshIcon存在，此icon位置不会变化
+      captchaImgHeight:33,
+      refreshIcon:'refresh',//空：无刷新icon；否则显示
+      captchaImgId:'phone',//防止多个子组件的img的id重复
+      captchaURL:urlConfiguration.standAlone.captcha,
+      getAfterMounted:false,
+    },
+  },
+  // initInputValue:registerMergeResult['inputValue'],
+  //   inputAttribute:registerMergeResult['inputAttribute'],
+  //   ruleForCreate:registerMergeResult['rule'],
+  //   // ruleForUpdate:ruleForUpdate.user,
+  //   inputTempData:registerMergeResult['inputTempData'],
+  //   unique:unique.user,
+  //
+  //
+  //   span:extraAttribute.user,
 }
 
+
+allowFields=['account','password']
+let loginMergeResult=genNeedInput({source:source,collName:'user',allowFields:allowFields,additionalFields:['captcha']})
 let loginInfo={
+  formItemInfo:{
+    inputValue:loginMergeResult['inputValue'],
+    inputAttribute:loginMergeResult['inputAttribute'],
+    rule:loginMergeResult['rule'],
+    inputTempData:loginMergeResult['inputTempData'],
+    icon:loginMergeResult['icon'],
+    iconColor:'#5cadff',
 
-  initInputValue:inputValueForCreate.user,
-    inputAttribute:inputAttribute.user,
-    ruleForCreate:ruleForCreate.user,
-    // ruleForUpdate:ruleForUpdate.user,
-    inputTempData:inputTempData.user,
-    icon:icon.user,
-    unique:unique.user,
+    showStarForRequire:true,
+    labelWidth:60, //0或者undefined，则不显示label；其他数值，显示label
 
-    labelWidth:80, //0或者undefined，则不显示label；其他数值，显示label
+    captchaInfo:{
+      captchaImgWidth:80, //px。事先确定好长宽，以便刷新时，如果有refreshIcon存在，此icon位置不会变化
+      captchaImgHeight:33,
+      refreshIcon:'refresh',//空：无刷新icon；否则显示
+      captchaImgId:'phone',//防止多个子组件的img的id重复
+      captchaURL:urlConfiguration.standAlone.captcha,
+      getAfterMounted:true,
+    },
+  },
 
-    span:extraAttribute.user,
 }
 
+allowFields=['password']
+let changePasswordInput=genNeedInput({source:source,collName:'user',allowFields:allowFields,additionalFields:undefined})
 let changePasswordInfo={
-  initInputValue:inputValueForCreate.user,
-    inputAttribute:inputAttribute.user,
-    ruleForCreate:ruleForCreate.user,
-    // ruleForUpdate:ruleForUpdate.user,
-    inputTempData:inputTempData.user,
-
+  formItemInfo:{
+    inputValue:changePasswordInput['inputValue'],
+    inputAttribute:changePasswordInput['inputAttribute'],
+    rule:changePasswordInput['rule'],
+    inputTempData:changePasswordInput['inputTempData'],
+    showStarForRequire:false,
+    // icon:icon.user,
+    // iconColor:'#5cadff',
     labelWidth:80, //0或者undefined，则不显示label；其他数值，显示label
-
-    span:extraAttribute.user,
+  },
 }
 
+allowFields=['name']
+let userInput=genNeedInput({source:source,collName:'user',allowFields:allowFields,additionalFields:undefined})
 let userInfo={
+  formItemInfo:{
+    inputValue:userInput['inputValue'],
+    inputAttribute:userInput['inputAttribute'],
+    rule:userInput['rule'],
+    inputTempData:userInput['inputTempData'],
+    // icon:userInput['icon'],
+    // iconColor:'#5cadff',
+    showStarForRequire:false,
+
+
+    labelWidth:80, //0或者undefined，则不显示label；其他数值，显示label
+  },
   cropInfo:{
     maxFileSize:10*1024*1024, //原始图片最大size
     L1OrigImgMaxWH:{
@@ -105,12 +172,81 @@ let headerInfo={
 let footerInfo={
   // year:this.$store.state.footerInfo.year
 }
+
+
+let mergeResult=mergeInputAttribute({sourceCollInputAttribute:inputAttribute.user,extraCollInputAttribute:extraAttribute.user,allowFields:['name']})
+let autoGenFormItemInfo={
+  inputValue:[], //直接传入，以便可以自己使用（get的时候，直接传入，put的时候，直接获得修改后的值）
+  fieldTempData:inputTempData.user.name,
+  fieldAttribute:mergeResult.name,//inputAttribute.user.name
+  fieldRule:ruleForCreate.user.name,
+
+  // labelWidth:80, //0或者undefined，则不显示label；其他数值，显示label
+
+  // icon:icon.user.name,
+  // iconColor:'#5cadff',
+
+  refName:'test', //组件含有form，需要使用单独的名字设置ref
+  inputWidth:100,//px，每个input的长度
+  maxNum:4, //最多几项
+
+  showStarForRequire:false,
+
+  wholeArrangeMode:'v',//2个部分：formItem(with label)/button排列方式  //用v，h的话，button无法和input水平对齐
+
+
+  // inputLabelSize:'inputLabelH3',
+  // inputSize:'inputH3',
+  // labelWidth:80,
+}
+
+/*
+* 子组件：formItem+autoGenFormItem
+* */
+// let inputAttributeForTags=mergeInputAttribute({sourceCollInputAttribute:inputAttribute.article,extraCollInputAttribute:extraAttribute.article,allowFields:['tags']})
+// inputValueForCreate.article.tags=[]
+
+
+let allowFieldForArticle=['name','htmlContent','tags']//
+let articleInput=genNeedInput({collName:'article',allowFields:allowFieldForArticle})
+// inf(' maxNum:articleInput[\'addItemButtonDisable\']', maxNum:articleInput['addItemButtonDisable'])
+let articleInfo={
+  ref:{
+    form:{
+      articleForm:'form',
+    },
+  },
+  formItemInfo:{
+    //data
+    inputValue:articleInput['inputValue'],
+    inputTempData:articleInput['inputTempData'],
+    inputAttribute:articleInput['inputAttribute'],
+    rule:articleInput['rule'],
+    // icon:icon,
+    // iconColor:'#5cadff',
+    showStarForRequire:true,
+    inputLabelSize:'inputLabelH3',
+    inputSize:'inputH3',
+
+    /*    autoGen config      */
+    inputArrayTempData:articleInput['inputArrayTempData'], //单个字段，所有生成input的attribute。由genNeedInput生成
+    inputArrayAttribute:articleInput['inputArrayAttribute'],//单个字段，所有生成input的attribute。由genNeedInput生成
+    addItemButtonDisable:articleInput['addItemButtonDisable'],
+    numRange:articleInput['numRange'],
+    inputWidth:100,//px，每个input的长度
+    wholeArrangeMode:'v',//2个部分：formItem(with label)/button排列方式  //用v，h的话，button无法和input水平对齐
+    inputArrangeMode:'h',// formItem的排列方式  //label-position=left==>h  label-position=left==>v
+  },
+
+
+}
 export {
   registerInfo,
   loginInfo,
   changePasswordInfo,
   userInfo,
-
+  autoGenFormItemInfo,
+  articleInfo,
   captchaInfo,
 
   headerInfo,
