@@ -148,7 +148,7 @@
           // this.showResultFlag=false
           if(true===this.rememberMe){
 
-            this.$cookies.set('account', this.formItemInfo.inputValue.account,'14d')
+            this.$cookies.set('account', this.formItemInfo.inputValue.account,'14d','/')
           }else{
             this.$cookies.remove('account')
           }
@@ -176,10 +176,12 @@
 
       this.loginInfo.formItemInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER]=['请输入手机号或邮箱']
       this.loginInfo.formItemInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=['请输入手机号或邮箱']
-
+      this.loginInfo.formItemInfo.inputAttribute.account[InputAttributeFieldName.UNIQUE]=false //登录时无需检测账号unique
 
       this.loginInfo.formItemInfo.rule.account[0].message='账号不能为空'
       this.loginInfo.formItemInfo.rule.account[1].message='账号必须是有效的手机号或邮箱'
+
+
       // this.loginInfo.formItemInfo.rule.account[1].pattern=this.loginInfo.formItemInfo.rule.account[1].pattern
       // this.loginInfo.formItemInfo.rule.password[1].pattern=this.loginInfo.formItemInfo.rule.password[1].pattern
 

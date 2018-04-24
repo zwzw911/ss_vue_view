@@ -70,7 +70,7 @@
       async getUserInfo_async(){
         let result=await sendRequestGetResult_async({urlOption:urlConfiguration.user.getUserInfo})
         if(result.rc>0){
-          alert(result)
+          alert(result.msg)
         }else{
           this.$refs[this.ref.userIcon.userIconForUserInfo].setImgSrc(result.msg['photoDataUrl'])
 

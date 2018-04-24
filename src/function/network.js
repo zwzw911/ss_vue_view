@@ -19,6 +19,7 @@ const myAxios = axios.create({
 
 async function sendRequestGetResult_async({urlOption,data}){
   let result
+  // inf('send data',data)
   switch (urlOption.method){
     case RequestMethod.PUT:
       result=await myAxios.put(urlOption.url,data)
@@ -27,10 +28,10 @@ async function sendRequestGetResult_async({urlOption,data}){
       result=await myAxios.post(urlOption.url,data)
           break;
     case RequestMethod.GET:
-      result=await myAxios.get(urlOption.url,data)
+      result=await myAxios.get(urlOption.url,data) //get/delete即使传入data，也不会发送出去
       break;
     case RequestMethod.DELETE:
-      result=await myAxios.delete(urlOption.url,data)
+      result=await myAxios.delete(urlOption.url,data) //get/delete即使传入data，也不会发送出去
       break;
     default:
       err('unknown request method')

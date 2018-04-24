@@ -14,6 +14,11 @@ import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 Vue.use(iView)
 
+/*    引入element-ui      */
+import { Tree } from 'element-ui'
+Vue.component(Tree.name, Tree);
+
+
 /*  引入vuex （需npm install --save vuex）    */
 // import {headerInfo,footerInfo} from './globalState/headerFooterInfo'
 // import {inputRelatePropertyInfo} from './globalState/inputRelateProperty'
@@ -30,7 +35,7 @@ let store=new Vuex.Store({
     headerInfo:globalState.headerInfo,
     footerInfo:globalState.footerInfo,
     inputRelatePropertyInfo:globalState.inputRelatePropertyInfo,
-    url:globalState.url,
+    // url:globalState.url,
     style:globalState.style,
   }
 })
@@ -46,5 +51,6 @@ new Vue({
   store,//引入vuex定义的state
   router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  render: h => h(App)
 })

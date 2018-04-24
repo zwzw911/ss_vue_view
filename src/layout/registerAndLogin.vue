@@ -3,20 +3,23 @@
     <!--<Layout>-->
     <!--type="flex" justify="center"-->
     <Row >
-      <Col span="10">
+      <Col span="6">
 
       <!--<router-view />-->
       <!--<selfLogin :login-info="loginInfo"></selfLogin>-->
       <!--<selfRegister  :register-info="registerInfo"></selfRegister>-->
       <!--<selfChangePassword :change-password-info="changePasswordInfo"></selfChangePassword>-->
       <!--<self-user-icon :user-icon-info="userIconInfo"></self-user-icon>-->
-      <!--<selfUserInfo :user-info="userInfo"></selfUserInfo>-->
+      <selfUserInfo :user-info="userInfo"></selfUserInfo>
       <!--<self-auto-gen-form-item :auto-gen-form-item-info="autoGenFormItemInfo" :editable="true"></self-auto-gen-form-item>-->
       <!--<self-article :article-info="articleInfo" :editable="editable" @validateAllItemResult="validateAllItemResult"></self-article>-->
+
+<!--<self-tree></self-tree>-->
+      <self-logout></self-logout>
       </Col>
     </Row>
 
-    <Button @click="switchEditable" :disabled="validateResult">siwtch</Button>
+    <!--<Button @click="switchEditable" :disabled="validateResult">siwtch</Button>-->
       <!--</div>-->
 
       <div class="footer">
@@ -49,6 +52,9 @@
 
   import selfArticle from '../components/subComponents/article.vue'
 
+  import selfTree from '../components/basicComponent/tree'
+  import selfLogout from '../components/basicComponent/logout'
+
   import selfSidebar from '../components/subLayoutComponents/sidebar.vue'
   import selfFooter from '../components/subLayoutComponents/footer.vue'
   import selfHeader from '../components/subLayoutComponents/header.vue'
@@ -60,7 +66,8 @@
 
   import * as componentInfo from '../constant/globalConfiguration/componentInfo'
   export default {
-      components:{sidebar,selfFooter,selfHeader,selfLogin,selfRegister,selfChangePassword,selfCrop,selfUserInfo,selfUserIcon,selfAutoGenFormItem,selfArticle},
+      components:{selfSidebar,selfFooter,selfHeader,selfLogin,selfRegister,selfChangePassword,selfCrop,
+        selfUserInfo,selfUserIcon,selfAutoGenFormItem,selfArticle,selfTree,selfLogout},
       computed:{
 
       },

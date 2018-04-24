@@ -10,6 +10,7 @@ const urlConfiguration={
   },
   user:{
     login:{url:'/user/login',method:RequestMethod.POST},
+    logout:{url:'/user/logout',method:RequestMethod.DELETE},
     register:{url:'/user',method:RequestMethod.POST},
     uploadUserPhoto:{url:'/user/uploadUserPhoto',method:RequestMethod.PUT},
     getUserInfo:{url:'/user',method:RequestMethod.GET},
