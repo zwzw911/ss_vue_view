@@ -6,16 +6,16 @@
       <Col span="6">
 
       <!--<router-view />-->
-      <!--<selfLogin :login-info="loginInfo"></selfLogin>-->
+      <selfLogin :login-info="loginInfo"></selfLogin>
       <!--<selfRegister  :register-info="registerInfo"></selfRegister>-->
       <!--<selfChangePassword :change-password-info="changePasswordInfo"></selfChangePassword>-->
       <!--<self-user-icon :user-icon-info="userIconInfo"></self-user-icon>-->
-      <selfUserInfo :user-info="userInfo"></selfUserInfo>
+      <!--<selfUserInfo :user-info="userInfo"></selfUserInfo>-->
       <!--<self-auto-gen-form-item :auto-gen-form-item-info="autoGenFormItemInfo" :editable="true"></self-auto-gen-form-item>-->
-      <!--<self-article :article-info="articleInfo" :editable="editable" @validateAllItemResult="validateAllItemResult"></self-article>-->
-
-<!--<self-tree></self-tree>-->
-      <self-logout></self-logout>
+      <!--<self-article :article-info="articleInfo" :editable="true" @validateAllItemResult="validateAllItemResult"></self-article>-->
+        <!--<Icon type="document-text"></Icon>-->
+<self-tree></self-tree>
+      <!--<self-logout></self-logout>-->
       </Col>
     </Row>
 
@@ -52,7 +52,7 @@
 
   import selfArticle from '../components/subComponents/article.vue'
 
-  import selfTree from '../components/basicComponent/tree'
+  import selfTree from '../components/basicComponent/articleTree'
   import selfLogout from '../components/basicComponent/logout'
 
   import selfSidebar from '../components/subLayoutComponents/sidebar.vue'

@@ -1,4 +1,4 @@
-/*    gene by D:\ss_vue_express\server_common\maintain\convert2Client\generateClientNumRange.js  
+/*    gene by D:\U\ss_vue_express\server_common\maintain\convert2Client\generateClientNumRange.js  
 * 当input为autoGen的时候，产生需要的min/maxNum 
 */
 
@@ -10,9 +10,8 @@ const numRange={
         tags:{"max":5},
     },
     public_group:{
-        membersId:{"max":200},
         adminsId:{"max":10},
-        waitApproveId:{"max":200},
+        membersId:{"max":200},
     },
     user_friend_group:{
         friendsInGroup:{"max":100},

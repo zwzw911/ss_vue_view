@@ -14,10 +14,11 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "async-validator": "^1.8.5",
     "awesomeprint": "^1.0.2",
     "axios": "^0.17.1",
     "element-ui": "^2.3.6",
-    "iview": "^2.13.0",
+    "iview": "^3.0.0",
     "lodash": "^4.17.5",
     "vue": "^2.5.2",
     "vue-cookies": "^1.5.4",

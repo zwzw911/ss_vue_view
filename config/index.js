@@ -20,7 +20,15 @@ module.exports = {
           target:"http://127.0.0.1:3000",
           changeOrigin:true,
           pathRewrite:{
-            "^/user":"/user"
+            "^/user":"/user",
+          }
+        },
+      '/folder':
+        {
+          target:"http://127.0.0.1:3000",
+          changeOrigin:true,
+          pathRewrite:{
+            "^/folder":"/folder",
           }
         },
     },

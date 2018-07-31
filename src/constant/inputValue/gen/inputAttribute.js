@@ -1,4 +1,4 @@
-/*    gene by D:\ss_vue_express\server_common\maintain\convert2Client\generateClientInputAttribute.js  
+/*    gene by D:\U\ss_vue_express\server_common\maintain\convert2Client\generateClientInputAttribute.js  
 * 字段的非rule属性，例如label，placeHolder，unique等 
 */
 
@@ -26,10 +26,10 @@ const inputAttribute={
     },
     resource_profile:{
         name:{"label":"资源配置名称","placeHolder":[""],"placeHolderBkup":[""],"unique":true},
-        range:{"label":"资源配置范围","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"默认资源配置","2":"高级资源配置"}},
-        type:{"label":"资源配置类型","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"默认资源配置","2":"高级资源配置"}},
-        maxFileNum:{"label":"最大文件数量","placeHolder":[""],"placeHolderBkup":[""]},
-        totalFileSizeInMb:{"label":"最大存储空间","placeHolder":[""],"placeHolderBkup":[""]},
+        range:{"label":"资源配置范围","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"基本资源配置","2":"高级资源配置"}},
+        type:{"label":"资源配置类型","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"基本资源配置","2":"高级资源配置"}},
+        maxNum:{"label":"最大文件数量","placeHolder":[""],"placeHolderBkup":[""]},
+        maxDiskSpaceInMb:{"label":"最大存储空间","placeHolder":[""],"placeHolderBkup":[""]},
     },
     store_path:{
         name:{"label":"存储路径名称","placeHolder":[""],"placeHolderBkup":[""],"unique":true},
@@ -46,38 +46,40 @@ const inputAttribute={
         htmlContent:{"label":"文档内容","placeHolder":["文档内容"],"placeHolderBkup":["文档内容"]},
         tags:{"label":"文档标签","placeHolder":["文档标签，2至20个字符"],"placeHolderBkup":["文档标签，2至20个字符"]},
         categoryId:{"label":"分类","placeHolder":[""],"placeHolderBkup":[""]},
+        allowComment:{"label":"允许评论","placeHolder":[""],"placeHolderBkup":[""]},
     },
     article_comment:{
         articleId:{"label":"文档","placeHolder":[""],"placeHolderBkup":[""]},
         content:{"label":"评论内容","placeHolder":[""],"placeHolderBkup":[""]},
     },
+    article_like_dislike:{
+        articleId:{"label":"文档","placeHolder":[""],"placeHolderBkup":[""]},
+    },
     folder:{
         name:{"label":"目录名称","placeHolder":[""],"placeHolderBkup":[""]},
         parentFolderId:{"label":"上级目录","placeHolder":[""],"placeHolderBkup":[""]},
     },
-    like_dislike:{
-        articleId:{"label":"文档","placeHolder":[""],"placeHolderBkup":[""]},
-        like:{"label":"喜欢","placeHolder":[""],"placeHolderBkup":[""]},
-    },
     tag:{
         name:{"label":"标签名称","placeHolder":[""],"placeHolderBkup":[""],"unique":true},
     },
-    add_friend:{
+    add_friend_request:{
         receiver:{"label":"添加的好友","placeHolder":[""],"placeHolderBkup":[""]},
-        status:{"label":"当前请求所处状态","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"尚未处理","2":"接受","3":"拒绝"}},
+        message:{"label":"附加信息","placeHolder":[""],"placeHolderBkup":[""]},
+    },
+    join_public_group_request:{
+        publicGroupId:{"label":"公共群","placeHolder":[""],"placeHolderBkup":[""]},
     },
     member_penalize:{
         publicGroupId:{"label":"群","placeHolder":[""],"placeHolderBkup":[""]},
         memberId:{"label":"成员","placeHolder":[""],"placeHolderBkup":[""]},
-        penalizeType:{"label":"处罚类型","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"0":"禁止文档","1":"禁止评论","2":"禁止创建系列","3":"禁止踩赞","4":"禁止举报","5":"禁止评论举报","7":"禁止好友分组","8":"禁止添加好友","9":"禁止创建群"}},
+        penalizeType:{"label":"处罚类型","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"禁止文档","2":"禁止评论","3":"禁止创建系列","4":"禁止踩赞","10":"禁止评论举报","20":"禁止好友分组","21":"禁止添加好友","30":"禁止创建群","31":"禁止加入群","40":"禁止上传头像","50":"禁止目录相关操作","60":"禁止举报","61":"禁止操作举报"}},
         duration:{"label":"处罚时间","placeHolder":[""],"placeHolderBkup":[""]},
     },
     public_group:{
         name:{"label":"群名称","placeHolder":[""],"placeHolderBkup":[""],"unique":true},
-        membersId:{"label":"群成员","placeHolder":[""],"placeHolderBkup":[""]},
-        adminsId:{"label":"群管理员","placeHolder":[""],"placeHolderBkup":[""]},
         joinInRule:{"label":"新成员加入规则","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"任意加入","2":"批准加入","3":"拒绝加入"}},
-        waitApproveId:{"label":"等待批准加入","placeHolder":[""],"placeHolderBkup":[""]},
+        adminsId:{"label":"群管理员","placeHolder":[""],"placeHolderBkup":[""]},
+        membersId:{"label":"群成员","placeHolder":[""],"placeHolderBkup":[""]},
     },
     public_group_event:{
         publicGroupId:{"label":"群","placeHolder":[""],"placeHolderBkup":[""]},
@@ -104,19 +106,22 @@ const inputAttribute={
         adminOwnerId:{"label":"处理人","placeHolder":[""],"placeHolderBkup":[""]},
         action:{"label":"操作","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"创建","2":"提交","3":"撤回","4":"分配","5":"接受","6":"驳回","7":"完成"}},
     },
+    impeach_image:{
+        impeachId:{"label":"举报对象","placeHolder":[""],"placeHolderBkup":[""]},
+    },
     impeach_comment:{
         impeachId:{"label":"举报","placeHolder":[""],"placeHolderBkup":[""]},
         content:{"label":"评论内容","placeHolder":[""],"placeHolderBkup":[""]},
     },
-    impeach_image:{
-        referenceId:{"label":"举报对象","placeHolder":[""],"placeHolderBkup":[""]},
-        referenceColl:{"label":"举报对象类型","placeHolder":[""],"placeHolderBkup":[""]},
+    impeach_comment_image:{
+        impeachCommentId:{"label":"举报处理","placeHolder":[""],"placeHolderBkup":[""]},
     },
     user:{
         name:{"label":"昵称","placeHolder":["昵称，由2-20个字符组成"],"placeHolderBkup":["昵称，由2-20个字符组成"],"unique":true},
         account:{"label":"账号","placeHolder":["请输入您的手机号","请输入您的电子邮件地址"],"placeHolderBkup":["请输入您的手机号","请输入您的电子邮件地址"],"unique":true},
         password:{"label":"密码","placeHolder":["密码，由6-20个字母、数字、特殊字符组成"],"placeHolderBkup":["密码，由6-20个字母、数字、特殊字符组成"]},
         photoDataUrl:{"label":"用户头像","placeHolder":[""],"placeHolderBkup":[""]},
+        addFriendRule:{"label":"朋友规则","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"任意加入","2":"批准加入","3":"拒绝加入"}},
     },
     user_resource_profile:{
         userId:{"label":"用户","placeHolder":[""],"placeHolderBkup":[""]},

@@ -169,7 +169,7 @@ formItemInfo:
   import {extraAttributeFieldName} from '../../constant/enum/keyEnum'
   import {sendRequestGetResult_async} from '../../function/network'
   import selfCaptcha from './cpatcha'
-  import {mergeAdditionalField} from '../helperLib/componentsHelperLib'
+  // import {mergeAdditionalField} from '../helperLib/componentsHelperLib'
   import {inf} from 'awesomeprint'
   import * as misc from '../../function/misc'
   export default {
@@ -310,7 +310,8 @@ formItemInfo:
         }
         //formItem放在2层template中，所以大概需要数组来引用
         this.$parent.validateField(fieldName, (validResult) => {
-          // inf('validSingleInputValue',validResult)
+          inf('fieldName',fieldName)
+          inf('validSingleInputValue',validResult)
           this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT] = validResult
           // inf('this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]',this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT])
         })

@@ -4,7 +4,7 @@
 'use strict'
 
 const icon={
-  user:{name:'person',account:'person',password:'locked'},
+  user:{name:'ios-person',account:'ios-person',password:'ios-lock'},
 }
 
 export {icon}

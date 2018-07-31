@@ -1,10 +1,15 @@
-/*    gene by D:\ss_vue_express\server_common\maintain\convert2Client\globalConfiguration.js  
+/*    gene by D:\U\ss_vue_express\server_common\maintain\convert2Client\globalConfiguration.js  
 * 一些设置信息，和服务器端的设置保持一致 
 */
 
 "use strict"
 
 
+const sessionOption={
+   cookieOption:{"path":"/","domain":"127.0.0.1","maxAge":900000,"secure":false,"httpOnly":false,"sameSite":"lax"},
+   expressSessionOption:{"secret":"suibian","resave":false,"rolling":false,"saveUninitialized":false},
+   sessionStoreOption:{"redis":{"ttl":900,"db":0}},
+}
 const defaultSetting={
    miscellaneous:{"captchaExpire":{"value":60,"type":"int","chineseName":"captcha最大保存时间","unit":"秒"}},
 }
@@ -36,7 +41,8 @@ const uploadFileDefine={
    impeach_comment:{"image":{"maxSizeInByte":2097152,"maxSizeInMB":2,"maxWidth":900,"maxHeight":700},"attachment":{"maxSizeInByte":10485760,"maxSizeInMB":10}},
 }
 const maxNumber={
-   article:{"tagNumberPerArticle":5,"imagesNumberPerArticle":5,"attachmentNumberPerArticle":5,"commentNumberPerArticle":500},
+   article:{"tagNumberPerArticle":5,"imagesNumberPerArticle":5,"imageSizeInMb":2,"attachmentNumberPerArticle":5,"attachmentSizeInMb":12,"commentNumberPerArticle":500},
+   folder:{"folderLevel":3},
    friend:{"maxFriendsNumberPerGroup":500,"maxMemberNumberPerPublicGroup":200,"maxAdministratorPerPublicGroup":10,"maxGroupUserCanJoinIn":20},
    impeach:{"maxImageNumber":10,"maxImageSizeInMb":2,"maxAttachmentNumber":10,"maxCommentNumber":200},
    impeachAttachment:{"maxImageNumber":10,"maxImageSizeInMb":2,"maxAttachmentNumber":10},
@@ -65,15 +71,16 @@ const mailAccount={
    qq:"1952206639@qq.com",
 }
 const userGroupFriend={
-   max:{"maxUserPerGroup":100,"maxUserFriendGroupNum":10,"maxUserPerDefaultGroup":200},
+   max:{"maxUserPerGroup":100,"maxUserPerDefaultGroup":200},
    defaultGroupName:{"enumFormat":{"MyFriend":"我的好友","BlackList":"黑名单"},"enumValue":["我的好友","黑名单"]},
 }
-const PublicGroup={
-   max:{"maxUserPerGroup":100,"maxPublicGroupNumber":10},
+const addFriendRequest={
+   max:{"maxDeclineTimes":10,"maxAcceptTimes":10},
 }
 
 
 export {
+    sessionOption,
     defaultSetting,
     searchSetting,
     paginationSetting,
@@ -88,5 +95,5 @@ export {
     mailOption,
     mailAccount,
     userGroupFriend,
-    PublicGroup,
+    addFriendRequest,
 }

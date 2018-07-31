@@ -16,7 +16,7 @@ import {extraAttribute} from '../inputValue/manual/extraAttribute'
 import {mergeInputAttribute,objectPartlyDeepCopy,genNeedInput} from '../../function/misc'
 
 import * as globalConfiguration from './globalConfiguration'
-
+import {inf} from 'awesomeprint'
 import {urlConfiguration} from '../url/url'
 
 const source={
@@ -89,7 +89,7 @@ let loginInfo={
   },
 
 }
-
+inf('loginMergeResult[\'rule\']',loginMergeResult['rule'])
 allowFields=['password']
 let changePasswordInput=genNeedInput({source:source,collName:'user',allowFields:allowFields,additionalFields:undefined})
 let changePasswordInfo={

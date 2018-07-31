@@ -1,4 +1,4 @@
-/*    gene by D:\ss_vue_express\server_common\maintain\convert2Client\generateClientNonValueEnum.js  
+/*    gene by D:\U\ss_vue_express\server_common\maintain\convert2Client\generateClientNonValueEnum.js  
 * 一些常用的enum值，写代码方便，例如ValidatePart 
 */
 

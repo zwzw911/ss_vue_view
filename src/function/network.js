@@ -28,10 +28,15 @@ async function sendRequestGetResult_async({urlOption,data}){
       result=await myAxios.post(urlOption.url,data)
           break;
     case RequestMethod.GET:
-      result=await myAxios.get(urlOption.url,data) //get/delete即使传入data，也不会发送出去
+      if(undefined!==data){
+        result=await myAxios.get(urlOption.url+'/'+data) //get/delete即使传入data，也不会发送出去
+      }else{
+        result=await myAxios.get(urlOption.url,data) //get/delete即使传入data，也不会发送出去
+      }
+
       break;
     case RequestMethod.DELETE:
-      result=await myAxios.delete(urlOption.url,data) //get/delete即使传入data，也不会发送出去
+      result=await myAxios.delete(urlOption.url,{data:data}) //get/delete即使传入data，也不会发送出去
       break;
     default:
       err('unknown request method')
@@ -42,7 +47,14 @@ async function sendRequestGetResult_async({urlOption,data}){
     return Promise.reject('cant get result')
   }
 }
-
+ function setUpdateValue(inputValueForUpdate){
+  for(let singleKey in inputValueForUpdate){
+    if(inputValueForUpdate[singleKey]==='notUsed'){
+      delete inputValueForUpdate[singleKey]
+    }
+  }
+ }
 export {
   sendRequestGetResult_async,
+  setUpdateValue,
 }

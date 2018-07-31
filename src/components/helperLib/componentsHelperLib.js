@@ -272,7 +272,7 @@ function calcCenterParams({element,elementWH,container,withCover}){
 export {
   getPosPara,
   myAxios,
-  mergeAdditionalField,
+  // mergeAdditionalField,
   pageViewWH,
   pageWH,
   pageContentWH,

@@ -1,4 +1,4 @@
-/*    gene by D:\ss_vue_express\server_common\maintain\convert2Client\generateClientInputTempData.js  
+/*    gene by D:\U\ss_vue_express\server_common\maintain\convert2Client\generateClientInputTempData.js  
 * 为每个field产生对象，存储一些临时数据，例如验证结果等 
 */
 
@@ -28,8 +28,8 @@ const inputTempData={
         name:{"validResult":null},
         range:{"validResult":null},
         type:{"validResult":null},
-        maxFileNum:{"validResult":null},
-        totalFileSizeInMb:{"validResult":null},
+        maxNum:{"validResult":null},
+        maxDiskSpaceInMb:{"validResult":null},
     },
     store_path:{
         name:{"validResult":null},
@@ -46,25 +46,28 @@ const inputTempData={
         htmlContent:{"validResult":null},
         tags:{"validResult":null},
         categoryId:{"validResult":null},
+        allowComment:{"validResult":null},
     },
     article_comment:{
         articleId:{"validResult":null},
         content:{"validResult":null},
     },
+    article_like_dislike:{
+        articleId:{"validResult":null},
+    },
     folder:{
         name:{"validResult":null},
         parentFolderId:{"validResult":null},
     },
-    like_dislike:{
-        articleId:{"validResult":null},
-        like:{"validResult":null},
-    },
     tag:{
         name:{"validResult":null},
     },
-    add_friend:{
+    add_friend_request:{
         receiver:{"validResult":null},
-        status:{"validResult":null},
+        message:{"validResult":null},
+    },
+    join_public_group_request:{
+        publicGroupId:{"validResult":null},
     },
     member_penalize:{
         publicGroupId:{"validResult":null},
@@ -74,10 +77,9 @@ const inputTempData={
     },
     public_group:{
         name:{"validResult":null},
-        membersId:{"validResult":null},
-        adminsId:{"validResult":null},
         joinInRule:{"validResult":null},
-        waitApproveId:{"validResult":null},
+        adminsId:{"validResult":null},
+        membersId:{"validResult":null},
     },
     public_group_event:{
         publicGroupId:{"validResult":null},
@@ -104,19 +106,22 @@ const inputTempData={
         adminOwnerId:{"validResult":null},
         action:{"validResult":null},
     },
+    impeach_image:{
+        impeachId:{"validResult":null},
+    },
     impeach_comment:{
         impeachId:{"validResult":null},
         content:{"validResult":null},
     },
-    impeach_image:{
-        referenceId:{"validResult":null},
-        referenceColl:{"validResult":null},
+    impeach_comment_image:{
+        impeachCommentId:{"validResult":null},
     },
     user:{
         name:{"validResult":null},
         account:{"validResult":null},
         password:{"validResult":null},
         photoDataUrl:{"validResult":null},
+        addFriendRule:{"validResult":null},
     },
     user_resource_profile:{
         userId:{"validResult":null},

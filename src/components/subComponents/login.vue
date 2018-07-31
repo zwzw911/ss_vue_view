@@ -42,6 +42,7 @@
 
       <span class="h4">already?<a>link</a></span>
     </div>
+    <!--<Button @click="test_delete" long size="large" shape="circle" type="primary"></Button>-->
   </div>
 </template>
 
@@ -114,6 +115,17 @@
       /********************************************/
       /*                    axios                 */
       /********************************************/
+/*      async test_delete(){
+        let data={
+          values: {
+            // [ValidatePart.METHOD]: Method.MATCH,
+            [ValidatePart.RECORD_ID]: '5b0a12c9f446ca0f9cdc9183',
+            // [ValidatePart.CAPTCHA]:captcha,
+          }
+        }
+        let result=await sendRequestGetResult_async({urlOption:{url:'/folder/',method:'delete'},data:data})
+
+      },*/
       async sendLoginInfo(){
         //captcha需要从inputValue中剥离，放入CAPTCHA
         let captcha=this.formItemInfo.inputValue[ValidatePart.CAPTCHA]
@@ -131,10 +143,10 @@
         // =await this.sendLoginInfo()
         if(result.rc>0){
           // captcha错误显示在input下
-          let setCaptchaResult=this.$refs[this.ref.formItem.formItemForLogin].checkIfCaptchaErrAndShow({data:result})
+          let setCaptchaResult=this.$refs[this.ref.formItem.formItemForLogin].checkIfCaptchaErrAndShow({data:result.msg})
           //否则，显示在最顶上
           if(false===setCaptchaResult){
-            let set99999Result=this.$refs[this.ref.formItem.formItemForLogin].checkIf99999ErrAndShow({data:result})
+            let set99999Result=this.$refs[this.ref.formItem.formItemForLogin].checkIf99999ErrAndShow({data:result.msg})
             if(false===set99999Result){
               this.globalResultMsg=result.msg
             }
@@ -181,7 +193,7 @@
       this.loginInfo.formItemInfo.rule.account[0].message='账号不能为空'
       this.loginInfo.formItemInfo.rule.account[1].message='账号必须是有效的手机号或邮箱'
 
-
+inf('this.loginInfo.formItemInfo.rule',this.loginInfo.formItemInfo.rule.captcha[1]['pattern'])
       // this.loginInfo.formItemInfo.rule.account[1].pattern=this.loginInfo.formItemInfo.rule.account[1].pattern
       // this.loginInfo.formItemInfo.rule.password[1].pattern=this.loginInfo.formItemInfo.rule.password[1].pattern
 
