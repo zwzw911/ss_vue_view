@@ -47,6 +47,7 @@ async function sendRequestGetResult_async({urlOption,data}){
     return Promise.reject('cant get result')
   }
 }
+
  function setUpdateValue(inputValueForUpdate){
   for(let singleKey in inputValueForUpdate){
     if(inputValueForUpdate[singleKey]==='notUsed'){
@@ -54,7 +55,16 @@ async function sendRequestGetResult_async({urlOption,data}){
     }
   }
  }
+
+ //网络操作返回的结果进行判别，如果有错误，显示
+function resultErrorShow(that,result){
+  that.$Modal.error({
+    title: '错误',
+    content: result.msg
+  });
+ }
 export {
   sendRequestGetResult_async,
   setUpdateValue,
+  resultErrorShow,
 }

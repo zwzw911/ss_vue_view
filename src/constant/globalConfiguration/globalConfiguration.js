@@ -42,7 +42,7 @@ const uploadFileDefine={
 }
 const maxNumber={
    article:{"tagNumberPerArticle":5,"imagesNumberPerArticle":5,"imageSizeInMb":2,"attachmentNumberPerArticle":5,"attachmentSizeInMb":12,"commentNumberPerArticle":500},
-   folder:{"folderLevel":3},
+   folder:{"folderLevel":4},
    friend:{"maxFriendsNumberPerGroup":500,"maxMemberNumberPerPublicGroup":200,"maxAdministratorPerPublicGroup":10,"maxGroupUserCanJoinIn":20},
    impeach:{"maxImageNumber":10,"maxImageSizeInMb":2,"maxAttachmentNumber":10,"maxCommentNumber":200},
    impeachAttachment:{"maxImageNumber":10,"maxImageSizeInMb":2,"maxAttachmentNumber":10},

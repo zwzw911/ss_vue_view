@@ -19,9 +19,6 @@
 bg-color-lightener-black {
   background-color: #333333;
 }
-bg-color-lightenest-black {
-  background-color: #4d4d4d;
-}
 /*        iview basic color     */
 .color-error {
   color: #ed3f14;
@@ -53,4 +50,7 @@ bg-color-lightenest-black {
 }
 color-lightener-black {
   color: #333333;
+}
+.border-color-grey {
+  border-color: #333333;
 }

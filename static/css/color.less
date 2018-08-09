@@ -64,7 +64,9 @@
   background-color: lighten(@color,30%);
 }
 
-
+.border-color(@color){
+  border-color: @color;
+}
 
 .bg-silver{
   background-color: silver;
@@ -83,9 +85,7 @@
 bg-color-lightener-black{
   .bg-lightener(@black)
 }
-bg-color-lightenest-black{
-  .bg-lightenest(@black)
-}
+
 
 
 
@@ -127,5 +127,9 @@ color-lightener-black{
   .lightener(@black)
 }
 
+
+.border-color-grey{
+  border-color: #333333;
+}
 
 

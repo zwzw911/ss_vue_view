@@ -5,7 +5,8 @@
 const path = require('path')
 // import {proxySetting} from '../src/constant/envConfiguration/envConfiguration'
 const proxySetting=require('../src/constant/envConfiguration/envConfiguration').proxySetting
-// const ap=require('awesomeprint')
+const generateProxyTable=require('../src/function/envConfig').generateProxyTable
+// import {generateProxyTable} from '../src/function/envConfig'
 // ap.inf('proxySetting',proxySetting)
 module.exports = {
   dev: {
@@ -13,25 +14,58 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-      // proxySetting
-      '/user':
-        {
-          target:"http://127.0.0.1:3000",
-          changeOrigin:true,
-          pathRewrite:{
-            "^/user":"/user",
-          }
-        },
-      '/folder':
-        {
-          target:"http://127.0.0.1:3000",
-          changeOrigin:true,
-          pathRewrite:{
-            "^/folder":"/folder",
-          }
-        },
-    },
+    proxyTable: generateProxyTable({baseUrl:['/user','/article','/article_comment','/article_like_dislike','/impeach','/impeach_action','/impeach_comment','/add_friend_request','/user_friend_group','/public_group','/join_public_group_request','/folder']}),
+    //   {
+    //   // proxySetting
+    //   '/user':
+    //     {
+    //       target:"http://127.0.0.1:3000",
+    //       changeOrigin:true,
+    //       pathRewrite:{
+    //         "^/user":"/user",
+    //       }
+    //     },
+    //   '/folder':
+    //     {
+    //       target:"http://127.0.0.1:3000",
+    //       changeOrigin:true,
+    //       pathRewrite:{
+    //         "^/folder":"/folder",
+    //       }
+    //     },
+    //   '/article':
+    //     {
+    //       target:"http://127.0.0.1:3000",
+    //       changeOrigin:true,
+    //       pathRewrite:{
+    //         "^/article":"/article",
+    //       }
+    //     },
+    //   '/article_comment':
+    //     {
+    //       target:"http://127.0.0.1:3000",
+    //       changeOrigin:true,
+    //       pathRewrite:{
+    //         "^/article_comment":"/article_comment",
+    //       }
+    //     },
+    //   '/article_like_dislike':
+    //     {
+    //       target:"http://127.0.0.1:3000",
+    //       changeOrigin:true,
+    //       pathRewrite:{
+    //         "^/article_like_dislike":"/article_like_dislike",
+    //       }
+    //     },
+    //   '/impeach':
+    //     {
+    //       target:"http://127.0.0.1:3000",
+    //       changeOrigin:true,
+    //       pathRewrite:{
+    //         "^/impeach":"/impeach",
+    //       }
+    //     },
+    // },
 
     // Various Dev Server settings
     host: '127.0.0.1', // can be overwritten by process.env.HOST

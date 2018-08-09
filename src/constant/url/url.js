@@ -24,9 +24,9 @@ const urlConfiguration={
     deleteFolder:{url:'/folder',method:RequestMethod.DELETE},
   },
   addFriend:{
-    create:{url:'/folder',method:RequestMethod.POST},
-    accept:{url:'/folder/accept',method:RequestMethod.PUT},
-    decline:{url:'/folder/decline',method:RequestMethod.PUT},
+    create:{url:'/add_friend_request',method:RequestMethod.POST},
+    accept:{url:'/add_friend_request/accept',method:RequestMethod.PUT},
+    decline:{url:'/add_friend_request/decline',method:RequestMethod.PUT},
   },
   article:{
     createArticle:{url:'/article',method:RequestMethod.POST},//no any params

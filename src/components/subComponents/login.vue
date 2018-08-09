@@ -193,7 +193,7 @@
       this.loginInfo.formItemInfo.rule.account[0].message='账号不能为空'
       this.loginInfo.formItemInfo.rule.account[1].message='账号必须是有效的手机号或邮箱'
 
-inf('this.loginInfo.formItemInfo.rule',this.loginInfo.formItemInfo.rule.captcha[1]['pattern'])
+// inf('this.loginInfo.formItemInfo.rule',this.loginInfo.formItemInfo.rule.captcha[1]['pattern'])
       // this.loginInfo.formItemInfo.rule.account[1].pattern=this.loginInfo.formItemInfo.rule.account[1].pattern
       // this.loginInfo.formItemInfo.rule.password[1].pattern=this.loginInfo.formItemInfo.rule.password[1].pattern
 

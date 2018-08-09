@@ -59,6 +59,11 @@ const extraAttribute={
     // tags:{},//单独使用
     categoryId:{}
   },
+
+  folder:{
+    name:{inputType:'text',},
+    parentFolderId:{inputType:'text',},
+  },
 }
 
 export {extraAttribute}

@@ -89,7 +89,7 @@ let loginInfo={
   },
 
 }
-inf('loginMergeResult[\'rule\']',loginMergeResult['rule'])
+// inf('loginMergeResult[\'rule\']',loginMergeResult['rule'])
 allowFields=['password']
 let changePasswordInput=genNeedInput({source:source,collName:'user',allowFields:allowFields,additionalFields:undefined})
 let changePasswordInfo={
@@ -207,13 +207,13 @@ let autoGenFormItemInfo={
 // inputValueForCreate.article.tags=[]
 
 
-let allowFieldForArticle=['name','htmlContent','tags']//
+let allowFieldForArticle=['name','tags','htmlContent']//
 let articleInput=genNeedInput({collName:'article',allowFields:allowFieldForArticle})
 // inf(' maxNum:articleInput[\'addItemButtonDisable\']', maxNum:articleInput['addItemButtonDisable'])
 let articleInfo={
   ref:{
     form:{
-      articleForm:'form',
+      articleForm:'articleForm',
     },
   },
   formItemInfo:{
@@ -228,7 +228,7 @@ let articleInfo={
     inputLabelSize:'inputLabelH3',
     inputSize:'inputH3',
 
-    /*    autoGen config      */
+    /*    autoGen(repeat field) config      */
     inputArrayTempData:articleInput['inputArrayTempData'], //单个字段，所有生成input的attribute。由genNeedInput生成
     inputArrayAttribute:articleInput['inputArrayAttribute'],//单个字段，所有生成input的attribute。由genNeedInput生成
     addItemButtonDisable:articleInput['addItemButtonDisable'],
@@ -240,6 +240,30 @@ let articleInfo={
 
 
 }
+
+//用在articleTree中，供用户输入文件夹名称
+allowFields=['name']
+let folderInput=genNeedInput({source:source,collName:'folder',allowFields:allowFields,additionalFields:undefined})
+let articleTreeFolderInfo={
+  ref:{
+    form:{
+      folderForm:'folderForm',
+    },
+  },
+  formItemInfo:{
+    inputValue:folderInput['inputValue'],
+    inputTempData:folderInput['inputTempData'],
+    inputAttribute:folderInput['inputAttribute'],
+    rule:folderInput['rule'],
+    // icon:icon,
+    // iconColor:'#5cadff',
+    showStarForRequire:true,
+    inputLabelSize:'inputLabelH5',
+    inputSize:'inputH7',
+  },
+
+}
+// inf('articleTreeFolderInfo',articleTreeFolderInfo)
 export {
   registerInfo,
   loginInfo,
@@ -251,4 +275,6 @@ export {
 
   headerInfo,
   footerInfo,
+
+  articleTreeFolderInfo,
 }

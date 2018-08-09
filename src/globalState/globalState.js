@@ -5,7 +5,7 @@
 
 import {headerInfo,footerInfo} from './headerFooterInfo'
 import {inputRelatePropertyInfo} from './inputRelateProperty'
-import {url} from './not_used_url'
+// import {url} from './not_used_url'
 import {style} from './style'
 
 export {
@@ -14,6 +14,6 @@ export {
 
   inputRelatePropertyInfo,
 
-  url,
+  // url,
   style,
 }

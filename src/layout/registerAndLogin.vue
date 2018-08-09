@@ -3,7 +3,7 @@
     <!--<Layout>-->
     <!--type="flex" justify="center"-->
     <Row >
-      <Col span="6">
+      <Col span="16">
 
       <!--<router-view />-->
       <selfLogin :login-info="loginInfo"></selfLogin>
@@ -12,9 +12,9 @@
       <!--<self-user-icon :user-icon-info="userIconInfo"></self-user-icon>-->
       <!--<selfUserInfo :user-info="userInfo"></selfUserInfo>-->
       <!--<self-auto-gen-form-item :auto-gen-form-item-info="autoGenFormItemInfo" :editable="true"></self-auto-gen-form-item>-->
-      <!--<self-article :article-info="articleInfo" :editable="true" @validateAllItemResult="validateAllItemResult"></self-article>-->
-        <!--<Icon type="document-text"></Icon>-->
-<self-tree></self-tree>
+      <self-article :article-info="articleInfo" :editable="true" @validateAllItemResult="validateAllItemResult"></self-article>
+        <!--<Icon type="md-add-circle" size="32"></Icon>-->
+<!--<self-tree></self-tree>-->
       <!--<self-logout></self-logout>-->
       </Col>
     </Row>

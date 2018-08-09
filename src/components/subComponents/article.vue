@@ -24,6 +24,13 @@
     <!--@validateAllItemResult="setFormItemResult" @onBlur="checkSubmitButtonStatus"-->
     <self-form-item  :editable="editable" :form-item-info="articleInfo.formItemInfo" :auto-gen-form-item-info="articleInfo.autoGenFormItemInfo" @validateAllItemResult="validateAllItemResult"></self-form-item>
     <!--<self-auto-gen-form-item :editable="editable" :auto-gen-form-item-info="articleInfo.autoGenFormItemInfo"></self-auto-gen-form-item>-->
+    <div class="flex-flow-row-wrap justify-content-center">
+      <Button type="primary" :disabled="!editable">保存</Button>
+      <Button type="default" :disabled="!editable" class="marginH5">取消</Button>
+      <Button type="success" :disabled="editable">编辑</Button>
+      <Button type="error" :disabled="!editable">删除</Button>
+    </div>
+
   </Form>
 </template>
 <script>
