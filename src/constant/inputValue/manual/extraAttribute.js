@@ -8,6 +8,7 @@
 * autoGen:boolean，input是否需要自增
 * autoSize：当inputType为textarea，才需要设置
 * uniqueCheckUrl:如果字段需要unique check，对应的urlConfiguration（url+method）
+* useRichTextEditor: 是否使用富文本编辑器，只对textarea起作用
 * */
 import {extraAttributeFieldName} from '../../../constant/enum/keyEnum'
 
@@ -54,6 +55,7 @@ const extraAttribute={
     folderId:{},
     htmlContent:{
       inputType:'textarea',
+      useRichTextEditor:true,
       autoSize:{minRows:10,maxRows:20}, //或者true
     },
     // tags:{},//单独使用

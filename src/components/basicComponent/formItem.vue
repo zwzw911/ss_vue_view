@@ -49,24 +49,51 @@ formItemInfo:
             </template>
             <template v-else>
 
-              <!---->
-              <Input
-                @on-focus="focusInputPlaceHolderDisappear({keyName:k});onFocus()"
-                @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValue({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});validateIfAllItemPass_async();onBlur();"
-                @on-change="validSingleInputValue({fieldName:k});validateIfAllItemPass_async();"
-                :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
-                v-model="formItemInfo.inputValue[k]" :placeholder="!editable ? '':formItemInfo.inputAttribute[k]['placeHolder'][0]"
-                :class="[editable ? '':'inputUnEditAble inputDisabled', 'title'===formItemInfo.inputAttribute[k]['inputSize'] ? 'inputTitle':'']"
-                    :readonly="!editable"
-              >
+              <!--如果是textarea，且是richEditor-->
+              <template v-if="'textarea'===formItemInfo.inputAttribute[k]['inputType'] && true===formItemInfo.inputAttribute[k]['useRichTextEditor']">
+                <template v-if="'wangEditor'===formItemInfo['richTextEditorConfiguration']['name']">
+                  <!--换行效果-->
+                  <div :ref="k" style="display: table;width:100%" :class="[''!==formItemInfo.inputTempData[k]['validResult'] && null!==formItemInfo.inputTempData[k]['validResult'] ? 'wangEditor-error-border':'']"></div>
+                  <!--复用formItem的validator-->
+                  <Input
+                    @on-focus="focusInputPlaceHolderDisappear({keyName:k});onFocus()"
+                    @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValue({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});validateIfAllItemPass();onBlur();"
+                    @on-change="validSingleInputValue({fieldName:k});validateIfAllItemPass();"
+                    :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
+                    v-model="formItemInfo.inputValue[k]" :placeholder="!editable ? '':formItemInfo.inputAttribute[k]['placeHolder'][0]"
+                    :class="[editable ? '':'inputUnEditAble inputDisabled', 'title'===formItemInfo.inputAttribute[k]['inputSize'] ? 'inputTitle':'']"
+                    :readonly="!editable" style="display: none;"
+                  >
 
-              <!-- :disabled="!editable"-->
-              <!--class="inputUnEditAble"-->
-              <!--:disabled="editable"-->
-              <span slot="prepend"  style="border-left: 0px" v-if="undefined!==formItemInfo.icon && undefined!==formItemInfo.icon[k] && null!==formItemInfo.icon[k] && ''!==formItemInfo.icon[k]">
+                  <!-- :disabled="!editable"-->
+                  <!--class="inputUnEditAble"-->
+                  <!--:disabled="editable"-->
+                  <span slot="prepend"  style="border-left: 0px" v-if="undefined!==formItemInfo.icon && undefined!==formItemInfo.icon[k] && null!==formItemInfo.icon[k] && ''!==formItemInfo.icon[k]">
                         <Icon :type="formItemInfo.icon[k]" size="20" :color="formItemInfo.iconColor"></Icon>
                       </span>
-              </Input>
+                  </Input>
+                </template>
+              </template>
+              <template v-else>
+                <Input
+                  @on-focus="focusInputPlaceHolderDisappear({keyName:k});onFocus()"
+                  @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValue({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});validateIfAllItemPass();onBlur();"
+                  @on-change="validSingleInputValue({fieldName:k});validateIfAllItemPass();"
+                  :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
+                  v-model="formItemInfo.inputValue[k]" :placeholder="!editable ? '':formItemInfo.inputAttribute[k]['placeHolder'][0]"
+                  :class="[editable ? '':'inputUnEditAble inputDisabled', 'title'===formItemInfo.inputAttribute[k]['inputSize'] ? 'inputTitle':'']"
+                  :readonly="!editable"
+                >
+
+                <!-- :disabled="!editable"-->
+                <!--class="inputUnEditAble"-->
+                <!--:disabled="editable"-->
+                <span slot="prepend"  style="border-left: 0px" v-if="undefined!==formItemInfo.icon && undefined!==formItemInfo.icon[k] && null!==formItemInfo.icon[k] && ''!==formItemInfo.icon[k]">
+                        <Icon :type="formItemInfo.icon[k]" size="20" :color="formItemInfo.iconColor"></Icon>
+                      </span>
+                </Input>
+              </template>
+
               <!--<Input v-model="userInputValue.name.value" placeholder=""></Input>-->
 
             </template>
@@ -106,8 +133,8 @@ formItemInfo:
 
                   <Input
                     @on-focus="focusInputPlaceHolderDisappear({keyName:k,idx:idx});dismissError({keyName:k,idx:idx});onFocus()"
-                    @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass_async();onBlur();"
-                    @on-change="validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass_async();"
+                    @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass();onBlur();"
+                    @on-change="validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass();"
                     :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                     v-model="formItemInfo.inputValue[k][idx]" :placeholder="formItemInfo.inputArrayAttribute[k][idx]['placeHolder'][0]"
                     :style="{width:formItemInfo.inputWidth+'px'}"
@@ -121,7 +148,7 @@ formItemInfo:
                     </span>
                     <span slot="append" style="" :style="{visibility: editable ? 'visible':'hidden'}" class="cursorPointer"
                           v-if="editable===true"
-                          @click="removeItem({keyName:k,idx:idx});validateIfAllItemPass_async">
+                          @click="removeItem({keyName:k,idx:idx});validateIfAllItemPass">
                       <Icon type="android-remove-circle" size="18"  color="#aaaaaa" title="移除"></Icon>
                     </span>
                   </Input>
@@ -130,7 +157,7 @@ formItemInfo:
             </div>
             <div>
               <Button type="primary" size="small" :style="formItemInfo.addItemButtonDisable[k] ? buttonDisableStyle:''" :disabled="formItemInfo.addItemButtonDisable[k]" :class="{hidden:!editable}"
-                      @click="addItem({keyName:k});validateIfAllItemPass_async()">添加</Button>
+                      @click="addItem({keyName:k});validateIfAllItemPass()">添加</Button>
             </div>
           </div>
 
@@ -147,8 +174,8 @@ formItemInfo:
         <!---->
         <Input
           @on-focus="focusInputPlaceHolderDisappear({keyName:'captcha'});onFocus()"
-          @on-blur="blurInputPlaceHolderRestore({keyName:'captcha'});validSingleInputValue({fieldName:'captcha'});validateIfAllItemPass_async();onBlur();"
-          @on-change="validSingleInputValue({fieldName:'captcha'});validateIfAllItemPass_async();"
+          @on-blur="blurInputPlaceHolderRestore({keyName:'captcha'});validSingleInputValue({fieldName:'captcha'});validateIfAllItemPass();onBlur();"
+          @on-change="validSingleInputValue({fieldName:'captcha'});validateIfAllItemPass();"
           :type="formItemInfo.inputAttribute['captcha']['inputType']" v-model="formItemInfo.inputValue['captcha']" :placeholder="formItemInfo.inputAttribute['captcha']['placeHolder'][0]"
         >
         </Input>
@@ -165,13 +192,13 @@ formItemInfo:
   </div>
 </template>
 <script>
-  import {InputAttributeFieldName,InputTempDataFieldName,ValidatePart} from '../../constant/enum/nonValueEnum'
+  import {InputAttributeFieldName,InputTempDataFieldName,ValidatePart,RichTextEditor} from '../../constant/enum/nonValueEnum'
   import {extraAttributeFieldName} from '../../constant/enum/keyEnum'
   import {sendRequestGetResult_async} from '../../function/network'
   import selfCaptcha from './cpatcha'
-  // import {mergeAdditionalField} from '../helperLib/componentsHelperLib'
   import {inf} from 'awesomeprint'
   import * as misc from '../../function/misc'
+  import E from 'wangeditor'
   export default {
     components:{selfCaptcha},
     props: {'formItemInfo':{type:Object},editable:{type:Boolean,default:true}},
@@ -184,10 +211,42 @@ formItemInfo:
         // }
       },
     },
-    mounted(){
-      // this.$refs[this.formItemInfo.captchaInfo.captchaImgId].getCaptchaImg_async()
+    mounted() {
+
+      for(let singleKey in this.formItemInfo.inputAttribute){
+        if('textarea'===this.formItemInfo.inputAttribute[singleKey]['inputType'] && true===this.formItemInfo.inputAttribute[singleKey]['useRichTextEditor']){
+          if(RichTextEditor.WANG_EDITOR===this.formItemInfo.richTextEditorConfiguration.name){
+            let editor = new E(this.$refs[singleKey])
+            editor.customConfig.onchange = (html) => {
+              // console.log('html',html)
+              this.validateContent(singleKey,html)
+            }
+            editor.customConfig.onblur = (html) => {
+              // console.log('html',html)
+              this.validateContent(singleKey,html)
+            }
+            editor.create()
+          }
+        }
+      }
+
     },
     methods: {
+      /**   wangEditor  **/
+      //keyName:字段名称
+      //content:字段内容
+      validateContent(keyName,content){
+        this.formItemInfo.inputValue[keyName] = content
+        this.$parent.validateField(keyName, (validResult) => {
+          // inf('fieldName',fieldName)
+          // inf('validSingleInputValue',validResult)
+          this.formItemInfo.inputTempData[keyName][InputTempDataFieldName.VALID_RESULT] = validResult
+          this.validateIfAllItemPass()
+          // inf('this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]',this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT])
+        })
+      },
+
+
       setTriggerOfInput(curVal){
 
         for(let singleFieldName in this.formItemInfo.rule){
@@ -318,7 +377,7 @@ formItemInfo:
       },
       //通过检测inputTempData中所有字段的valid_result，判断是否所有item validate pass
       //产生事件validateAllItemResult，返回boolean
-      async validateIfAllItemPass_async() {
+      validateIfAllItemPass() {
         //非编辑状态，不执行validate
         if(this.editable===false){
           return
@@ -407,7 +466,7 @@ formItemInfo:
 
           }
           //因为是异步函数，需要在Promise返回后，手工调用validateIfAllItemPass_async进行检查
-          this.$options.methods.validateIfAllItemPass_async.bind(this)()
+          this.$options.methods.validateIfAllItemPass.bind(this)()
           // inf('err done')
           // this.$options.methods.onBlur.bind(this)()
           //如果需要对检查结果做特殊处理(例如，不需要显示错误结果)，此处为钩子

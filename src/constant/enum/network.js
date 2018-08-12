@@ -10,10 +10,7 @@ const RequestMethod={
   DELETE:'delete',
 }
 
-const Part={
-
-}
 export {
   RequestMethod,
-  Part,
+
 }

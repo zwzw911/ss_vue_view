@@ -73,3 +73,7 @@
   background-color: transparent !important;
   cursor: default !important;
 }
+/**   wangEditor  **/
+.wangEditor-error-border {
+  border: 1px solid #ed4014;
+}

@@ -14,6 +14,7 @@ import {unique} from '../inputValue/manual/not_used_uniqueCheck'
 import {extraAttribute} from '../inputValue/manual/extraAttribute'
 
 import {mergeInputAttribute,objectPartlyDeepCopy,genNeedInput} from '../../function/misc'
+ import {RichTextEditor} from '../../constant/enum/nonValueEnum'
 
 import * as globalConfiguration from './globalConfiguration'
 import {inf} from 'awesomeprint'
@@ -227,7 +228,10 @@ let articleInfo={
     showStarForRequire:true,
     inputLabelSize:'inputLabelH3',
     inputSize:'inputH3',
-
+    /**   richTextEditor configuration    **/
+    richTextEditorConfiguration:{
+        name:RichTextEditor.WANG_EDITOR,
+    },
     /*    autoGen(repeat field) config      */
     inputArrayTempData:articleInput['inputArrayTempData'], //单个字段，所有生成input的attribute。由genNeedInput生成
     inputArrayAttribute:articleInput['inputArrayAttribute'],//单个字段，所有生成input的attribute。由genNeedInput生成

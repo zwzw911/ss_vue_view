@@ -12,8 +12,12 @@ const InputTempDataFieldName=
 const ValidatePart=
 {"SEARCH_PARAMS":"searchParams","RECORD_INFO":"recordInfo","RECORD_ID":"recordId","CURRENT_PAGE":"currentPage","FILTER_FIELD_VALUE":"filterFieldValue","RECORD_ID_ARRAY":"recIdArr","EDIT_SUB_FIELD":"editSubField","EVENT":"event","SINGLE_FIELD":"singleField","MANIPULATE_ARRAY":"manipulateArray","METHOD":"method","CAPTCHA":"captcha","SMS":"sms"}
 
+const RichTextEditor={
+  WANG_EDITOR:'wangEditor',
+}
 export {
     InputAttributeFieldName,
     InputTempDataFieldName,
     ValidatePart,
+    RichTextEditor,
 }

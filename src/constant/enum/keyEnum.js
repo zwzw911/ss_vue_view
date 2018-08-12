@@ -9,6 +9,7 @@ const extraAttributeFieldName={
   AUTO_GEN:'autoGen',
   AUTO_SIZE:'autoSize',
   UNIQUE_CHECK_URL:'uniqueCheckUrl',
+  USE_RICH_TEXT_EDITOR:'useRichTextEditor',// textarea是否使用富文本编辑器
 }
 
 export {
