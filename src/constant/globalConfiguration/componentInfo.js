@@ -14,7 +14,7 @@ import {unique} from '../inputValue/manual/not_used_uniqueCheck'
 import {extraAttribute} from '../inputValue/manual/extraAttribute'
 
 import {mergeInputAttribute,objectPartlyDeepCopy,genNeedInput} from '../../function/misc'
- import {RichTextEditor} from '../../constant/enum/nonValueEnum'
+ import {RichTextEditor} from '../../constant/enum/keyEnum'
 
 import * as globalConfiguration from './globalConfiguration'
 import {inf} from 'awesomeprint'
@@ -161,7 +161,7 @@ let captchaInfo={
   captchaImgHeight:33,
   refreshIcon:'refresh',//空：无刷新icon；否则显示
   captchaImgId:'phone',//防止多个子组件的img的id重复
-  captchaURL:'/user/captcha',
+  // captchaURL:'/user/captcha',
   getAfterMounted:false,
 }
 
@@ -171,7 +171,7 @@ let headerInfo={
 }
 
 let footerInfo={
-  // year:this.$store.state.footerInfo.year
+  year:'2018',
 }
 
 

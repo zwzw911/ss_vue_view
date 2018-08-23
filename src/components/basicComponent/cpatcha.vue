@@ -51,7 +51,8 @@ example
 <script>
     // import axios from 'axios'
     import {getPosPara} from '../helperLib/componentsHelperLib'
-    import {sendRequestGetResult_async} from '../../function/network'
+    import {sendRequestGetResult_async,resultErrorShow} from '../../function/network'
+    import {urlConfiguration} from '../../constant/url/url'
     import {inf} from 'awesomeprint'
     export default {
       props: ['captchaInfo'],
@@ -76,32 +77,62 @@ example
             this.$emit('genCaptchaSuccess')
           }
         },
-        async getCaptchaImg_async(){
-          // inf('captcha call getCaptchaImg_async')
-          let result=await sendRequestGetResult_async({urlOption:this.captchaInfo.captchaURL})
+        getCaptchaImg_async(){
+          let that=this
+          sendRequestGetResult_async({urlOption:urlConfiguration.standAlone.captcha}).then(function (response) {
+            that.dealCorrectCaptchaResult(response)
+          },function (err) {
+            console.log(err.data)
+            // inf(',sg',msg)
+            //转换错误信息
+            if(err.status && err.status===504){
+              err.data='无法连接服务器，请稍后重试'
+            }
+            return resultErrorShow(that,err.data)
+
+          })
+          // let result=await sendRequestGetResult_async({urlOption:urlConfiguration.standAlone.captcha})
+          // // inf('captcha call getCaptchaImg_async',result)
+          // this.captchaImgLoadedFlag=false
+          // if(result.rc===0){
+          //   this.captchaImgHideFlag=false
+          //   this.captchaImgDataURL=result.msg
+          //   this.captchaImgErrorMsg=''
+          // }else{
+          //   // error/controller/helperError
+          //   // 前一次POST未设session，需要重发来获得captcha
+          //   if(result.rc===60052){
+          //     this.getCaptchaImg_async()
+          //   }
+          //   else{
+          //     //只有出错才会见错误信息传递给父组件
+          //     this.captchaImgErrorMsg=result.msg
+          //     this.$emit('genCaptchaFail',result.msg)
+          //     // this.$emit('getCaptchaImg_asyncFail',result)
+          //   }
+          //
+          // }
+        },
+        async dealCorrectCaptchaResult(result){
           this.captchaImgLoadedFlag=false
           if(result.rc===0){
             this.captchaImgHideFlag=false
             this.captchaImgDataURL=result.msg
             this.captchaImgErrorMsg=''
           }else{
-            // error/controller/helperError
             // 前一次POST未设session，需要重发来获得captcha
-            if(result.rc===60052){
-              this.getCaptchaImg_async()
+            if(result.rc===60050){
+              // inf('resend')
+              await this.getCaptchaImg_async()
             }
             else{
               //只有出错才会见错误信息传递给父组件
               this.captchaImgErrorMsg=result.msg
-              this.$emit('genCaptchaFail',result.msg)
-              // this.$emit('getCaptchaImg_asyncFail',result)
+              // that.$emit('genCaptchaFail',result.msg)
             }
-
           }
-
         },
       },
-
       computed:{
         dom(){
           return {

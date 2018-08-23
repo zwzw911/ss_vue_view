@@ -7,9 +7,13 @@
 let headerInfo={
   state:{
     userName:'asdf',
+    articleId:null,
   },
   getters:{},
   mutations:{
+/*    setArticleId(state,articleId){
+      state.articleId=articleId
+    },*/
   },
   actions:{}
 }

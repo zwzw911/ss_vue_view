@@ -15,9 +15,9 @@ import 'iview/dist/styles/iview.css'
 Vue.use(iView)
 
 /*    引入element-ui      */
-import { Tree,Button } from 'element-ui'
+import { Tree } from 'element-ui'
 Vue.component(Tree.name, Tree);
-Vue.component(Button.name, Button);
+// Vue.component(Button.name, Button);
 
 /*  引入vuex （需npm install --save vuex）    */
 // import {headerInfo,footerInfo} from './globalState/headerFooterInfo'

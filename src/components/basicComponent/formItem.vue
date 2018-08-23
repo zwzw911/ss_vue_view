@@ -192,13 +192,15 @@ formItemInfo:
   </div>
 </template>
 <script>
-  import {InputAttributeFieldName,InputTempDataFieldName,ValidatePart,RichTextEditor} from '../../constant/enum/nonValueEnum'
-  import {extraAttributeFieldName} from '../../constant/enum/keyEnum'
+  import {InputAttributeFieldName,InputTempDataFieldName,ValidatePart} from '../../constant/enum/nonValueEnum'
+  import {extraAttributeFieldName,RichTextEditor} from '../../constant/enum/keyEnum'
   import {sendRequestGetResult_async} from '../../function/network'
   import selfCaptcha from './cpatcha'
   import {inf} from 'awesomeprint'
   import * as misc from '../../function/misc'
   import E from 'wangeditor'
+  import {wangEditorConfiguration} from "../../constant/globalConfiguration/3rd";
+
   export default {
     components:{selfCaptcha},
     props: {'formItemInfo':{type:Object},editable:{type:Boolean,default:true}},
@@ -212,11 +214,16 @@ formItemInfo:
       },
     },
     mounted() {
-
+      /**   wangEditor  **/
       for(let singleKey in this.formItemInfo.inputAttribute){
         if('textarea'===this.formItemInfo.inputAttribute[singleKey]['inputType'] && true===this.formItemInfo.inputAttribute[singleKey]['useRichTextEditor']){
           if(RichTextEditor.WANG_EDITOR===this.formItemInfo.richTextEditorConfiguration.name){
             let editor = new E(this.$refs[singleKey])
+            // inf('before assign editor.customConfig',editor.customConfig)
+            // inf('wangEditorConfiguration',wangEditorConfiguration)
+            Object.assign(editor.customConfig, wangEditorConfiguration)
+            // inf('after assign editor.customConfig',editor.customConfig)
+            // editor.customConfig.zIndex =
             editor.customConfig.onchange = (html) => {
               // console.log('html',html)
               this.validateContent(singleKey,html)
@@ -291,11 +298,12 @@ formItemInfo:
         }
       },
       onFocus(){
+        // this.formItemInfo.inputTempData['captcha']['validResult']=''
         this.$emit('onFocus')
       },
       onBlur(){
-        let that=this
-        that.$emit('onBlur')
+        // let that=this
+        this.$emit('onBlur')
       },
       //模拟safiri，点击input时，placeHolder内容消失
       focusInputPlaceHolderDisappear({keyName,idx}) {

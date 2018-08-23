@@ -12,9 +12,9 @@
       <!--<self-user-icon :user-icon-info="userIconInfo"></self-user-icon>-->
       <!--<selfUserInfo :user-info="userInfo"></selfUserInfo>-->
       <!--<self-auto-gen-form-item :auto-gen-form-item-info="autoGenFormItemInfo" :editable="true"></self-auto-gen-form-item>-->
-      <self-article :article-info="articleInfo" :editable="true" @validateAllItemResult="validateAllItemResult"></self-article>
+      <!--<self-article-for-update :article-info="articleInfo" :editable="true" @validateAllItemResult="validateAllItemResult"></self-article-for-update>-->
         <!--<Icon type="md-add-circle" size="32"></Icon>-->
-<!--<self-tree></self-tree>-->
+<self-tree></self-tree>
       <!--<self-logout></self-logout>-->
       </Col>
     </Row>
@@ -50,7 +50,7 @@
   import selfUserIcon from '../components/basicComponent/userIcon.vue'
   import selfAutoGenFormItem from '../components/basicComponent/autoGenFormItem.vue'
 
-  import selfArticle from '../components/subComponents/article.vue'
+  import selfArticleForUpdate from '../components/subComponents/articleForUpdate.vue'
 
   import selfTree from '../components/basicComponent/articleTree'
   import selfLogout from '../components/basicComponent/logout'
@@ -67,7 +67,7 @@
   import * as componentInfo from '../constant/globalConfiguration/componentInfo'
   export default {
       components:{selfSidebar,selfFooter,selfHeader,selfLogin,selfRegister,selfChangePassword,selfCrop,
-        selfUserInfo,selfUserIcon,selfAutoGenFormItem,selfArticle,selfTree,selfLogout},
+        selfUserInfo,selfUserIcon,selfAutoGenFormItem,selfArticleForUpdate,selfTree,selfLogout},
       computed:{
 
       },

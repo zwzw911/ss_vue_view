@@ -12,6 +12,10 @@ const extraAttributeFieldName={
   USE_RICH_TEXT_EDITOR:'useRichTextEditor',// textarea是否使用富文本编辑器
 }
 
+const RichTextEditor={
+  'WANG_EDITOR':'wangEditor',
+}
 export {
   extraAttributeFieldName,
+  RichTextEditor,
 }

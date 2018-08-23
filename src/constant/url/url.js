@@ -29,6 +29,8 @@ const urlConfiguration={
     decline:{url:'/add_friend_request/decline',method:RequestMethod.PUT},
   },
   article:{
+    getArticle:{url:'/article',method:RequestMethod.GET},
+    getUpdatedArticle:{url:'/article/getUpdateArticle',method:RequestMethod.GET},
     createArticle:{url:'/article',method:RequestMethod.POST},//no any params
     updateArticle:{url:'/article',method:RequestMethod.PUT},//recordId+recordInfo
     // deleteArticle:{url:'/article',method:RequestMethod.DELETE},//recordId。 not support yet

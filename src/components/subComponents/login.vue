@@ -22,7 +22,7 @@
             :label-width="formItemInfo.labelWidth"
             @submit.native.prevent
       >
-        <self-form-item :ref="ref.formItem.formItemForLogin" :editable="editable" :form-item-info="formItemInfo" @validateAllItemResult="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
+        <self-form-item :ref="ref.formItem.formItemForLogin" :editable="editable" :form-item-info="formItemInfo" @validateAllItemResult="setFormItemResult" @onBlur="checkSubmitButtonStatus" @onFocus="resetGlobalMsg"></self-form-item>
 
 
         <!--term of service-->
@@ -95,7 +95,6 @@
 
       //每个input blur或者check box click，都要检查素有input valida的状态以及check box的状态，以便决定是否enable 注册按钮
       checkSubmitButtonStatus() {
-        // inf('checkSubmitButtonStatus in')
 
         if(false===this.validateFormItemResult){
           // inf('forminte  box in')
@@ -107,7 +106,10 @@
         this.submitButtonDisable = false
       },
 
-
+      resetGlobalMsg(){
+        // inf('checkSubmitButtonStatus in')
+        this.globalResultMsg=''
+      },
 
 /*      genCaptchaSuccess(){
 

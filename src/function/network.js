@@ -7,6 +7,10 @@ import axios from 'axios'
 import {inf,wrn,err} from 'awesomeprint'
 import {RequestMethod} from '../constant/enum/network'
 
+axios.defaults.retry = 2
+axios.defaults.retryDelay = 1000
+// inf('asiox defaults',axios.defaults)
+
 const myAxios = axios.create({
   // baseURL: process.env.BASE_API, // node环境的不同，对应不同的baseURL
   timeout: 5000, // 请求的超时时间
@@ -16,7 +20,37 @@ const myAxios = axios.create({
   // },
   withCredentials: true // 允许携带cookie
 })
+myAxios.interceptors.response.use(undefined,function axiosRetryInterceptor(err) {
+  // inf('asiox error',err)
+  let config = err.config;
+  // If config does not exist or the retry option is not set, reject
+  if (config && config.retry) {
+    // Set the variable for keeping track of the retry count
+    config.__retryCount = config.__retryCount || 0;
 
+    // Check if we've maxed out the total number of retries
+    if(config.__retryCount >= config.retry) {
+      // Reject with the error
+      inf('final err',err.response)
+      return Promise.reject(err.response);
+    }
+
+    // Increase the retry count
+    config.__retryCount += 1;
+    inf('config.__retryCount',config.__retryCount)
+    // Create new promise to handle exponential backoff
+    let backoff = new Promise(function(resolve) {
+      setTimeout(function() {
+        resolve();
+      }, config.retryDelay || 1);
+    });
+    // inf('recall')
+    // Return the promise in which recalls axios to retry the request
+    return backoff.then(function() {
+      return myAxios(config);
+    });
+  }
+});
 async function sendRequestGetResult_async({urlOption,data}){
   let result
   // inf('send data',data)
@@ -41,6 +75,7 @@ async function sendRequestGetResult_async({urlOption,data}){
     default:
       err('unknown request method')
   }
+  // inf('myaxios result',result)
   if(undefined!==result){
     return Promise.resolve(result.data)
   }else{
@@ -57,10 +92,11 @@ async function sendRequestGetResult_async({urlOption,data}){
  }
 
  //网络操作返回的结果进行判别，如果有错误，显示
-function resultErrorShow(that,result){
+function resultErrorShow(that,msg){
+
   that.$Modal.error({
     title: '错误',
-    content: result.msg
+    content: msg
   });
  }
 export {

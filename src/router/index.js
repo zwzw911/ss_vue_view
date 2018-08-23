@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+/**   import page   **/
 import mainPage from '@/layout/mainPage'
 import registerAndLogin from '@/layout/registerAndLogin'
+import updateArticle from '@/layout/updateArticle'
 
 import register from '../components/subComponents/register'
 import login from '../components/subComponents/login'
@@ -23,7 +25,11 @@ export default new Router({
       name: 'mainPage',
       component: registerAndLogin
     },
-
+    {
+      path: '/updateArticle/:articleId',
+      name: 'updateArticle',
+      component: updateArticle
+    },
 
     /*{
       path: '/',

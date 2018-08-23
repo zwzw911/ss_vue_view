@@ -227,9 +227,10 @@
       handleNodeClick(data) {
         // data.isOpen=!data.isOpen
         // console.log('handleNodeClick data', this.$refs.tree.currentNode.node.parent.data);
-        // if(data.isArticle===true){
-        //   window.open("http://127.0.0.1:8080");
-        // }
+        if(data.isArticle===true){
+          // this.$store.commit('setArticleId',data.id)
+          window.open(`http://127.0.0.1:8080/updateArticle/${data.id}`);//update/${data.id}
+        }
       },
       /**   自定义icon     **/
       renderContent(h, { node, data, store }) {
