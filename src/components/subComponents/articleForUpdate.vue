@@ -27,7 +27,15 @@
       <self-form-item  :editable="editable" :form-item-info="articleInfo.formItemInfo" :auto-gen-form-item-info="articleInfo.autoGenFormItemInfo" @validateAllItemResult="validateAllItemResult"></self-form-item>
       <!--<self-auto-gen-form-item :editable="editable" :auto-gen-form-item-info="articleInfo.autoGenFormItemInfo"></self-auto-gen-form-item>-->
 
-      <Upload :action="uploadAction.attachment" :format="uploadFileDefine.common.attachmentType" :max-size="uploadFileDefine.article.article_attachment.maxSizeInMB*1024">
+      <Upload
+        :action="uploadAction.attachment"
+        :format="uploadFileDefine.common.attachmentType"
+        :max-size="1"
+        :on-format-error="handleFormatError"
+        :on-exceeded-size="handleMaxSize"
+      >
+        <!--:max-size="uploadFileDefine.article.article_attachment.maxSizeInMB*1024"-->
+
         <Button icon="md-add-circle">添加附件</Button>
       </Upload>
       <div class="flex-flow-row-wrap justify-content-center">
@@ -42,16 +50,28 @@
 
 </template>
 <script>
-  /**   子组件   **/
+  /******************************/
+  /**          子组件         **/
+  /******************************/
   import selfFormItem from '../basicComponent/formItem'
   import selfAutoGenFormItem from '../basicComponent/autoGenFormItem'
-  /**   网络   **/
+  /******************************/
+  /**          网络            **/
+  /******************************/
   import {sendRequestGetResult_async} from '../../function/network'
   import {urlConfiguration} from '../../constant/url/url'
   import {host} from '../../constant/envConfiguration/appSetting'
-  /**   enum    **/
+  /******************************/
+  /**      错误（函数）       **/
+  /******************************/
+  import {showErrorInCenterMessage} from '../../function/showErrorResult'
+  /******************************/
+  /**           enum           **/
+  /******************************/
   import {ValidatePart} from '../../constant/enum/nonValueEnum'
-  /**   配置    **/
+  /******************************/
+  /**          配置            **/
+  /******************************/
   import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
 
   /**   打印函数   ***/
@@ -82,11 +102,32 @@
           }
         },
         /*************************/
-        /**   子组件emit事件   **/
+        /**   子组件formItem emit事件   **/
         /*************************/
         validateAllItemResult(result){
           // inf('validateAllItemResult result',result)
           this.validResult=result
+        },
+        /****************************/
+        /**   子组件Upload事件    **/
+        /****************************/
+        //格式不支持
+        handleFormatError (file) {
+          let that=this
+          showErrorInCenterMessage({that:that,msg:`文件${file.name}的格式不支持`})
+/*          this.$Notice.warning({
+            title: 'The file format is incorrect',
+            desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+          });*/
+        },
+        //尺寸超出
+        handleMaxSize (file) {
+          let that=this
+          showErrorInCenterMessage({that:that,msg:`文件${file.name}大小超过上限`})
+/*          this.$Notice.warning({
+            title: 'Exceeding file size limit',
+            desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+          });*/
         },
       },
       computed: {},

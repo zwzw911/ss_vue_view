@@ -31,16 +31,25 @@
 </template>
 
 <script>
-
+  /******************************/
+  /**         component       **/
+  /******************************/
   import selfFooter from '../components/subLayoutComponents/footer.vue'
   import selfUpdateArticle from '../components/subComponents/articleForUpdate.vue'
-
+  /******************************/
+  /**         3rd              **/
+  /******************************/
   import {inf} from 'awesomeprint'
-  import * as misc from "../function/misc"
-  //
-  // import selfModalResult from '../subLayoutComponents/modalResult.vue'
+  /******************************/
+  /**    common function       **/
+  /******************************/
 
+  /******************************/
+  /**     common constant     **/
+  /******************************/
   import * as componentInfo from '../constant/globalConfiguration/componentInfo'
+
+
   export default {
       components:{selfUpdateArticle,selfFooter,},
       computed:{

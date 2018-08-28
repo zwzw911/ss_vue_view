@@ -50,10 +50,19 @@ example
 </template>
 <script>
     // import axios from 'axios'
-    import {getPosPara} from '../helperLib/componentsHelperLib'
-    import {sendRequestGetResult_async,resultErrorShow} from '../../function/network'
-    import {urlConfiguration} from '../../constant/url/url'
+    /******************************/
+    /**         3rd              **/
+    /******************************/
     import {inf} from 'awesomeprint'
+    /******************************/
+    /**    common function       **/
+    /******************************/
+    import {getPosPara} from '../helperLib/componentsHelperLib'
+    import {sendRequestGetResult_async} from '../../function/network'
+    import {showErrorInModal} from '../../function/showErrorResult'
+    // import {showErrorInModal} from '../../function/showErrorResult'
+    import {urlConfiguration} from '../../constant/url/url'
+
     export default {
       props: ['captchaInfo'],
       mounted(){
@@ -88,7 +97,7 @@ example
             if(err.status && err.status===504){
               err.data='无法连接服务器，请稍后重试'
             }
-            return resultErrorShow(that,err.data)
+            return showErrorInModal(that,err.data)
 
           })
           // let result=await sendRequestGetResult_async({urlOption:urlConfiguration.standAlone.captcha})

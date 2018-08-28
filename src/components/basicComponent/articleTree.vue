@@ -14,25 +14,45 @@
     <modalFolderName :modal-folder-name-info="modalCreateFolderInfo" ref="createFolder" @returnFolderName="returnCreatedFolderName"></modalFolderName>
     <modalFolderName :modal-folder-name-info="modalRenameFolderInfo" ref="renameFolder" @returnFolderName="returnNewFolderName"></modalFolderName>
     <!--<Button type="primary" @click="showModalFolder">Display dialog box</Button>-->
+
+    <self-spin :spin-info='spinInfo'></self-spin>
   </div>
 
 </template>
 <script>
+  /******************************/
+  /**         component       **/
+  /******************************/
   import modalFolderName from './articleTreeModalInputFolderName'
-
+  import selfSpin from './spin'
+  /******************************/
+  /**         3rd              **/
+  /******************************/
   import {inf} from 'awesomeprint'
-  import {sendRequestGetResult_async,setUpdateValue,resultErrorShow} from '../../function/network'
+  /******************************/
+  /**    common function       **/
+  /******************************/
+  import {sendRequestGetResult_async,setUpdateValue} from '../../function/network'
+  import {showErrorInModal} from '../../function/showErrorResult'
+  import {objectDeepCopy,genNeedInput} from '../../function/misc'
+  /******************************/
+  /**     common constant     **/
+  /******************************/
   import {urlConfiguration} from '../../constant/url/url'
   import {ValidatePart} from '../../constant/enum/nonValueEnum'
   import {inputValueForUpdate} from '../../constant/inputValue/gen/inputValue'
-  import {objectDeepCopy,genNeedInput} from '../../function/misc'
   import {articleTreeFolderInfo} from '../../constant/globalConfiguration/componentInfo'
   import {maxNumber} from '../../constant/globalConfiguration/globalConfiguration'
+
   export default {
-    components:{modalFolderName},
+    components:{modalFolderName,selfSpin},
     data() {
 
       return {
+        spinInfo:{
+          msg:'读取目录...',
+          show:true,
+        },
         /**   modalTree   **/
         modalCreateFolderInfo:{
           show:false,
@@ -101,7 +121,7 @@
         data.values[ValidatePart.RECORD_INFO]=inputValueForUpdate_folder
         let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.createFolder,data:data})
         if(result.rc>0){
-          return resultErrorShow(this,result.msg)
+          return showErrorInModal(this,result.msg)
         }
         result.msg['childNum']=0
         result.msg['isFolder']=true
@@ -128,7 +148,7 @@
         }
         let  result =await sendRequestGetResult_async({urlOption:urlConfiguration.folder.updateFolder,data:data})
         if(result.rc>0){
-          return resultErrorShow(this,result.msg)
+          return showErrorInModal(this,result.msg)
         }
       },
       /** 删除folder **/
@@ -137,7 +157,7 @@
         data.values[ValidatePart.RECORD_ID]=nodeData.id
         let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.deleteFolder,data:data})
         if(result.rc>0){
-          return resultErrorShow(this,result.msg)
+          return showErrorInModal(this,result.msg)
         }
         this.$refs.tree.remove(nodeData)
         return Promise.resolve(0)
@@ -188,7 +208,7 @@
 
           let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.updateFolder,data:data})
           if(result.rc>0){
-            return resultErrorShow(this,result.msg)
+            return showErrorInModal(this,result.msg)
           }
           // return Promise.resolve(0)
         }
@@ -206,7 +226,7 @@
           // data.values[ValidatePart.RECORD_INFO]=inputValueForUpdate.folder
           let result=await sendRequestGetResult_async({urlOption:urlConfiguration.article.updateArticle,data:data})
           if(result.rc>0){
-            return resultErrorShow(this,result.msg)
+            return showErrorInModal(this,result.msg)
           }
           // 更新parentFolder的isLeaf属性
           if(true===dropNode.data.isFolder){
@@ -369,11 +389,13 @@
       },
       async loadNode(node, resolve) {
         let convertResult
+
+
         if (node.level === 0) {
           // console.log('level 0 loaded node', node);
           let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.readFolderContent})
           if(result.rc>0){
-            return resultErrorShow(this,result.msg)
+            return showErrorInModal(this,result.msg)
           }
 
           convertResult=this.convertTreeData(result.msg)
@@ -386,7 +408,7 @@
           // console.log('level >0 loaded node', node.key);
           let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.readFolderContent,data:node.key})
           if(result.rc>0){
-            return resultErrorShow(this,result.msg)
+            return showErrorInModal(this,result.msg)
           }
           // console.log('level >0 loaded result', result);
           // console.log('loadNode(node', result.msg)

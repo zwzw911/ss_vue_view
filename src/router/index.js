@@ -5,15 +5,15 @@ import mainPage from '@/layout/mainPage'
 import registerAndLogin from '@/layout/registerAndLogin'
 import updateArticle from '@/layout/updateArticle'
 
-import register from '../components/subComponents/register'
-import login from '../components/subComponents/login'
-import changePassword from '../components/subComponents/changePassword'
-
-
-import {inputValueForCreate,inputValueForUpdate} from '../constant/inputValue/gen/inputValue'
-import {ruleForCreate,ruleForUpdate} from '../constant/rule/rule'
-import {inputAttribute} from '../constant/inputValue/gen/inputAttribute'
-import {inputTempData} from '../constant/inputValue/gen/inputTempData'
+// import register from '../components/subComponents/register'
+// import login from '../components/subComponents/login'
+// import changePassword from '../components/subComponents/changePassword'
+//
+//
+// import {inputValueForCreate,inputValueForUpdate} from '../constant/inputValue/gen/inputValue'
+// import {ruleForCreate,ruleForUpdate} from '../constant/rule/rule'
+// import {inputAttribute} from '../constant/inputValue/gen/inputAttribute'
+// import {inputTempData} from '../constant/inputValue/gen/inputTempData'
 
 Vue.use(Router)
 
