@@ -116,6 +116,9 @@ const urlConfiguration={
     create:{url:'/admin_penalize',method:RequestMethod.POST},
     'delete':{url:'/admin_penalize',method:RequestMethod.DELETE},
   },
+
+
+
 }
 
 export {urlConfiguration}

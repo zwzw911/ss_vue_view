@@ -4,6 +4,13 @@
 /**************************************************************/
 /**************** color  ************************/
 /**************************************************************/
+.bg-linear-gradient {
+  background: -webkit-gradient(linear, left top, right top, from(#ffffff), to(#bcdafa));
+  background: linear-gradient(90deg, #ffffff, #bcdafa);
+}
+/*.color{
+.bg-lightenest(#bcdafa)
+}*/
 .bg-silver {
   background-color: silver;
 }
@@ -20,6 +27,15 @@ bg-color-lightener-black {
   background-color: #333333;
 }
 /*        iview basic color     */
+.color-primary {
+  color: #2d8cf0;
+}
+.color-light-primary {
+  color: #5cadff;
+}
+.color-dark-primary {
+  color: #2b85e4;
+}
 .color-error {
   color: #ed3f14;
 }
@@ -51,6 +67,9 @@ bg-color-lightener-black {
 color-lightener-black {
   color: #333333;
 }
+/*color-lightenest-primary{
+  .lightenest(@primary)
+}*/
 .border-color-grey {
   border-color: #333333;
 }

@@ -67,7 +67,14 @@
 .border-color(@color){
   border-color: @color;
 }
+//(@direction,@starColor,@endColor)
+.bg-linear-gradient{
+  background: linear-gradient(90deg, #ffffff,#bcdafa);
+}
 
+/*.color{
+.bg-lightenest(#bcdafa)
+}*/
 .bg-silver{
   background-color: silver;
 }
@@ -92,6 +99,15 @@ bg-color-lightener-black{
 
 
 /*        iview basic color     */
+.color-primary{
+  color:@primary
+}
+.color-light-primary{
+  color:@light-primary
+}
+.color-dark-primary{
+  color:@dark-primary
+}
 .color-error{
   color:@error
 }
@@ -126,7 +142,9 @@ bg-color-lightener-black{
 color-lightener-black{
   .lightener(@black)
 }
-
+/*color-lightenest-primary{
+  .lightenest(@primary)
+}*/
 
 .border-color-grey{
   border-color: #333333;

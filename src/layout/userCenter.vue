@@ -6,7 +6,7 @@
       <Col span="16">
 
       <!--<router-view />-->
-      <selfLogin :login-info="loginInfo"></selfLogin>
+      <!--<selfLogin :login-info="loginInfo"></selfLogin>-->
       <!--<selfRegister  :register-info="registerInfo"></selfRegister>-->
       <!--<selfChangePassword :change-password-info="changePasswordInfo"></selfChangePassword>-->
       <!--<self-user-icon :user-icon-info="userIconInfo"></self-user-icon>-->
@@ -14,7 +14,7 @@
       <!--<self-auto-gen-form-item :auto-gen-form-item-info="autoGenFormItemInfo" :editable="true"></self-auto-gen-form-item>-->
       <!--<self-article-for-update :article-info="articleInfo" :editable="true" @validateAllItemResult="validateAllItemResult"></self-article-for-update>-->
         <!--<Icon type="md-add-circle" size="32"></Icon>-->
-<self-tree></self-tree>
+      <self-tree></self-tree>
       <!--<self-logout></self-logout>-->
       </Col>
     </Row>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-  import selfRegister from '../components/subComponents/register.vue'
+  /*import selfRegister from '../components/subComponents/register.vue'
   import selfLogin from '../components/subComponents/login.vue'
   import selfChangePassword from '../components/subComponents/changePassword.vue'
   import selfUserInfo from '../components/subComponents/userInfo.vue'
@@ -50,30 +50,37 @@
   import selfUserIcon from '../components/basicComponent/userIcon.vue'
   import selfAutoGenFormItem from '../components/basicComponent/autoGenFormItem.vue'
 
-  import selfArticleForUpdate from '../components/subComponents/articleForUpdate.vue'
-
+  import selfArticleForUpdate from '../components/subComponents/articleForUpdate.vue'*/
+  /******************************/
+  /**         component       **/
+  /******************************/
   import selfTree from '../components/basicComponent/articleTree'
-  import selfLogout from '../components/basicComponent/logout'
+/*  import selfLogout from '../components/basicComponent/logout'
 
   import selfSidebar from '../components/subLayoutComponents/sidebar.vue'
   import selfFooter from '../components/subLayoutComponents/footer.vue'
-  import selfHeader from '../components/subLayoutComponents/header.vue'
-
+  import selfHeader from '../components/subLayoutComponents/header.vue'*/
+  /******************************/
+  /**         3rd              **/
+  /******************************/
   import {inf} from 'awesomeprint'
+  /******************************/
+  /**    common function       **/
+  /******************************/
   import * as misc from "../function/misc"
-  //
-  // import selfModalResult from '../subLayoutComponents/modalResult.vue'
-
+  /******************************/
+  /**     common constant     **/
+  /******************************/
   import * as componentInfo from '../constant/globalConfiguration/componentInfo'
+
   export default {
-      components:{selfSidebar,selfFooter,selfHeader,selfLogin,selfRegister,selfChangePassword,selfCrop,
-        selfUserInfo,selfUserIcon,selfAutoGenFormItem,selfArticleForUpdate,selfTree,selfLogout},
+      components:{selfTree},
       computed:{
 
       },
     data () {
       return {
-        loginInfo:componentInfo.loginInfo,
+/*        loginInfo:componentInfo.loginInfo,
         userInfo:componentInfo.userInfo,
         registerInfo:componentInfo.registerInfo,
         changePasswordInfo:componentInfo.changePasswordInfo,
@@ -82,7 +89,7 @@
 
         editable:false,
 
-        validateResult:false,
+        validateResult:false,*/
       }
     },
     methods:{

@@ -19,6 +19,7 @@
             // 首先删除server端session（先删除client端的session，导致发送到server的请求无session，然后server又会自动分配一个新session了）
             let serverResult=await sendRequestGetResult_async({urlOption:urlConfiguration.user.logout})
             let result=this.$cookies.remove('connect.sid')
+            this.$cookies.remove('loginDone')
             // }
             // this.$cookies.remove('account')
             //

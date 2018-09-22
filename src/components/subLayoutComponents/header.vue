@@ -32,13 +32,13 @@
       <!--<div class=" ">-->
         <!--<Row type="flex" justify="start" >-->
           <template v-if="userLogin">
-            <Menu mode="horizontal" :theme="theme" active-name="1" >
+            <Menu mode="horizontal" :theme="theme" active-name="1" @on-select="routeToAfterLogin">
               <div class="flex-flow-row-nowrap justify-content-space-between">
                 <div>
-                  <MenuItem name="userName">
+                  <MenuItem name="userName" >
                     {{userName}}
                   </MenuItem>
-                  <MenuItem name="logout">
+                  <MenuItem name="logout" >
                     退出
                   </MenuItem>
                 </div>
@@ -69,9 +69,20 @@
             <!--<a href="#" class="a-text-color-white" :class="itemFontSize">退出</a>-->
           </template>
           <template v-else >
-            <!--<Col >-->
-              <a href="#" class="a-text-color-white a-hover-color-dark-white" :class="[itemMargin,itemFontSize]">登录 </a>
-              <a href="#" class="a-text-color-white a-hover-color-dark-white" :class="itemFontSize">注册</a>
+            <Menu mode="horizontal" :theme="theme" active-name="1" @on-select="routeToBeforeLogin">
+              <div class="flex-flow-row-nowrap-reverse justify-content-space-between">
+                <div>
+                  <MenuItem name="login" >
+                    登录
+                  </MenuItem>
+                  <MenuItem name="register" >
+                    注册
+                  </MenuItem>
+                </div>
+              </div>
+            </Menu>
+              <!--<a  @click="routeToLogin" class="a-text-color-white a-hover-color-dark-white" :class="[itemMargin,itemFontSize]">登录 </a>-->
+              <!--<a @click="routeToRegister" class="a-text-color-white a-hover-color-dark-white" :class="itemFontSize">注册</a>-->
             <!--</Col>-->
 
           </template>
@@ -88,18 +99,69 @@
 
 
 <script>
-  // headerInfo:{
-  //   itemsInHeader:[{name:"注册",href:"register"},{name:"登录",href:"login"}],
-  //     userName:this.$store.state.userInfo.userName
-  // },
+  /******************************/
+  /**    common function       **/
+  /******************************/
+  // import {sendRequestGetResult_async,setUpdateValue} from '../../function/network'
+  // import {showErrorInModal} from '../../function/showErrorResult'
+  import {ifUserLogin,routeTo} from '../../function/misc'
+  import {sendRequestGetResult_async} from '../../function/network'
+
+  /******************************/
+  /**         3rd              **/
+  /******************************/
+  import {inf} from 'awesomeprint'
+
+  /******************************/
+  /**    common constant       **/
+  /******************************/
+  import {urlConfiguration} from '../../constant/url/url'
+  import {routePath} from '../../constant/url/routePath'
+
   export default {
       props:['headerInfo'],
       computed:{
         // userName(){return this.headerInfo.userName},
-        userLogin(){
-          return this.headerInfo.userName!==''
-        }
+/*        userLogin(){
+          // return ifUserLogin({that:this})
+          return this.$cookies.isKey('loginDone')
+        }*/
       },
+    methods:{
+
+      routeToBeforeLogin(menuName){
+          switch (menuName){
+            case 'login':
+              routeTo({that:this,path:'/login'})
+                  break;
+            case 'register':
+              routeTo({that:this,path:'/register'})
+                  break;
+
+          }
+      },
+      async routeToAfterLogin(menuName){
+          switch (menuName){
+            case 'userName':
+              routeTo({that:this,path:'/userCenter'})
+              break;
+            case 'logout':
+              let serverResult=await sendRequestGetResult_async({urlOption:urlConfiguration.user.logout})
+              let result=this.$cookies.remove('connect.sid')
+              this.$cookies.remove('loginDone')
+              /**   logout，直接转到主页   **/
+              //如果不是主页，执行跳转
+              routeTo({that:this,path:routePath.main})
+              //如果已经是主页，不会执行跳转
+              this.userLogin=false
+// this.userLogin()
+              // this.userLogin()
+              break;
+          }
+
+        // routeTo({that:this,path:'/userCenter'})
+      },
+    },
     data(){
         return{
           itemMargin:'marginR_2',//header中部件之间的间隔（例如用户名/退出，登录/注册）
@@ -107,9 +169,10 @@
           transfer:true,
           theme:'light',
 
-          userName:this.$store.state.headerInfo.userName,
+          //从cookie中读取，而不是globalState
+          userName:this.$cookies.get('account'),
+          userLogin:this.$cookies.isKey('loginDone'),
         }
-
     },
   }
 

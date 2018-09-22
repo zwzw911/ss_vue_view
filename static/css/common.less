@@ -128,11 +128,15 @@ aside>div>span:not(:first-of-type){
   .borderSet(thin,dashed,black);
 }
 
+.border-left-separator{
+  border-left: 1px solid silver;
+}
+
 .cursor(@type){
   cursor: @type;
 }
 
-.cursor_pointer{
+.cursor-pointer{
   .cursor(pointer);
 }
 
@@ -217,7 +221,7 @@ aside>div>span:not(:first-of-type){
 #configuration>span:hover,#bill>span:hover{
   //background-color:#f8fdff;
   .tabBorder;
-  .cursor_pointer
+  .cursor-pointer
 }
 
 #configuration>span.activate,#bill>span.activate{

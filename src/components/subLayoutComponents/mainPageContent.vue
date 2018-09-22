@@ -77,7 +77,7 @@
       data(){
         return {
           // contentInfo:this.contentInfo,
-          userThumb:uploadFileDefine.user_thumb,
+          userThumb:uploadFileDefine.user_photo,
         }
           /*return {
             sidebarName: {

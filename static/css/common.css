@@ -98,7 +98,10 @@ aside>div>span:not(:first-of-type){
 .border1 {
   border: thin dashed black;
 }
-.cursor_pointer {
+.border-left-separator {
+  border-left: 1px solid silver;
+}
+.cursor-pointer {
   cursor: pointer;
 }
 /*

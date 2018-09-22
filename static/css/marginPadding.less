@@ -29,6 +29,9 @@
   .marginR(@num);
 }
 
+.marginAll(@num){
+  margin: @num * @base;
+}
 //element-ui tree的间隔太小，设置成可以自动变化的
 //.el-node-content-marginV(@num){
 //  .marginV(@num)
@@ -54,6 +57,10 @@
   .paddingL(@num);
   .paddingR(@num);
 }
+.paddingAll(@num){
+  padding: @num * @base;
+}
+
 
 //height
 .height(@num){
@@ -240,7 +247,27 @@
   .marginH(20);
 }
 
-
+.marginAll1{
+  .marginAll(1)
+}
+.marginAll2{
+  .marginAll(2)
+}
+.marginAll3{
+  .marginAll(3)
+}
+.marginAll4{
+  .marginAll(4)
+}
+.marginAll5{
+  .marginAll(5)
+}
+.marginAll6{
+  .marginAll(6)
+}
+.marginAll7{
+  .marginAll(7)
+}
 
 
 .paddingL1{
@@ -395,6 +422,36 @@
   .paddingH(20);
 }
 
+.paddingAll1{
+  .paddingAll(1);
+}
+.paddingAll2{
+  .paddingAll(2);
+}
+.paddingAll3{
+  .paddingAll(3);
+}
+.paddingAll4{
+  .paddingAll(4);
+}
+.paddingAll5{
+  .paddingAll(5);
+}
+.paddingAll6{
+  .paddingAll(6);
+}
+.paddingAll7{
+  .paddingAll(7);
+}
+.paddingAllX{
+  .paddingAll(20);
+}
+
+
+
+
+
+
 .delete-padding-1{
   margin-left:-15px;
 }
@@ -403,4 +460,9 @@
 }
 .delete-padding-3{
   margin-left:-45px;
+}
+
+
+.autoGenAnchorToDeleteMarginLeft>div{
+  margin-left: 0 !important;
 }

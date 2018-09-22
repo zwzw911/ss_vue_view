@@ -9,7 +9,7 @@
 import {pageViewWH} from '../components/helperLib/componentsHelperLib'
 
 //网络操作返回的结果进行判别，如果有错误，显示
-function showErrorInModal(that,msg){
+function showErrorInModal({that,msg}){
   that.$Modal.error({
     title: '错误',
     content: msg
@@ -20,9 +20,13 @@ function showErrorInModal(that,msg){
 function showErrorInCenterMessage({that,msg,title='错误'}){
   let {W,H}=pageViewWH()
   let top=parseInt(H)/2
-  this.$Notice.error({
+  // that.$Notice.config({
+  //   top:200,
+  // })
+  that.$Notice.error({
     title: '错误 ',
     desc: msg,
+    // top:top,
   });
 }
 export {

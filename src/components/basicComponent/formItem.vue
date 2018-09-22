@@ -101,77 +101,127 @@ formItemInfo:
         </template>
         <!--autoGen-->
         <template v-else>
-          <div :class="[ formItemInfo.wholeArrangeMode==='v'  ? classVertical: classHorizontal]">
-            <div :class="[ formItemInfo.inputArrangeMode==='v'  ? classVertical: classHorizontal]">
-              <!--<template   >-->
-                <!--<div>-->
-                <!--<Col span="24">-->
+          <!--根据labelWidth决定是 垂直还是水平排列（lebel+input/icon）-->
+          <div :class="[ formItemInfo.labelWidth===undefined  ? classVertical: classHorizontal]">
               <div :class="[formItemInfo.showStarForRequire ? '':'noStarForRequire' ,
                       undefined===formItemInfo.inputLabelSize ? '':formItemInfo.inputLabelSize,
                       undefined===formItemInfo.inputSize ? '':formItemInfo.inputSize,]"
                     class="ivu-form-item-required">
-                <label class="ivu-form-item-label" v-if="formItemInfo.inputValue[k]===null || formItemInfo.inputValue[k].length===0">{{formItemInfo.inputAttribute[k].label}}</label>
+                <!--v-if="formItemInfo.inputValue[k]===null || formItemInfo.inputValue[k].length===0"-->
+                <label
+                  class="ivu-form-item-label"
+                  :class="[ undefined===formItemInfo.inputLabelSize ? '':formItemInfo.inputLabelSize]"
+                  :style="{width: undefined===formItemInfo.labelWidth ? '':formItemInfo.labelWidth+'px'}"
+                >
+                  {{formItemInfo.inputAttribute[k].label}}
+                </label>
               </div>
 
-                <FormItem v-for="(ele,idx) in formItemInfo.inputValue[k]"
-                  :prop="k+'.'+idx" :key="idx"
-                  :error="formItemInfo.inputArrayTempData[k][idx]['validResult']"
-                  :rules="formItemInfo.rule[k]"
-                  :class="[formItemInfo.showStarForRequire ? '':'noStarForRequire' ,
+            <!--idx>0 && formItemInfo.inputArrangeMode==='v' ? 'inputNoLabelWidth':'',-->
+            <!--:style="{'margin-left':formItemInfo.labelWidth}"-->
+            <!--formItemInfo.wholeArrangeMode==='v'  ? 'marginR4':'',-->
+            <!---->
+            <!--:prop="k+'.'+idx"-->
+            <div :class="[ formItemInfo.inputArrangeMode==='v'  ? classVertical: classHorizontal]" >
+              <FormItem v-for="(ele,idx) in formItemInfo.inputValue[k]"
+                        :prop="k+'.'+idx"
+                        :key="idx"
+                        :error="formItemInfo.inputArrayTempData[k][idx]['validResult']"
+                        :rules="formItemInfo.rule[k]"
+                        :class="[formItemInfo.showStarForRequire ? '':'noStarForRequire' ,
                       idx>0 && formItemInfo.inputArrangeMode==='h' ? 'inputLabel-hidden':'',
-                      idx>0 && formItemInfo.inputArrangeMode==='v' ? 'inputNoLabelWidth':'',
+
                       undefined===formItemInfo.inputLabelSize ? '':formItemInfo.inputLabelSize,
                       undefined===formItemInfo.inputSize ? '':formItemInfo.inputSize,
-                      formItemInfo.wholeArrangeMode==='v'  ? 'marginR4':'',
                       ]"
-                  :label=" formItemInfo.inputAttribute[k]['label']"
-                  class=""
+                        class="autoGenAnchorToDeleteMarginLeft marginR4"
+              >
+<!--                <FormItem  :prop="k" :key="k"
+                           :class="[formItemInfo.showStarForRequire ? '':'noStarForRequire' ,
+                              undefined===formItemInfo.inputLabelSize ? '':formItemInfo.inputLabelSize,
+                              undefined===formItemInfo.inputSize ? '':formItemInfo.inputSize,]"
+                           :error="formItemInfo.inputTempData[k]['validResult']"
+                           class=" "
+                           :label="formItemInfo.inputAttribute[k]['label']">-->
+                <!--:label=" formItemInfo.inputAttribute[k]['label']"-->
+                <!--idx>0 && undefined===formItemInfo.labelWidth ? 'inputLabel-hidden':'',-->
+                <!--:class="{noStarForRequire: !formItemInfo.showStarForRequire,'inputLabel-hidden':idx>0}"-->
+                <!--<div>-->
+                <!--,'margin-left': idx===0 &&formItemInfo.labelWidth!==undefined ? formItemInfo.labelWidth+'px':''-->
+                <!--@on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass();onBlur();"-->
+
+                <Input
+                  @on-focus="focusInputPlaceHolderDisappear({keyName:k,idx:idx});dismissError({keyName:k,idx:idx});onFocus()"
+                  @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass();onBlur({k:k,idx:idx});"
+                  @on-change="validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass();"
+
+                  :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
+                  v-model="formItemInfo.inputValue[k][idx]" :placeholder="formItemInfo.inputArrayAttribute[k][idx]['placeHolder'][0]"
+                  :style="{width: formItemInfo.inputWidth+'px'}"
+                  :class="[editable ? '':'inputUnEditAble']"
+                  :readonly="!editable"
                 >
-                  <!--idx>0 && undefined===formItemInfo.labelWidth ? 'inputLabel-hidden':'',-->
-                  <!--:class="{noStarForRequire: !formItemInfo.showStarForRequire,'inputLabel-hidden':idx>0}"-->
-                  <!--<div>-->
 
-                  <Input
-                    @on-focus="focusInputPlaceHolderDisappear({keyName:k,idx:idx});dismissError({keyName:k,idx:idx});onFocus()"
-                    @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass();onBlur();"
-                    @on-change="validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass();"
-                    :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
-                    v-model="formItemInfo.inputValue[k][idx]" :placeholder="formItemInfo.inputArrayAttribute[k][idx]['placeHolder'][0]"
-                    :style="{width:formItemInfo.inputWidth+'px'}"
-                    :class="[editable ? '':'inputUnEditAble']"
-                    :readonly="!editable"
-                  >
-
-                    <!--:class="[editable ? '':'inputUnEditAble', 'title'===inputAttribute[idx]['inputSize'] ? 'inputTitle':'']" :readonly="!editable"-->
-                    <span slot="prepend"  style="border-left: 0px" v-if="undefined!==formItemInfo.icon  && null!==formItemInfo.icon && ''!==formItemInfo.icon">
+                <!--:class="[editable ? '':'inputUnEditAble', 'title'===inputAttribute[idx]['inputSize'] ? 'inputTitle':'']" :readonly="!editable"-->
+                <span slot="prepend"  style="border-left: 0px" v-if="undefined!==formItemInfo.icon  && null!==formItemInfo.icon && ''!==formItemInfo.icon">
                       <Icon :type="formItemInfo.icon" size="20" :color="formItemInfo.iconColor"></Icon>
                     </span>
-                    <span slot="append" style="" :style="{visibility: editable ? 'visible':'hidden'}" class="cursorPointer"
-                          v-if="editable===true"
-                          @click="removeItem({keyName:k,idx:idx});validateIfAllItemPass">
-                      <Icon type="android-remove-circle" size="18"  color="#aaaaaa" title="移除"></Icon>
+                <span slot="append" style="" :style="{visibility: editable ? 'visible':'hidden'}" class="cursorPointer"
+                      v-if="editable===true"
+                      @click="removeItem({keyName:k,idx:idx});validateIfAllItemPass">
+                      <Icon type="md-remove-circle" size="18"  color="#aaaaaa" title="移除"></Icon>
                     </span>
-                  </Input>
-                </FormItem>
-              <!--</template>-->
+                </Input>
+              </FormItem>
+
+              <icon type="md-add-circle"
+                    :style="formItemInfo.addItemButtonDisable[k] ? buttonDisableStyle:''"
+                    :disabled="formItemInfo.addItemButtonDisable[k]"
+                    :class="[{hidden:!editable},undefined===formItemInfo.inputLabelSize ? '':formItemInfo.inputLabelSize.replace('inputLabelH','h'),]"
+                    @click="addItem({keyName:k});validateIfAllItemPass()"
+                    class="color-primary cursor-pointer">
+                添加
+              </icon>
             </div>
-            <div>
-              <Button type="primary" size="small" :style="formItemInfo.addItemButtonDisable[k] ? buttonDisableStyle:''" :disabled="formItemInfo.addItemButtonDisable[k]" :class="{hidden:!editable}"
-                      @click="addItem({keyName:k});validateIfAllItemPass()">添加</Button>
-            </div>
+
+
           </div>
+          <!--</div>-->
 
         </template>
       </template>
-      <!--autoGen-->
+      <!--captcha-->
+      <template v-else>
+        <div class="flex-flow-row-nowrap align-items-flex-start align-content-center justify-content-space-between flex-grow-1">
+          <FormItem  prop="captcha"   class=" marginR3" :error="formItemInfo.inputTempData['captcha']['validResult']"
+                     :class="[formItemInfo.showStarForRequire ? '':'noStarForRequire' ,
+                      undefined===formItemInfo.inputLabelSize ? '':formItemInfo.inputLabelSize,
+                      undefined===formItemInfo.inputSize ? '':formItemInfo.inputSize,]"
+                     :label="formItemInfo.inputAttribute[k]['label']"
+          >
+            <Input
+              @on-focus="focusInputPlaceHolderDisappear({keyName:'captcha'});onFocus()"
+              @on-blur="blurInputPlaceHolderRestore({keyName:'captcha'});validSingleInputValue({fieldName:'captcha'});validateIfAllItemPass();onBlur();"
+              @on-change="validSingleInputValue({fieldName:'captcha'});validateIfAllItemPass();"
+              :type="formItemInfo.inputAttribute['captcha']['inputType']" v-model="formItemInfo.inputValue['captcha']" :placeholder="formItemInfo.inputAttribute['captcha']['placeHolder'][0]"
+            >
+            </Input>
 
+          </FormItem>
+          <selfCaptcha :ref="formItemInfo.captchaInfo.captchaImgId" class="radius1" :captchaInfo="formItemInfo.captchaInfo" @genCaptchaSuccess="genCaptchaSuccess" ></selfCaptcha>
+        </div>
+      </template>
     </template>
 
     <!--captcha; ref的父元素不能放在template中-->
-    <div class="flex-flow-row-nowrap align-items-flex-start align-content-center justify-content-space-between flex-grow-1"
+    <!--<div class="flex-flow-row-nowrap align-items-flex-start align-content-center justify-content-space-between flex-grow-1"
          v-if="undefined!==formItemInfo.captchaInfo">
-      <FormItem  prop="captcha"   class=" marginR3" :error="formItemInfo.inputTempData['captcha']['validResult']">
-        <!---->
+      <FormItem  prop="captcha"   class=" marginR3" :error="formItemInfo.inputTempData['captcha']['validResult']"
+            :class="[formItemInfo.showStarForRequire ? '':'noStarForRequire' ,
+            undefined===formItemInfo.inputLabelSize ? '':formItemInfo.inputLabelSize,
+            undefined===formItemInfo.inputSize ? '':formItemInfo.inputSize,]"
+      >
+        &lt;!&ndash;&ndash;&gt;
         <Input
           @on-focus="focusInputPlaceHolderDisappear({keyName:'captcha'});onFocus()"
           @on-blur="blurInputPlaceHolderRestore({keyName:'captcha'});validSingleInputValue({fieldName:'captcha'});validateIfAllItemPass();onBlur();"
@@ -181,29 +231,46 @@ formItemInfo:
         </Input>
 
       </FormItem>
-
+      &lt;!&ndash;<label class="ivu-form-item-label" style="width: 60px;">密码</label>&ndash;&gt;
       <selfCaptcha :ref="formItemInfo.captchaInfo.captchaImgId" class="radius1" :captchaInfo="formItemInfo.captchaInfo" @genCaptchaSuccess="genCaptchaSuccess" ></selfCaptcha>
-
-
-    </div>
+    </div>-->
 <!--    </Col>
 
   </Row>-->
   </div>
 </template>
 <script>
+  /******************************/
+  /**         component       **/
+  /******************************/
+  import selfCaptcha from './cpatcha'
+  /******************************/
+  /**         3rd              **/
+  /******************************/
+  import {inf} from 'awesomeprint'
+  import E from 'wangeditor'
+  import {wangEditorConfiguration} from "../../constant/globalConfiguration/3rd";
+  /******************************/
+  /**    common function       **/
+  /******************************/
   import {InputAttributeFieldName,InputTempDataFieldName,ValidatePart} from '../../constant/enum/nonValueEnum'
   import {extraAttributeFieldName,RichTextEditor} from '../../constant/enum/keyEnum'
   import {sendRequestGetResult_async} from '../../function/network'
-  import selfCaptcha from './cpatcha'
-  import {inf} from 'awesomeprint'
   import * as misc from '../../function/misc'
-  import E from 'wangeditor'
-  import {wangEditorConfiguration} from "../../constant/globalConfiguration/3rd";
+  import {showErrorInCenterMessage} from '../../function/showErrorResult'
+  /******************************/
+  /**     common constant     **/
+  /******************************/
+
+
 
   export default {
     components:{selfCaptcha},
-    props: {'formItemInfo':{type:Object},editable:{type:Boolean,default:true}},
+    props: {
+      'formItemInfo':{type:Object},
+      editable:{type:Boolean,default:true},
+      // formRefName:{type:String}
+      },
     watch: {
       editable (curVal, oldVal) {
         // inf('new editable value',curVal)
@@ -239,6 +306,18 @@ formItemInfo:
 
     },
     methods: {
+      /**********************************************/
+      /**** eliminate margin-left for autoGen   ****/
+      /*********************************************/
+      // autoEliminateMarginLeft(){
+      //   //只有总体呈水平排列（label和input/icon）,才需要消除margin-left
+      //   if(this.formItemInfo.wholeArrangeMode==='h'){
+      //     let ele=document.getElementsByClassName('autoGenAnchorToDeleteMarginLeft')//.getElementsByTagName('div')
+      //     console.log('ele attr',ele.length)
+      //     // console.log('ele attr',ele[0].getAttribute('class'))
+      //   }
+      // },
+
       /**   wangEditor  **/
       //keyName:字段名称
       //content:字段内容
@@ -298,15 +377,21 @@ formItemInfo:
         }
       },
       onFocus(){
+        // inf('onFocus in')
         // this.formItemInfo.inputTempData['captcha']['validResult']=''
         this.$emit('onFocus')
       },
       onBlur(){
         // let that=this
+/*        this.$parent.validateField('tags',function(err,result){
+          inf('err',err)
+          inf('result',result)
+        })*/
         this.$emit('onBlur')
       },
       //模拟safiri，点击input时，placeHolder内容消失
       focusInputPlaceHolderDisappear({keyName,idx}) {
+        // inf('focusInputPlaceHolderDisappear in')
         let fieldAttribute=this.formItemInfo.inputAttribute[keyName]
         //如果是autoGen，直接在inputArrayTempData操作
         if(true===fieldAttribute[InputAttributeFieldName.AUTO_GEN]){
@@ -331,15 +416,21 @@ formItemInfo:
       //如果离开input时，inputValue为空，需要恢复placeholder内容
       blurInputPlaceHolderRestore({keyName,idx}) {
         // inf('blurInputPlaceHolderRestore in')
+
         // inf('blurInputPlaceHolderRestore keyName',keyName)
+        // inf('blurInputPlaceHolderRestore idx',idx)
+        // inf('this.formItemInfo.inputAttribute[keyName]',this.formItemInfo.inputAttribute[keyName])
+        // inf('this.formItemInfo.ref.form.articleForm',this.formRefName)
+        // this.$parent.validate()
         let fieldAttribute=this.formItemInfo.inputAttribute[keyName]
         //如果是autoGen，直接在inputArrayTempData操作
         if(true===fieldAttribute[InputAttributeFieldName.AUTO_GEN]) {
           if (undefined === idx) {
             err(`for autoGen field ${keyName}, miss parameter idx`)
           } else {
+            inf('before valud reulst',this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT])
             if (null === this.formItemInfo.inputValue[keyName][idx] || '' === this.formItemInfo.inputValue[keyName][idx] ) {
-              this.formItemInfo.inputArrayAttribute[keyName][idx][InputAttributeFieldName.PLACE_HOLDER] = this.formItemInfo.inputAttribute[keyName][idx][InputAttributeFieldName.PLACE_HOLDER_BKUP]
+              this.formItemInfo.inputArrayAttribute[keyName][idx][InputAttributeFieldName.PLACE_HOLDER] = this.formItemInfo.inputAttribute[keyName][InputAttributeFieldName.PLACE_HOLDER_BKUP]
             }
           }
         }
@@ -488,9 +579,12 @@ formItemInfo:
       /***************************************************/
       dismissError({keyName,idx}){
         // inf('idx',idx)
-        this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT]=""
+        if(null!==this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT] && ''!==this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT]){
+          this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT]=""
+        }
+
       },
-      removeEmptyEle({keyName}){
+/*      removeEmptyEle({keyName}){
         let tobeDeletedIdx=misc.searchEmptyValueIdxInArray({array:this.formItemInfo.inputValue[keyName]})
         // inf('tobeDeletedIdx',tobeDeletedIdx)
         if(tobeDeletedIdx.length>0){
@@ -498,21 +592,47 @@ formItemInfo:
           misc.deleteDefinedEleInArray({array:this.formItemInfo.inputArrayTempData,tobeDeletedIdx:tobeDeletedIdx})
           misc.deleteDefinedEleInArray({array:this.formItemInfo.inputArrayAttribute,tobeDeletedIdx:tobeDeletedIdx})
         }
-      },
+      },*/
       addItem({keyName}){
-        inf('keyname',keyName)
+        // inf('keyname',keyName)
+        let that=this
+        //如果inputValue未设置，则初始化
         if( null===this.formItemInfo.inputValue[keyName] || undefined=== this.formItemInfo.inputValue[keyName]){
           this.formItemInfo.inputValue[keyName]=[]
         }
-        if(this.formItemInfo.inputValue[keyName].length<this.formItemInfo.numRange[keyName]['max']){
+        //判断最后一个元素是否验证通过，无法继续添加
+        let length=this.formItemInfo.inputValue[keyName].length
+
+        if(length>0){
+          // inf('length',length)
+          // inf('last validResult',this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult'])
+          if(""!==this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult'] || null===this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult']){
+            // this.formItemInfo.addItemButtonDisable[keyName]=true
+            // showErrorInCenterMessage({that:that,msg:'有尚未填入内容的标签'})
+            // this.formItemInfo.inputArrayTempData[keyName][length-1][InputTempDataFieldName.VALID_RESULT] = `文档标签不能为空啊`
+            return
+          }
+        }
+
+        // //判断最后一个元素是否为空，如果为空，无法继续添加
+        // let length=this.formItemInfo.inputValue[keyName].length
+        // if(""===this.formItemInfo.inputValue[keyName][length-1]){
+        //   // this.formItemInfo.addItemButtonDisable[keyName]=true
+        //   // showErrorInCenterMessage({that:that,msg:'有尚未填入内容的标签'})
+        //   this.formItemInfo.inputArrayTempData[keyName][length-1][InputTempDataFieldName.VALID_RESULT] = `有尚未填入内容的标签`
+        //   return
+        // }
+        if(length<this.formItemInfo.numRange[keyName]['max']){
           this.formItemInfo.inputValue[keyName].push('')
           this.formItemInfo.inputArrayAttribute[keyName].push(misc.objectDeepCopy(this.formItemInfo.inputAttribute[keyName]))
+          // inf('misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName])',misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName]))
           this.formItemInfo.inputArrayTempData[keyName].push(misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName]))
         }
         //如果没加或者加完之后，达到上限
         if(this.formItemInfo.inputValue[keyName].length>=this.formItemInfo.numRange[keyName]['max']){
           this.formItemInfo.addItemButtonDisable[keyName]=true
         }
+        // this.autoEliminateMarginLeft()
       },
       removeItem({keyName,idx}){
         this.formItemInfo.inputValue[keyName].splice(idx,1)
@@ -522,7 +642,8 @@ formItemInfo:
       },
       //是否有重复
       validateDuplicate({keyName,idx}){
-        // inf('validateDuplicate in with idx',idx)
+        inf('validateDuplicate in with idx',idx)
+        inf('before valud reulst',this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT])
         let tobeCheckValue=this.formItemInfo.inputValue[keyName][idx]
         let keyValue=this.formItemInfo.inputValue[keyName]
         if(''!==tobeCheckValue){
@@ -541,7 +662,7 @@ formItemInfo:
             }
           }
         }
-        this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT] =''
+        // this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT] =''
       },
     },
     computed: {},

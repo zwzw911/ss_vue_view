@@ -74,87 +74,34 @@
       <!--</div>-->
 
       <div class="footer">
-        <!--<selfFooter :footer-info="footerInfo"></selfFooter>-->
-      </div>
-    <!--</Layout>-->
-    <!--<selfModalResult></selfModalResult>-->
-
-
-
-
-
-
-    <!--<div class="container">
-
-      <div class="layout-header">
-        <div class="layout-logo layout-logo-center"></div>
+        <selfFooter :footer-info="footerInfo"></selfFooter>
       </div>
 
-
-    </div>
-
-
-    <div class="container">
-      <div class="layout-content marginT_2" >
-        <Row>
-          <Col span="5">
-            &lt;!&ndash;<Menu active-name="1-2" width="auto" :open-names="['1']">&ndash;&gt;
-            <sidebar></sidebar>
-          </Col>
-          <Col span="19">
-          <template v-if="sidebarActiveMenu!==''">
-            <h1 class="marginT_7">{{sidebarActiveMenuChineseName}}</h1>
-            <div class="paddingT_7 marginH_2">
-              &lt;!&ndash;<self-table :headtitle="headTitle" :rows="tableData"></self-table>&ndash;&gt;
-              <selfTable ></selfTable>
-            </div>
-          </template>
-
-          </Col>
-        </Row>
-      </div>
-    </div>
-
-
-
-
-
-      <selfFooter :class="[{'fixed-footer':isFixed},'horizontal-center']" ></selfFooter>-->
 
 
   </div>
 </template>
 
 <script>
+  /******************************/
+  /**         component       **/
+  /******************************/
   import selfHeader from '../components/subLayoutComponents/header.vue'
   import selfSearch from '../components/subLayoutComponents/search.vue'
   import selfFooter from '../components/subLayoutComponents/footer.vue'
   import selfSideBar from '../components/subLayoutComponents/sidebar.vue'
   import selfContent from '../components/subLayoutComponents/mainPageContent.vue'
-  // import sidebar from '../subLayoutComponents/sidebar.vue'
-  // import selfFooter from '../subLayoutComponents/footer.vue'
-  //
-  // import selfModalResult from '../subLayoutComponents/modalResult.vue'
+  /******************************/
+  /**    common function       **/
+  /******************************/
+  import {ifUserLogin,routeTo} from '../function/misc'
+
+
   export default {
-      components:{selfHeader,selfSearch,selfSideBar,selfContent},
+      components:{selfHeader,selfSearch,selfSideBar,selfContent,selfFooter},
       computed:{
 
-//                 isFixed(){
-// //                  this.$store.commit('initAllFieldInInputAttr')
-//                   return this.$store.state.htmlState.ifFooterFixed
-//       //            console.log(`result is ${result}`)
-//       //            return result
-//                 },
-//         sidebarActiveMenu(){
-//                     return this.$store.state.sidebarState.sidebarActiveMenu
-//       },
-//         sidebarActiveMenuChineseName(){
-//           return this.$store.state.sidebarState.sidebarActiveMenuChineseName
-//         }
-      /*        browserHeight(){
-                  console.log(`height is ${this.$store.state.mainState.screenHeight}`)
-                  return this.$store.state.mainState.screenHeight
-              }*/
+
       },
     data () {
       return {
@@ -185,32 +132,6 @@
               {userThumbSrc:'/static/logo.png',userName:'dasf'},
           }
         ],
-
-
-
-          /*headTitle:[
-              {
-            type: 'selection',
-            width: 60,
-            align: 'center'
-          },
-            {title:'年龄',key:'age'},
-            /!*{
-              title: '操作',
-              key: 'action',
-              width: 150,
-              align: 'center',
-              render (row, column, index) {
-                return `<i-button type="primary" size="small" @click="edit(${index})" icon="edit"></i-button> <i-button type="error" size="small" @click="remove(${index})" icon="trash-b"></i-button>`;
-              }
-            }*!/
-          ],
-          tableData:[
-              {age:'1',id:1},{age:'2',id:2}],*/
-//        sidebarName:[{name:"test",slotName:"slottest"},{name:"test111111",slotName:"slottest1"}]
-
-
-
       }
     },
     methods:{

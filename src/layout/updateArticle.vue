@@ -3,9 +3,9 @@
     <!--<Layout>-->
     <!--type="flex" justify="center"-->
     <Row >
-      <Col span="16">
+      <Col span="20">
 
-      <self-update-article :article-info="articleInfo" :editable="true" @validateAllItemResult="validateAllItemResult"></self-update-article>
+      <self-update-article :article-info="articleInfo"  @validateAllItemResult="validateAllItemResult"></self-update-article>
 
       </Col>
     </Row>
@@ -13,7 +13,7 @@
     <!--<Button @click="switchEditable" :disabled="validateResult">siwtch</Button>-->
       <!--</div>-->
 
-      <div class="footer">
+      <div span="24">
         <selfFooter :footer-info="footerInfo"></selfFooter>
       </div>
     <!--</Layout>-->
@@ -43,18 +43,25 @@
   /******************************/
   /**    common function       **/
   /******************************/
-
+  import * as misc from '../function/misc'
   /******************************/
   /**     common constant     **/
   /******************************/
   import * as componentInfo from '../constant/globalConfiguration/componentInfo'
-
+  import {routePath} from '../constant/url/routePath'
 
   export default {
       components:{selfUpdateArticle,selfFooter,},
       computed:{
 
       },
+    mounted(){
+        //尚未登录，设置错误信息并显示登录页面
+      if(false===misc.ifUserLogin({that:this})){
+        this.$store.commit("setRedirectMsg",{msg:'redirect test'})
+        misc.routeTo({that:this,path:routePath.redirectToLogin})
+      }
+    },
     data () {
       return {
 /*        loginInfo:componentInfo.loginInfo,

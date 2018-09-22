@@ -194,6 +194,27 @@
   margin-left: 100px;
   margin-right: 100px;
 }
+.marginAll1 {
+  margin: 5px;
+}
+.marginAll2 {
+  margin: 10px;
+}
+.marginAll3 {
+  margin: 15px;
+}
+.marginAll4 {
+  margin: 20px;
+}
+.marginAll5 {
+  margin: 25px;
+}
+.marginAll6 {
+  margin: 30px;
+}
+.marginAll7 {
+  margin: 35px;
+}
 .paddingL1 {
   padding-left: 5px;
 }
@@ -354,6 +375,30 @@
   padding-left: 100px;
   padding-right: 100px;
 }
+.paddingAll1 {
+  padding: 5px;
+}
+.paddingAll2 {
+  padding: 10px;
+}
+.paddingAll3 {
+  padding: 15px;
+}
+.paddingAll4 {
+  padding: 20px;
+}
+.paddingAll5 {
+  padding: 25px;
+}
+.paddingAll6 {
+  padding: 30px;
+}
+.paddingAll7 {
+  padding: 35px;
+}
+.paddingAllX {
+  padding: 100px;
+}
 .delete-padding-1 {
   margin-left: -15px;
 }
@@ -362,4 +407,7 @@
 }
 .delete-padding-3 {
   margin-left: -45px;
+}
+.autoGenAnchorToDeleteMarginLeft > div {
+  margin-left: 0 !important;
 }

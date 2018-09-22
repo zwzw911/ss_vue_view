@@ -7,6 +7,8 @@ import axios from 'axios'
 import {inf,wrn,err} from 'awesomeprint'
 import {RequestMethod} from '../constant/enum/network'
 
+import {error} from '../constant/error/error'
+
 axios.defaults.retry = 2
 axios.defaults.retryDelay = 1000
 // inf('asiox defaults',axios.defaults)
@@ -31,8 +33,8 @@ myAxios.interceptors.response.use(undefined,function axiosRetryInterceptor(err) 
     // Check if we've maxed out the total number of retries
     if(config.__retryCount >= config.retry) {
       // Reject with the error
-      inf('final err',err.response)
-      return Promise.reject(err.response);
+      // inf('final err',err.response)
+      return Promise.reject(error.axios.reachMaxRetry);
     }
 
     // Increase the retry count

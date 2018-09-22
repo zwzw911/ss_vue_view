@@ -14,7 +14,23 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: generateProxyTable({baseUrl:['/user','/article','/article_comment','/article_like_dislike','/impeach','/impeach_action','/impeach_comment','/add_friend_request','/user_friend_group','/public_group','/join_public_group_request','/folder']}),
+    proxyTable: generateProxyTable({
+      baseUrl:[
+        '/user',
+        '/article',
+        '/article_comment',
+        // '/article_attachment',
+        '/article_like_dislike',
+        '/impeach',
+        '/impeach_action',
+        '/impeach_comment',
+        '/add_friend_request',
+        '/user_friend_group',
+        '/public_group',
+        '/join_public_group_request',
+        '/folder'
+      ]
+    }),
     //   {
     //   // proxySetting
     //   '/user':

@@ -8,14 +8,14 @@
   @keyframes load{ 0%{transform:rotate(0)} 100%{transform:rotate(-360deg)} } #load{animation:load 1s linear infinite; transform-origin:center center; }
 </style>
 <template>
-  <Spin :style="{display:spinInfo.show}" >
+  <Spin :style=computedSpinInfo.style>
     <!--<Icon type="ios-loading" size=24 class="spin-icon-load" style="height:100%"></Icon>-->
     <!--<svg class="circular" viewBox="25 25 50 50">-->
       <!--<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"></circle>-->
     <!--</svg>-->
     <div     class="flex-flow-row-wrap justify-content-center align-content-center"    >
       <!--<div>-->
-        <svg  :width=spinInfo.fontSize+8 :height=spinInfo.fontSize+8 viewBox="0 0 200 200" >
+        <svg  :width=computedSpinInfo.fontSize+computedSpinInfo.inc :height=computedSpinInfo.fontSize+computedSpinInfo.inc viewBox="0 0 200 200" >
           <g id="load">
             <linearGradient id="right" gradientUnits="userSpaceOnUse" x1="150" y1="20" x2="150" y2="180">
               <stop offset="0" style="stop-color:#2b85e4"/>
@@ -34,7 +34,7 @@
       <!--</div>-->
 
 
-      <span v-if="spinInfo.position===undefined || spinInfo.position==='h'" :style="{'font-size':spinInfo.fontSize+'px'}  ">{{spinInfo.msg}}</span>
+      <span v-if="spinInfo.position===undefined || spinInfo.position==='h'" class="marginL2" :style="{'font-size':computedSpinInfo.fontSize+'px'}  ">{{spinInfo.msg}}</span>
     <!--<span v-if="spinInfo.position===undefined || spinInfo.position==='h'" style="font-size:24px;height:24px; text-align: center;font-type:'Microsoft YaHei';  ">{{spinInfo.msg}}</span>-->
       <span v-if="spinInfo.position==='v'">{{spinInfo.msg}}</span>
     </div>
@@ -46,9 +46,33 @@
   /**         3rd              **/
   /******************************/
   import {inf} from 'awesomeprint'
+  /******************************/
+  /**    common function       **/
+  /******************************/
+  // import {sendRequestGetResult_async,setUpdateValue} from '../../function/network'
+  // import {showErrorInModal} from '../../function/showErrorResult'
+  import {objectDeepCopy,genNeedInput} from '../../function/misc'
   export default {
     props:{'spinInfo':{type:Object}},//{msg:,position:V/H,show:false/true,fontSize}
     methods:{
+    },
+    computed:{
+      computedSpinInfo(){
+        let spinInfo=objectDeepCopy(this.spinInfo)
+        //如果没有设置大小，则取默认值
+        spinInfo.fontSize=spinInfo.fontSize||14
+        //根据字体的大小，设置spin的增加值（以便尽量使文字居中）
+        spinInfo.inc=Math.ceil(spinInfo.fontSize/4)
+        //根据show（boolean值），产生对应的css style
+        spinInfo.show=spinInfo.show || false
+        if(false===spinInfo.show){
+          spinInfo.style='display:none'
+        }else{
+          spinInfo.style=''
+        }
+        return spinInfo
+        // this.spinInfo.fontSize=this.spinInfo.fontSize||18
+      },
     },
     data(){
       return {

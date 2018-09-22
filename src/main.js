@@ -14,12 +14,30 @@ import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 Vue.use(iView)
 
-/*    引入element-ui      */
+/*********************/
+/***  自定义css  ****/
+/*********************/
+import '../static/css/action.css'
+import '../static/css/color.css'
+import '../static/css/common.css'
+import '../static/css/customer.css'
+import '../static/css/flex.css'
+import '../static/css/fromBootStrap.css'
+import '../static/css/marginPadding.css'
+import '../static/css/position.css'
+import '../static/css/radius.css'
+import '../static/css/size.css'
+import '../static/css/style.css'
+
+/**************************/
+/**   引入element-ui     **/
+/**************************/
 import { Tree } from 'element-ui'
 Vue.component(Tree.name, Tree);
 // Vue.component(Button.name, Button);
-
-/*  引入vuex （需npm install --save vuex）    */
+/**************************************************/
+/**  引入vuex （需npm install --save vuex）    **/
+/**************************************************/
 // import {headerInfo,footerInfo} from './globalState/headerFooterInfo'
 // import {inputRelatePropertyInfo} from './globalState/inputRelateProperty'
 import * as globalState from './globalState/globalState'
@@ -34,6 +52,8 @@ let store=new Vuex.Store({
     // footerInfo,
     headerInfo:globalState.headerInfo,
     footerInfo:globalState.footerInfo,
+    redirectInfo:globalState.redirectInfo,
+
     inputRelatePropertyInfo:globalState.inputRelatePropertyInfo,
     // url:globalState.url,
     style:globalState.style,

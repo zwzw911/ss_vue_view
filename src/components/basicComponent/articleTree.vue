@@ -4,6 +4,7 @@
 <template>
   <div>
     <el-tree :data="treeData" :props="defaultProps" :load="loadNode"  lazy node-key="id" @node-click="handleNodeClick" :render-content="renderContent"
+             empty-text=""
              :expand-on-click-node="false"
              draggable
              :allow-drop="allowDrop"
@@ -34,7 +35,7 @@
   /******************************/
   import {sendRequestGetResult_async,setUpdateValue} from '../../function/network'
   import {showErrorInModal} from '../../function/showErrorResult'
-  import {objectDeepCopy,genNeedInput} from '../../function/misc'
+  import {objectDeepCopy,genNeedInput,ifUserLogin} from '../../function/misc'
   /******************************/
   /**     common constant     **/
   /******************************/
@@ -46,6 +47,11 @@
 
   export default {
     components:{modalFolderName,selfSpin},
+    created(){
+      if(false===ifUserLogin({that:this})){
+        this.$router.push('/login');
+      }
+    },
     data() {
 
       return {
@@ -121,7 +127,7 @@
         data.values[ValidatePart.RECORD_INFO]=inputValueForUpdate_folder
         let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.createFolder,data:data})
         if(result.rc>0){
-          return showErrorInModal(this,result.msg)
+          return showErrorInModal({that:this,msg:result.msg})
         }
         result.msg['childNum']=0
         result.msg['isFolder']=true
@@ -148,7 +154,7 @@
         }
         let  result =await sendRequestGetResult_async({urlOption:urlConfiguration.folder.updateFolder,data:data})
         if(result.rc>0){
-          return showErrorInModal(this,result.msg)
+          return showErrorInModal({that:this,msg:result.msg})
         }
       },
       /** 删除folder **/
@@ -157,7 +163,7 @@
         data.values[ValidatePart.RECORD_ID]=nodeData.id
         let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.deleteFolder,data:data})
         if(result.rc>0){
-          return showErrorInModal(this,result.msg)
+          return showErrorInModal({that:this,msg:result.msg})
         }
         this.$refs.tree.remove(nodeData)
         return Promise.resolve(0)
@@ -208,7 +214,7 @@
 
           let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.updateFolder,data:data})
           if(result.rc>0){
-            return showErrorInModal(this,result.msg)
+            return showErrorInModal({that:this,msg:result.msg})
           }
           // return Promise.resolve(0)
         }
@@ -226,7 +232,7 @@
           // data.values[ValidatePart.RECORD_INFO]=inputValueForUpdate.folder
           let result=await sendRequestGetResult_async({urlOption:urlConfiguration.article.updateArticle,data:data})
           if(result.rc>0){
-            return showErrorInModal(this,result.msg)
+            return showErrorInModal({that:this,msg:result.msg})
           }
           // 更新parentFolder的isLeaf属性
           if(true===dropNode.data.isFolder){
@@ -388,35 +394,40 @@
         return result
       },
       async loadNode(node, resolve) {
+
+        // inf('this.$store.state.userName',this.$store.state.headerInfo.userName)
         let convertResult
 
+        this.spinInfo.show=true
 
+        let result
         if (node.level === 0) {
           // console.log('level 0 loaded node', node);
-          let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.readFolderContent})
-          if(result.rc>0){
-            return showErrorInModal(this,result.msg)
-          }
+          result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.readFolderContent})
 
-          convertResult=this.convertTreeData(result.msg)
-          // this.data=convertResult
-          // inf('node convertResult',node.data)
-          return resolve(convertResult);
         }
         else{
           // let data={values:[ValidatePart.]}
           // console.log('level >0 loaded node', node.key);
-          let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.readFolderContent,data:node.key})
-          if(result.rc>0){
-            return showErrorInModal(this,result.msg)
+          result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.readFolderContent,data:node.key})
+         /* if(result.rc>0){
+            return showErrorInModal({that:this,msg:result.msg})
           }
           // console.log('level >0 loaded result', result);
           // console.log('loadNode(node', result.msg)
           convertResult=this.convertTreeData(result.msg)
           // node.data.children=convertResult
           // inf('node convertResult',convertResult)
-          return resolve(convertResult);
+          return resolve(convertResult);*/
         }
+        if(result.rc>0){
+          return showErrorInModal({that:this,msg:result.msg})
+        }
+        convertResult=this.convertTreeData(result.msg)
+        // this.data=convertResult
+        // inf('node convertResult',node.data)
+        this.spinInfo.show=false
+        return resolve(convertResult);
       }
     }
   };

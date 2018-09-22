@@ -2,6 +2,6 @@
 
 
 const additionalInputAttribute=
-{"captcha":{"label":"验证字符","placeHolder":["验证字符"],"placeHolderBkup":["验证字符"],"unique":false}}
+{"captcha":{"label":"验证码","placeHolder":["验证码"],"placeHolderBkup":["验证码"],"unique":false}}
 
 export {additionalInputAttribute}

@@ -28,8 +28,12 @@ example
 <style scoped>
 </style>
 <template>
+
+
+  <!--<div class="flex-flow-column-nowrap align-content-flex-start">-->
   <div class="flex-flow-column-nowrap align-content-flex-start">
     <div class="flex-flow-row-nowrap align-items-center">
+
       <div >
         <img  alt="单击刷新" title="单击刷新"
               :id="innerCaptchaImgId" :src="captchaImgDataURL" :style="{width:this.captchaInfo.captchaImgWidth+'px',height:this.captchaInfo.captchaImgHeight+'px'}"
@@ -87,17 +91,20 @@ example
           }
         },
         getCaptchaImg_async(){
+          // inf('getCaptchaImg_async in')
           let that=this
           sendRequestGetResult_async({urlOption:urlConfiguration.standAlone.captcha}).then(function (response) {
             that.dealCorrectCaptchaResult(response)
           },function (err) {
+            console.log('getCaptchaImg_async err in')
+            console.log(err)
             console.log(err.data)
             // inf(',sg',msg)
             //转换错误信息
             if(err.status && err.status===504){
               err.data='无法连接服务器，请稍后重试'
             }
-            return showErrorInModal(that,err.data)
+            return showErrorInModal({that:that,msg:err.data})
 
           })
           // let result=await sendRequestGetResult_async({urlOption:urlConfiguration.standAlone.captcha})

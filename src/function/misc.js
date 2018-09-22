@@ -279,8 +279,28 @@ async function nativeReadFile_async({inputId,readType,maxSize}){
     }
   })
 
-
 }
+
+//判断用户是否已经登录
+function ifUserLogin({that}){
+
+  // return that.$store.state.headerInfo.userName!==''
+  if(true===that.$cookies.isKey('loginDone')){
+    return that.$cookies.get('loginDone')==='1'
+  }else{
+    return false
+  }
+}
+
+//页面跳转
+//path: string or number
+function routeTo({that,path}){
+  that.$router.push(path)
+}
+
+
+
+
 export {
   genNeedInput,
   mergeInputAttribute,
@@ -290,5 +310,10 @@ export {
   searchEmptyValueIdxInArray,
   deleteDefinedEleInArray,
   nativeReadFile_async,
+
+  ifUserLogin,
+  routeTo,
+
+  // countDown,
 }
 

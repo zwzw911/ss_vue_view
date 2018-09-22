@@ -2,12 +2,16 @@
   <div id="app">
     <!--<img src="./assets/logo.png">-->
     <router-view/>
+    <!--<selfFooter ></selfFooter>-->
   </div>
+
 </template>
 
 <script>
+  import selfFooter from './components/subLayoutComponents/footer.vue'
 export default {
-  name: 'App'
+  name: 'App',
+  components:{selfFooter},
 }
 </script>
 

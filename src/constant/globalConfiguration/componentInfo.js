@@ -225,9 +225,10 @@ let articleInfo={
     rule:articleInput['rule'],
     // icon:icon,
     // iconColor:'#5cadff',
+    labelWidth:160, //若要实现label-left的效果，必须设置width，以便实现margin-left
     showStarForRequire:true,
     inputLabelSize:'inputLabelH3',
-    inputSize:'inputH3',
+    inputSize:'inputH6',
     /**   richTextEditor configuration    **/
     richTextEditorConfiguration:{
         name:RichTextEditor.WANG_EDITOR,
@@ -238,8 +239,8 @@ let articleInfo={
     addItemButtonDisable:articleInput['addItemButtonDisable'],
     numRange:articleInput['numRange'],
     inputWidth:100,//px，每个input的长度
-    wholeArrangeMode:'v',//2个部分：formItem(with label)/button排列方式  //用v，h的话，button无法和input水平对齐
-    inputArrangeMode:'h',// formItem的排列方式  //label-position=left==>h  label-position=left==>v
+    wholeArrangeMode:'h',//2个部分：label和input/icon排列方式  //用v，h的话，button无法和input水平对齐
+    inputArrangeMode:'h',//autoGen时 formItem的排列方式  //label-position=left==>h  label-position=left==>v
   },
 
 

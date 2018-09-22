@@ -1,0 +1,6 @@
+.attachment-delete-icon-hover-show:hover > div > div > i {
+  visibility: visible ;
+}
+.attachment-delete-icon-hover-show > div > div > i {
+  visibility: hidden ;
+}

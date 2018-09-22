@@ -2,35 +2,27 @@ import Vue from 'vue'
 import Router from 'vue-router'
 /**   import page   **/
 import mainPage from '@/layout/mainPage'
-import registerAndLogin from '@/layout/registerAndLogin'
+import login from '@/layout/login'
+import register from '@/layout/register'
 import updateArticle from '@/layout/updateArticle'
-
-// import register from '../components/subComponents/register'
-// import login from '../components/subComponents/login'
-// import changePassword from '../components/subComponents/changePassword'
-//
-//
-// import {inputValueForCreate,inputValueForUpdate} from '../constant/inputValue/gen/inputValue'
-// import {ruleForCreate,ruleForUpdate} from '../constant/rule/rule'
-// import {inputAttribute} from '../constant/inputValue/gen/inputAttribute'
-// import {inputTempData} from '../constant/inputValue/gen/inputTempData'
+import userCenter from '@/layout/userCenter'
+import redirectToLogin from '@/layout/redirectToLogin'
+import registerAgreement from '@/layout/registerAgreement'
+/**   routePath   **/
+import {routePath} from "../constant/url/routePath";
 
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   routes: [
-    {
-      path: '/',
-      name: 'mainPage',
-      component: registerAndLogin
-    },
-    {
-      path: '/updateArticle/:articleId',
-      name: 'updateArticle',
-      component: updateArticle
-    },
-
+    {path: routePath.main,name: 'mainPage',component: mainPage},
+    {path: routePath.login,name: 'login',component: login,},
+    {path: routePath.register,name: 'register',component: register,},
+    {path: routePath.registerAgreement,name: 'registerAgreement',component: registerAgreement},
+    {path: routePath.userCenter,name: 'userCenter',component: userCenter,},
+    {path: routePath.updateArticle,name: 'updateArticle',component: updateArticle},
+    {path: routePath.redirectToLogin,name: 'redirectToLogin',component: redirectToLogin,},
     /*{
       path: '/',
       name: 'registerAndLogin',

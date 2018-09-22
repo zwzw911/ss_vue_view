@@ -9,7 +9,7 @@
     <div>
 
             <!--:label-width="80"-->
-      <div class="flex-flow-row-nowrap justify-content-flex-start paddingH4 marginV2">
+      <div class="flex-flow-row-nowrap justify-content-flex-start  marginV2">
         <p style="" class="color-red h5">
           <span>{{globalResultMsg}}</span>
           <span style="visibility:hidden">1</span>
@@ -17,7 +17,7 @@
       </div>
 
 
-      <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4 "  label-position="left"
+      <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 "  label-position="left"
             :ref="ref.form.formForLogin" :model="formItemInfo.inputValue" :rules="formItemInfo.rule"
             :label-width="formItemInfo.labelWidth"
             @submit.native.prevent
@@ -26,7 +26,7 @@
 
 
         <!--term of service-->
-        <div class="flex-flow-row-nowrap justify-content-flex-start marginV4">
+        <div class="flex-flow-row-nowrap justify-content-flex-start marginV1">
           <Checkbox v-model="rememberMe" @on-change="">
 
           </Checkbox>
@@ -40,36 +40,50 @@
         <!--</FormItem>-->
       </Form>
 
-      <span class="h4">already?<a>link</a></span>
+      <!--paddingH4: 和form的设置一致，以便对齐-->
+      <div class="  flex-flow-row-nowrap justify-content-flex-start marginT4">
+        <a class="text-align-left" @click="routeToRegister" >注册</a>
+      </div>
+
     </div>
     <!--<Button @click="test_delete" long size="large" shape="circle" type="primary"></Button>-->
   </div>
 </template>
 
 <script>
-  'use strict'
-  // import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
-  // import selfCaptcha from './cpatcha'
-  import {objectDeepCopy,objectPartlyDeepCopy} from  '../../function/misc'
-  import {InputAttributeFieldName,InputTempDataFieldName,ValidatePart} from '../../constant/enum/nonValueEnum'
-
+  /******************************/
+  /**         component       **/
+  /******************************/
+  import selfFormItem from '../basicComponent/formItem'
+  /******************************/
+  /**         3rd              **/
+  /******************************/
+  import {inf,wrn,err} from 'awesomeprint'
+  /******************************/
+  /**    common function       **/
+  /******************************/
   import {sendRequestGetResult_async} from '../../function/network'
+  import {showErrorInModal} from '../../function/showErrorResult'
+  import {objectDeepCopy,genNeedInput,ifUserLogin,routeTo} from '../../function/misc'
+
+  /******************************/
+  /**     common constant     **/
+  /******************************/
+  import {InputAttributeFieldName,InputTempDataFieldName,ValidatePart} from '../../constant/enum/nonValueEnum'
   import {urlConfiguration} from '../../constant/url/url'
 
-  import {mergeAdditionalField} from '../helperLib/componentsHelperLib'
+  // import {mergeAdditionalField} from '../helperLib/componentsHelperLib'
 
-  import {inf,wrn,err} from 'awesomeprint'
 
-  import selfFormItem from '../basicComponent/formItem'
+
   export default {
     components:{selfFormItem},
     props:['loginInfo'], //
     created(){
-
-/*      if(true===this.$cookies.isKey('account')){
-        this.userInputValue.account=this.$cookies.get('account')
-        this.userInputTempData.account[InputTempDataFieldName.VALID_RESULT]=''
-      }*/
+      //如果已经登录，直接跳转到首页
+      if(true===ifUserLogin({that:this})){
+        routeTo({that:this,path:'/'})
+      }
       if(true===this.$cookies.isKey('account')){
         this.formItemInfo.inputValue.account=this.$cookies.get('account')
         this.rememberMe=true
@@ -84,7 +98,7 @@
     },
     methods: {
       /********************************************/
-      /*                    formItem              */
+      /**                   formItem             **/
       /********************************************/
       //获得整体验证结果，然后设置button的状态
       setFormItemResult(result){
@@ -115,7 +129,7 @@
 
       },*/
       /********************************************/
-      /*                    axios                 */
+      /**                   axios                **/
       /********************************************/
 /*      async test_delete(){
         let data={
@@ -144,6 +158,7 @@
         let result=await sendRequestGetResult_async({urlOption:urlConfiguration.user.login,data:data})
         // =await this.sendLoginInfo()
         if(result.rc>0){
+          // inf('result',result)
           // captcha错误显示在input下
           let setCaptchaResult=this.$refs[this.ref.formItem.formItemForLogin].checkIfCaptchaErrAndShow({data:result.msg})
           //否则，显示在最顶上
@@ -158,20 +173,34 @@
             await this.$refs[this.ref.formItem.formItemForLogin].getCaptchaImg_async()
           }
         }else{
+          /**   登录成功    **/
           this.globalResultMsg=''
-          // this.showResultFlag=false
+          // login成功，用户信息保存到cookie和globalState中
           if(true===this.rememberMe){
-
             this.$cookies.set('account', this.formItemInfo.inputValue.account,'14d','/')
           }else{
             this.$cookies.remove('account')
+          }
+          //存储登录的用户信息到cookie（存储在global，刷新页面后，数据会重置）
+          this.$cookies.set('loginDone','1','8h','/')
+          // this.$store.commit('loginSuccessful',{userName:this.formItemInfo.inputValue.account})
+          //返回上页
+          if(this.$router.length>0){
+            // inf(this.$router[-1])
+            this.$router.go(-1)
+          }else{
+            routeTo({that:this,path:'/'})
           }
 
         }
       },
 
-
-
+      /********************************************/
+      /**                   route                **/
+      /********************************************/
+      routeToRegister(){
+        routeTo({that:this,path:'/register'})
+      },
     },
     computed:{
 

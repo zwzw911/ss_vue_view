@@ -12,14 +12,14 @@
         <!--<template v-for="(tabValue,tabName,index) in tabInfo" >-->
           <TabPane :label="tabInfo.phone['label']"  :icon="tabInfo.phone['icon']" :name="tabInfo.phone['name']">
             <!--:label-width="80"-->
-            <div class="flex-flow-row-nowrap justify-content-flex-start paddingH4 marginV2">
+            <div class="flex-flow-row-nowrap justify-content-flex-start marginV2">
               <p style="" class="color-red h5">
                 <span>{{globalResultMsg[currentType]}}</span>
                 <span style="visibility:hidden">1</span>
               </p>
             </div>
 
-            <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4" label-position="left"
+            <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1" label-position="left"
                   :label-width="undefined===formItemInfo[currentType].labelWidth ? 0:formItemInfo[currentType].labelWidth"
                   :ref="ref.form.phone" :model="formItemInfo.phone.inputValue" :rules="formItemInfo.phone.rule"
                   @submit.native.prevent
@@ -28,19 +28,19 @@
               <self-form-item :ref="ref.formItem.phone" :form-item-info="formItemInfo.phone" @validateAllItemResult="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
               <!--<selfCaptcha ref="selfCaptchaForEmail" :captcha-info="captchaInfo"></selfCaptcha>-->
               <!--term of service-->
-              <div class="flex-flow-row-nowrap justify-content-flex-start marginV4">
+<!--              <div class="flex-flow-row-nowrap justify-content-flex-start marginV4">
                 <Checkbox v-model="agreeTOS[currentType]" @on-change="checkSubmitButtonStatus()">
 
                 </Checkbox>
                 <span>asdf<a>trew</a></span>
 
-              </div>
+              </div>-->
 
 <!--              <FormItem class="">
                 <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">注册</Button>
                 &lt;!&ndash;<Button type="ghost" @click="handleReset('userInputValue')" style="margin-left: 8px">Reset</Button>&ndash;&gt;
               </FormItem>-->
-              <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">注册</Button>
+              <!--<Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">注册</Button>-->
             </Form>
 
           </TabPane>
@@ -49,14 +49,14 @@
           <!--<template v-for="(tabValue,tabName,index) in tabInfo" >-->
           <TabPane :label="tabInfo.email['label']"  :icon="tabInfo.email['icon']" :name="tabInfo.email['name']">
             <!--:label-width="80"-->
-            <div class="flex-flow-row-nowrap justify-content-flex-start paddingH4 marginV2">
+            <div class="flex-flow-row-nowrap justify-content-flex-start  marginV2">
               <p style="" class="color-red h5">
                 <span>{{globalResultMsg[currentType]}}</span>
                 <span style="visibility:hidden">1</span>
               </p>
             </div>
 
-            <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4"
+            <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 "
                   label-position="left"
                   :label-width="undefined===formItemInfo[currentType].labelWidth ? 0:formItemInfo[currentType].labelWidth"
                   :ref="ref.form.email" :model="formItemInfo.email.inputValue" :rules="formItemInfo.email.rule"
@@ -64,42 +64,52 @@
             >
               <self-form-item :ref="ref.formItem.email" :form-item-info="formItemInfo.email"></self-form-item>
               <!--term of service-->
-              <div class="flex-flow-row-nowrap justify-content-flex-start marginV4">
-                <Checkbox v-model="agreeTOS[currentType]" @on-change="checkSubmitButtonStatus()">
 
-                </Checkbox>
-                <span>asdf<a>trew</a></span>
-
-              </div>
 
 <!--              <FormItem class="">
                 <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" long :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">注册</Button>
                 &lt;!&ndash;<Button type="ghost" @click="handleReset('userInputValue')" style="margin-left: 8px">Reset</Button>&ndash;&gt;
               </FormItem>-->
-              <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" long :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">注册</Button>
+              <!--<Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" long :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">注册</Button>-->
+
             </Form>
 
           </TabPane>
       </Tabs>
+      <div class="flex-flow-column-nowrap align-content-space-between justify-content-space-between marginV2 ">
+        <div class="text-align-left marginB1">
+          <Checkbox v-model="agreeTOS[currentType]" @on-change="checkSubmitButtonStatus()">
+            阅读并同意<a href="/registerAgreement" target="_blank">注册协议</a>
+          </Checkbox>
+        </div>
 
 
-      <span class="h4">already?<a>link</a></span>
+        <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" long :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">注册</Button>
+
+        <a class=" text-align-left marginT4" @click="routeToLogin">登录</a>
+      </div>
+
     </div>
   </div>
 </template>
 
 <script>
-  // import selfCaptcha from './cpatcha'
-  // import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
-  import {objectDeepCopy,objectPartlyDeepCopy} from  '../../function/misc'
+  /******************************/
+  /**         component       **/
+  /******************************/
+  import selfFormItem from '../basicComponent/formItem'
+  /******************************/
+  /**         3rd              **/
+  /******************************/
+  import {inf,wrn,err} from 'awesomeprint'
+  /******************************/
+  /**    common function       **/
+  /******************************/
+  import {objectDeepCopy,objectPartlyDeepCopy,routeTo} from  '../../function/misc'
   import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
   import {sendRequestGetResult_async} from '../../function/network'
   import {urlConfiguration} from '../../constant/url/url'
 
-  // import {mergeAdditionalField} from '../helperLib/componentsHelperLib'
-  import {inf,wrn,err} from 'awesomeprint'
-
-  import selfFormItem from '../basicComponent/formItem'
 
   export default {
     components:{selfFormItem},
@@ -118,7 +128,7 @@
       checkSubmitButtonStatus() {
           let type=this.currentType
 
-          if(false===this.validateFormItemResult[type]){
+          if(null===this.validateFormItemResult[type] || false===this.validateFormItemResult[type]){
             // inf('forminte  box in')
             this.submitButtonDisable[type] = true
             return
@@ -168,7 +178,7 @@
 
 
       /********************************************/
-      /*                    axios                 */
+      /**                   axios                **/
       /********************************************/
       async sendRegInfo() {
         let captcha=objectPartlyDeepCopy({sourceObj:this.formItemInfo[this.currentType].inputValue,expectedKey:['captcha']})
@@ -205,10 +215,14 @@
               //消除global（最顶上）的错误
               this.globalResultMsg[this.currentType]=''
             }
-
-
       },
 
+      /********************************************/
+      /**                   route                **/
+      /********************************************/
+      routeToLogin(){
+        routeTo({that:this,path:'/login'})
+      },
     },
 
     computed:{
@@ -235,8 +249,8 @@
         // phone['inputValue']=objectPartlyDeepCopy({sourceObj:this.registerInfo.initInputValue,expectedKey:usedFieldName})
         // email['inputValue']=objectPartlyDeepCopy({sourceObj:this.registerInfo.initInputValue,expectedKey:usedFieldName})
 
-        phone['icon']={name:'person',account:'android-phone-portrait',password:'locked'}
-        email['icon']={name:'person',account:'android-mail',password:'locked'}
+        phone['icon']={name:'ios-person',account:'ios-phone-portrait',password:'ios-lock'}
+        email['icon']={name:'ios-person',account:'ios-mail',password:'ios-lock'}
 
         // phone['rule']=objectPartlyDeepCopy({sourceObj:this.registerInfo.formItemInfo.rule,expectedKey:usedFieldName})
         phone['rule'].name[1].pattern=this.registerInfo.formItemInfo.rule.name[1].pattern

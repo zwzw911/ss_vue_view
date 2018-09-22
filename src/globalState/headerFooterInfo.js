@@ -6,11 +6,17 @@
 
 let headerInfo={
   state:{
-    userName:'asdf',
-    articleId:null,
+    userName:'',
+    articleId:'',
   },
   getters:{},
   mutations:{
+    loginSuccessful(state,payload){
+      state.userName=payload.userName
+    },
+    loginOut(state){
+      state.userName=''
+    },
 /*    setArticleId(state,articleId){
       state.articleId=articleId
     },*/
@@ -20,7 +26,7 @@ let headerInfo={
 
 let footerInfo={
   state:{
-    year:'2017',
+    year:'2018',
   },
   getters:{},
   mutations:{
