@@ -84,7 +84,7 @@
       if(true===ifUserLogin({that:this})){
         routeTo({that:this,path:'/'})
       }
-      if(true===this.$cookies.isKey('account')){
+      if(true===this.$cookies.isKey('rememberMe') && true===this.$cookies.isKey('account') ){
         this.formItemInfo.inputValue.account=this.$cookies.get('account')
         this.rememberMe=true
         this.formItemInfo.inputTempData.account[InputTempDataFieldName.VALID_RESULT]=''
@@ -125,6 +125,9 @@
         this.globalResultMsg=''
       },
 
+/*      setRememberMe(value){
+
+      },*/
 /*      genCaptchaSuccess(){
 
       },*/
@@ -175,13 +178,15 @@
         }else{
           /**   登录成功    **/
           this.globalResultMsg=''
-          // login成功，用户信息保存到cookie和globalState中
+          //存储登录的用户信息到cookie（为了登录后在header上显示用户名，所以无论是否rememberMe，都要将用户名保存在cookie）（存储在global，刷新页面后，数据会重置）
           if(true===this.rememberMe){
             this.$cookies.set('account', this.formItemInfo.inputValue.account,'14d','/')
+            this.$cookies.set('rememberMe', 1,'14d','/')
           }else{
-            this.$cookies.remove('account')
+            this.$cookies.set('account', this.formItemInfo.inputValue.account,'8h','/')
+            this.$cookies.remove('rememberMe')
           }
-          //存储登录的用户信息到cookie（存储在global，刷新页面后，数据会重置）
+
           this.$cookies.set('loginDone','1','8h','/')
           // this.$store.commit('loginSuccessful',{userName:this.formItemInfo.inputValue.account})
           //返回上页

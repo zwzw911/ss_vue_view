@@ -153,7 +153,7 @@ formItemInfo:
                 <Input
                   @on-focus="focusInputPlaceHolderDisappear({keyName:k,idx:idx});dismissError({keyName:k,idx:idx});onFocus()"
                   @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass();onBlur({k:k,idx:idx});"
-                  @on-change="validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass();"
+                  @on-change="validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass();validateAllAutoGenItem({keyName:k});"
 
                   :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                   v-model="formItemInfo.inputValue[k][idx]" :placeholder="formItemInfo.inputArrayAttribute[k][idx]['placeHolder'][0]"
@@ -174,14 +174,15 @@ formItemInfo:
                 </Input>
               </FormItem>
 
-              <icon type="md-add-circle"
-                    :style="formItemInfo.addItemButtonDisable[k] ? buttonDisableStyle:''"
+              <!--:style="formItemInfo.addItemButtonDisable[k] ? buttonDisableStyle:''"-->
+              <Icon type="md-add-circle"
+
                     :disabled="formItemInfo.addItemButtonDisable[k]"
-                    :class="[{hidden:!editable},undefined===formItemInfo.inputLabelSize ? '':formItemInfo.inputLabelSize.replace('inputLabelH','h'),]"
+                    :class="[{hidden:!editable},undefined===formItemInfo.inputLabelSize ? '':formItemInfo.inputLabelSize.replace('inputLabelH','h'),formItemInfo.addItemButtonDisable[k] ? '':'color-primary cursor-pointer']"
                     @click="addItem({keyName:k});validateIfAllItemPass()"
-                    class="color-primary cursor-pointer">
+                    >
                 添加
-              </icon>
+              </Icon>
             </div>
 
 
@@ -332,9 +333,8 @@ formItemInfo:
         })
       },
 
-
+      //根据是否处于edit，相应的设置input的trigger。如果disable editable，那么去除blur；否则加上blur
       setTriggerOfInput(curVal){
-
         for(let singleFieldName in this.formItemInfo.rule){
           for(let idx in this.formItemInfo.rule[singleFieldName]){
             if(false===curVal){
@@ -344,10 +344,21 @@ formItemInfo:
               this.formItemInfo.rule[singleFieldName][idx]['trigger']+=',blur'
             }
           }
-
         }
-
       },
+      /************************/
+      /****   预处理数据    ***/
+      /************************/
+      loadData({valueFromDb}){
+        this.formItemInfo.inputValue=misc.objectDeepCopy(valueFromDb)
+        this.inputOriginalValue=misc.objectDeepCopy(valueFromDb)
+      },
+      sanityNotChangedData(){
+        for(let single)
+      },
+      /************************/
+      /****  判断返回结果  ***/
+      /************************/
       //判断返回的值里是否为captcha的错误，是否话，错误信息显示在captcha的input下
       checkIfCaptchaErrAndShow({data}){
         // inf('checkIfCaptchaErrAndShow in')
@@ -372,23 +383,18 @@ formItemInfo:
       //将子组件captcha的getCaptchaImg_async方法暴露出来，供formitem的父组件调用
       getCaptchaImg_async(){
         if(undefined !== this.formItemInfo.captchaInfo){
-          // inf('call getCaptchaImg_async')
-          this.$refs[this.formItemInfo.captchaInfo.captchaImgId].getCaptchaImg_async()
+          this.$refs[this.formItemInfo.captchaInfo.captchaImgId][0].getCaptchaImg_async()
         }
       },
       onFocus(){
-        // inf('onFocus in')
-        // this.formItemInfo.inputTempData['captcha']['validResult']=''
         this.$emit('onFocus')
       },
       onBlur(){
-        // let that=this
-/*        this.$parent.validateField('tags',function(err,result){
-          inf('err',err)
-          inf('result',result)
-        })*/
         this.$emit('onBlur')
       },
+      /************************/
+      /****  placeHolder  ****/
+      /***********************/
       //模拟safiri，点击input时，placeHolder内容消失
       focusInputPlaceHolderDisappear({keyName,idx}) {
         // inf('focusInputPlaceHolderDisappear in')
@@ -460,6 +466,10 @@ formItemInfo:
         }
 
       },
+
+      /*********************/
+      /****  validate  ****/
+      /*********************/
       //存储 单个input 的检测结果（null：为检测，非空字符：检测通过，空字符：检测通过）
       validSingleInputValue({fieldName}) {
         //非编辑状态，不执行validate
@@ -476,7 +486,10 @@ formItemInfo:
       },
       //通过检测inputTempData中所有字段的valid_result，判断是否所有item validate pass
       //产生事件validateAllItemResult，返回boolean
-      validateIfAllItemPass() {
+      async validateIfAllItemPass() {
+
+        // inf('this.$parent.validate()',this.$parent.validate())
+        /*inf('validateIfAllItemPass in')
         //非编辑状态，不执行validate
         if(this.editable===false){
           return
@@ -518,17 +531,27 @@ formItemInfo:
         // flag=true
 
         //输入是否都符合rule定义
-/*        let validateByRuleResult
+/!*        let validateByRuleResult
         if(flag===true){
           validateByRuleResult = await this.validateByRule_async()
-        }*/
+        }*!/
+inf('flag',flag)*/
+        this.$parent.validate((validResult)=>{
+          // console.log('validResult in foritem',validResult)
+          this.$emit('validateAllItemResult',validResult)
+/*          if(validResult){
+            this.$emit('validateAllItemResult',true)
+          }else{
+            this.$emit('validateAllItemResult',false)
+          }*/
 
-        this.$emit('validateAllItemResult',flag)
+        })
+
       },
-      async validateByRule_async(){
+/*      async validateByRule_async(){
         let result=await this.$parent.validate()
         return Promise.resolve(result)
-      },
+      },*/
       //字段的unique检测
       //不知道为啥，props,data和computed中的数据，不能放在promise的then中使用，如果要做设置，只能通过参数传递
       async validateUnique({fieldName,formItemInfo}) {
@@ -572,78 +595,10 @@ formItemInfo:
           this.$emit('uniqueCheckResult',{fieldName:fieldName,data:response})
         }
       },
-      genCaptchaSuccess(){},
-
-      /***************************************************/
-      /**************    autoGenFormItem    *************/
-      /***************************************************/
-      dismissError({keyName,idx}){
-        // inf('idx',idx)
-        if(null!==this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT] && ''!==this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT]){
-          this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT]=""
-        }
-
-      },
-/*      removeEmptyEle({keyName}){
-        let tobeDeletedIdx=misc.searchEmptyValueIdxInArray({array:this.formItemInfo.inputValue[keyName]})
-        // inf('tobeDeletedIdx',tobeDeletedIdx)
-        if(tobeDeletedIdx.length>0){
-          misc.deleteDefinedEleInArray({array:this.formItemInfo.inputValue[keyName],tobeDeletedIdx:tobeDeletedIdx})
-          misc.deleteDefinedEleInArray({array:this.formItemInfo.inputArrayTempData,tobeDeletedIdx:tobeDeletedIdx})
-          misc.deleteDefinedEleInArray({array:this.formItemInfo.inputArrayAttribute,tobeDeletedIdx:tobeDeletedIdx})
-        }
-      },*/
-      addItem({keyName}){
-        // inf('keyname',keyName)
-        let that=this
-        //如果inputValue未设置，则初始化
-        if( null===this.formItemInfo.inputValue[keyName] || undefined=== this.formItemInfo.inputValue[keyName]){
-          this.formItemInfo.inputValue[keyName]=[]
-        }
-        //判断最后一个元素是否验证通过，无法继续添加
-        let length=this.formItemInfo.inputValue[keyName].length
-
-        if(length>0){
-          // inf('length',length)
-          // inf('last validResult',this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult'])
-          if(""!==this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult'] || null===this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult']){
-            // this.formItemInfo.addItemButtonDisable[keyName]=true
-            // showErrorInCenterMessage({that:that,msg:'有尚未填入内容的标签'})
-            // this.formItemInfo.inputArrayTempData[keyName][length-1][InputTempDataFieldName.VALID_RESULT] = `文档标签不能为空啊`
-            return
-          }
-        }
-
-        // //判断最后一个元素是否为空，如果为空，无法继续添加
-        // let length=this.formItemInfo.inputValue[keyName].length
-        // if(""===this.formItemInfo.inputValue[keyName][length-1]){
-        //   // this.formItemInfo.addItemButtonDisable[keyName]=true
-        //   // showErrorInCenterMessage({that:that,msg:'有尚未填入内容的标签'})
-        //   this.formItemInfo.inputArrayTempData[keyName][length-1][InputTempDataFieldName.VALID_RESULT] = `有尚未填入内容的标签`
-        //   return
-        // }
-        if(length<this.formItemInfo.numRange[keyName]['max']){
-          this.formItemInfo.inputValue[keyName].push('')
-          this.formItemInfo.inputArrayAttribute[keyName].push(misc.objectDeepCopy(this.formItemInfo.inputAttribute[keyName]))
-          // inf('misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName])',misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName]))
-          this.formItemInfo.inputArrayTempData[keyName].push(misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName]))
-        }
-        //如果没加或者加完之后，达到上限
-        if(this.formItemInfo.inputValue[keyName].length>=this.formItemInfo.numRange[keyName]['max']){
-          this.formItemInfo.addItemButtonDisable[keyName]=true
-        }
-        // this.autoEliminateMarginLeft()
-      },
-      removeItem({keyName,idx}){
-        this.formItemInfo.inputValue[keyName].splice(idx,1)
-        this.formItemInfo.inputArrayAttribute[keyName].splice(idx,1)
-        this.formItemInfo.inputArrayTempData[keyName].splice(idx,1)
-        this.formItemInfo.addItemButtonDisable[keyName]=false
-      },
       //是否有重复
       validateDuplicate({keyName,idx}){
-        inf('validateDuplicate in with idx',idx)
-        inf('before valud reulst',this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT])
+        // inf('validateDuplicate in with idx',idx)
+        // inf('before valud reulst',this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT])
         let tobeCheckValue=this.formItemInfo.inputValue[keyName][idx]
         let keyValue=this.formItemInfo.inputValue[keyName]
         if(''!==tobeCheckValue){
@@ -664,6 +619,78 @@ formItemInfo:
         }
         // this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT] =''
       },
+      genCaptchaSuccess(){},
+
+      /***************************************************/
+      /**************    autoGenFormItem    *************/
+      /***************************************************/
+      dismissError({keyName,idx}){
+        // inf('idx',idx)
+        if(null!==this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT] && ''!==this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT]){
+          this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT]=""
+        }
+
+      },
+      //根据keyName判断一个autoGen的所有item是否已经都valid了
+      validateAllAutoGenItem({keyName}){
+        //判断所有元素是否验证通过，无法继续添加
+        if(undefined!==this.formItemInfo.inputValue[keyName]){
+          let length=this.formItemInfo.inputValue[keyName].length
+          if(length>0){
+            // inf('length',length)
+            // inf('last validResult',this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult'])
+            while (length>0){
+              if(""!==this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult'] || null===this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult']){
+                // this.formItemInfo.addItemButtonDisable[keyName]=true
+                // showErrorInCenterMessage({that:that,msg:'有尚未填入内容的标签'})
+                // this.formItemInfo.inputArrayTempData[keyName][length-1][InputTempDataFieldName.VALID_RESULT] = `文档标签不能为空啊`
+                this.formItemInfo.addItemButtonDisable[keyName]=true
+                return false
+              }
+              length--
+            }
+          }
+        }
+        this.formItemInfo.addItemButtonDisable[keyName]=false
+        return true
+      },
+      addItem({keyName}){
+        // inf('keyname',keyName)
+        let that=this
+        this.formItemInfo.addItemButtonDisable[keyName]=false
+        //如果inputValue未设置，则初始化
+        if( null===this.formItemInfo.inputValue[keyName] || undefined=== this.formItemInfo.inputValue[keyName]){
+          this.formItemInfo.inputValue[keyName]=[]
+        }
+        //判断是否所有已经存在的item都验证通过
+        let existItemValidateResult=this.validateAllAutoGenItem({keyName:keyName})
+        if(false===existItemValidateResult){
+          return
+        }
+        //判断是否已经达到最大数量，如果没有，创建一个新的value/attribute/tempData
+        if(length>=this.formItemInfo.numRange[keyName]['max']){
+          this.formItemInfo.addItemButtonDisable[keyName]=true
+          return
+        }else{
+          this.formItemInfo.inputValue[keyName].push('')
+          this.formItemInfo.inputArrayAttribute[keyName].push(misc.objectDeepCopy(this.formItemInfo.inputAttribute[keyName]))
+          // inf('misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName])',misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName]))
+          this.formItemInfo.inputArrayTempData[keyName].push(misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName]))
+          this.formItemInfo.addItemButtonDisable[keyName]=true
+        }
+        // if(length<this.formItemInfo.numRange[keyName]['max']){
+
+        // }
+        // this.autoEliminateMarginLeft()
+      },
+      removeItem({keyName,idx}){
+        this.formItemInfo.inputValue[keyName].splice(idx,1)
+        this.formItemInfo.inputArrayAttribute[keyName].splice(idx,1)
+        this.formItemInfo.inputArrayTempData[keyName].splice(idx,1)
+        // inf('this.validateAllAutoGenItem({keyName:keyName})',this.validateAllAutoGenItem({keyName:keyName}))
+        this.validateAllAutoGenItem({keyName:keyName})
+      },
+
     },
     computed: {},
     data() {
@@ -676,6 +703,10 @@ formItemInfo:
 
         classVertical:'flex-flow-column-nowrap justify-content-flex-start align-items-flex-start align-content-flex-start',
         classHorizontal:'flex-flow-row-nowrap justify-content-flex-start align-items-flex-start align-content-flex-start',
+        // ref:this.formItemInfo.captchaInfo.captchaImgId,
+
+        //存储原始数据
+        inputOriginalValue:undefined,
       }
     },
   }

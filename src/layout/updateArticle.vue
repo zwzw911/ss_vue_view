@@ -69,7 +69,7 @@
         registerInfo:componentInfo.registerInfo,
         changePasswordInfo:componentInfo.changePasswordInfo,
         autoGenFormItemInfo:componentInfo.autoGenFormItemInfo,*/
-        articleInfo:componentInfo.articleInfo,
+        articleInfo:componentInfo.articleInfo(),
         footerInfo:componentInfo.footerInfo,
         // editable:false,
         validateResult:false,

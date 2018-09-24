@@ -9,7 +9,7 @@
 </style>-->
 
 <template>
-  <div class="height8  marginT4 flex-flow-row-nowrap justify-content-center align-items-center container" style="border-top: 1px solid #0e0e0e">
+  <div class="height8  marginT4 flex-flow-row-nowrap justify-content-center align-items-center" style="border-top: 1px solid #0e0e0e">
     <span>2016-2018 &copy; iShare</span>
   </div>
 <!--  <div class="height8 flex-flow-row-nowrap justify-content-center align-items-center" >

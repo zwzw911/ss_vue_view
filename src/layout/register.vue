@@ -50,7 +50,7 @@
       return {
 /*        loginInfo:componentInfo.loginInfo,
         userInfo:componentInfo.userInfo,*/
-        registerInfo:componentInfo.registerInfo,
+        registerInfo:componentInfo.registerInfo(),
 /*        changePasswordInfo:componentInfo.changePasswordInfo,
         autoGenFormItemInfo:componentInfo.autoGenFormItemInfo,
         articleInfo:componentInfo.articleInfo,

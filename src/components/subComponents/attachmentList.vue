@@ -5,7 +5,7 @@
   <div class="flex-flow-column-wrap align-content-flex-start align-items-flex-start">
     <div v-for="(val,idx) in attachmentListPropsInfo.currentAttachmentFileInfo" class="attachment-delete-icon-hover-show h4 marginT2">
       <a>{{attachmentListPropsInfo.currentAttachmentFileInfo[idx]['name']}}</a>
-      <Tooltip placement="right" :delay=2000 content="删除附件">
+      <Tooltip placement="right" :delay=1000 content="删除附件">
         <Icon type="md-trash" class="color-error marginL2 cursor-pointer" style="align-self: flex-end" @click="deleteAttachment_async({idx:idx})"></Icon>
       </ToolTip>
     </div>

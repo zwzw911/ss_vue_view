@@ -66,7 +66,7 @@
       },
     data () {
       return {
-        loginInfo:componentInfo.loginInfo,//misc.objectDeepCopy(    不要使用objectDeepInfo,否则会导致正则无法正确copy
+        loginInfo:componentInfo.loginInfo(),//misc.objectDeepCopy(    不要使用objectDeepInfo,否则会导致正则无法正确copy
         /*userInfo:componentInfo.userInfo,
         registerInfo:componentInfo.registerInfo,
         changePasswordInfo:componentInfo.changePasswordInfo,

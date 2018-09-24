@@ -75,7 +75,9 @@ example
           }
       },
       methods: {
-
+test(){
+  alert('test')
+},
         captchaLoaded(){
           // inf('captchaLoaded in')
           let imgPosPara=getPosPara(this.dom.captchaImg)
@@ -91,7 +93,7 @@ example
           }
         },
         getCaptchaImg_async(){
-          // inf('getCaptchaImg_async in')
+          inf('getCaptchaImg_async in')
           let that=this
           sendRequestGetResult_async({urlOption:urlConfiguration.standAlone.captcha}).then(function (response) {
             that.dealCorrectCaptchaResult(response)
@@ -130,6 +132,7 @@ example
           // }
         },
         async dealCorrectCaptchaResult(result){
+          inf('dealCorrectCaptchaResult in')
           this.captchaImgLoadedFlag=false
           if(result.rc===0){
             this.captchaImgHideFlag=false
@@ -137,8 +140,10 @@ example
             this.captchaImgErrorMsg=''
           }else{
             // 前一次POST未设session，需要重发来获得captcha
+            inf('resend')
+            inf('result',result)
             if(result.rc===60050){
-              // inf('resend')
+
               await this.getCaptchaImg_async()
             }
             else{

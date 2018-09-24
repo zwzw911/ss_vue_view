@@ -8,7 +8,7 @@
       <!--<router-view />-->
       <!--<selfLogin :login-info="loginInfo"></selfLogin>-->
       <!--<selfRegister  :register-info="registerInfo"></selfRegister>-->
-      <!--<selfChangePassword :change-password-info="changePasswordInfo"></selfChangePassword>-->
+      <selfChangePassword :change-password-info="changePasswordInfo"></selfChangePassword>
       <!--<self-user-icon :user-icon-info="userIconInfo"></self-user-icon>-->
       <!--<selfUserInfo :user-info="userInfo"></selfUserInfo>-->
       <!--<self-auto-gen-form-item :auto-gen-form-item-info="autoGenFormItemInfo" :editable="true"></self-auto-gen-form-item>-->
@@ -80,16 +80,16 @@
       },
     data () {
       return {
-/*        loginInfo:componentInfo.loginInfo,
+      /*  loginInfo:componentInfo.loginInfo,
         userInfo:componentInfo.userInfo,
-        registerInfo:componentInfo.registerInfo,
-        changePasswordInfo:componentInfo.changePasswordInfo,
-        autoGenFormItemInfo:componentInfo.autoGenFormItemInfo,
+        registerInfo:componentInfo.registerInfo,*/
+        changePasswordInfo:componentInfo.changePasswordInfo(),
+       /* autoGenFormItemInfo:componentInfo.autoGenFormItemInfo,
         articleInfo:componentInfo.articleInfo,
 
-        editable:false,
+        editable:false,*/
 
-        validateResult:false,*/
+        validateResult:false,
       }
     },
     methods:{

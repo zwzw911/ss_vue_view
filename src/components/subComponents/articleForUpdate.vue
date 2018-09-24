@@ -19,15 +19,14 @@
             :label-width="articleInfo.formItemInfo.labelWidth"
             @submit.native.prevent
       >
-        <!--    <FormItem label="test">
-              <Input></Input>
-            </FormItem>-->
 
-        <!--:ref="ref.formItem.formItemForLogin"-->
-        <!--@validateAllItemResult="setFormItemResult" @onBlur="checkSubmitButtonStatus"-->
-        <!--:auto-gen-form-item-info="articleInfo.autoGenFormItemInfo"-->
-        <self-form-item  :editable="editable" :form-item-info="articleInfo.formItemInfo" :formRefName="articleInfo.ref.form.articleForm"  @validateAllItemResult="validateAllItemResult"></self-form-item>
-        <!--<self-auto-gen-form-item :editable="editable" :auto-gen-form-item-info="articleInfo.autoGenFormItemInfo"></self-auto-gen-form-item>-->
+        <self-form-item
+          :editable="editable"
+          :form-item-info="articleInfo.formItemInfo"
+          :formRefName="articleInfo.ref.form.articleForm"
+          @validateAllItemResult="validateAllItemResult"
+          :ref="articleInfo.ref.formItem.articleFormItem"
+        ></self-form-item>
 
       </Form>
 
@@ -36,7 +35,7 @@
     </div>
 
     <div class="flex-flow-row-wrap justify-content-center">
-      <Button type="primary" :disabled="false===validResult">保存</Button>
+      <Button type="primary" :disabled="false===validResult" @click="saveUpdate">保存</Button>
       <Button type="default"  class="marginH5">取消</Button>
       <!--<Button type="success" :disabled="editable">编辑</Button>-->
       <!--<Button type="error" :disabled="!editable">删除</Button>-->
@@ -95,13 +94,19 @@
 
           })
         },
-        saveUpdate(){
-          let data={values:{}}
-          data.values[ValidatePart.RECORD_ID]=''
-          //生成数据
-          for(let singleKey in this.articleInfo.formItemInfo.inputTempData){
-            //根据inputTempData的值判断inputValue是否被更改
+        async saveUpdate(){
+          //1. 出发form的方法，检测是否所有input都符合条件，结果传递给本组件变量validResult
+          await this.$refs[this.articleInfo.ref.formItem.articleFormItem].validateIfAllItemPass()
+          // console.log('this.validResult',this.validResult)
+          if(true===this.validResult){
+            let data={values:{}}
+            data.values[ValidatePart.RECORD_ID]=''
+            //生成数据
+            for(let singleKey in this.articleInfo.formItemInfo.inputTempData){
+              //根据inputTempData的值判断inputValue是否被更改
+            }
           }
+
         },
         /*************************/
         /**   子组件formItem emit事件   **/

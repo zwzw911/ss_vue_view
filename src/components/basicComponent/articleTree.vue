@@ -62,11 +62,11 @@
         /**   modalTree   **/
         modalCreateFolderInfo:{
           show:false,
-          formItemInfo:articleTreeFolderInfo.formItemInfo,
+          formItemInfo:articleTreeFolderInfo().formItemInfo,
         },
         modalRenameFolderInfo:{
           show:false,
-          formItemInfo:articleTreeFolderInfo.formItemInfo,
+          formItemInfo:articleTreeFolderInfo().formItemInfo,
         },
         /**   tree   **/
         treeData: [
