@@ -25,7 +25,7 @@
                   @submit.native.prevent
             >
 
-              <self-form-item :ref="ref.formItem.phone" :form-item-info="formItemInfo.phone" @validateAllItemResult="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
+              <self-form-item :ref="ref.formItem.phone" :form-item-info="formItemInfo.phone" @checkIfAllItemValidatedAndPass="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
               <!--<selfCaptcha ref="selfCaptchaForEmail" :captcha-info="captchaInfo"></selfCaptcha>-->
               <!--term of service-->
 <!--              <div class="flex-flow-row-nowrap justify-content-flex-start marginV4">
@@ -84,7 +84,9 @@
         </div>
 
 
-        <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" long :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">注册</Button>
+        <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" long :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">
+          注册
+        </Button>
 
         <a class=" text-align-left marginT4" @click="routeToLogin">登录</a>
       </div>
@@ -106,10 +108,14 @@
   /**    common function       **/
   /******************************/
   import {objectDeepCopy,objectPartlyDeepCopy,routeTo} from  '../../function/misc'
-  import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
   import {sendRequestGetResult_async} from '../../function/network'
+  import * as handleResult from '../../function/handleResult'
+  /******************************/
+  /**    common constant       **/
+  /******************************/
   import {urlConfiguration} from '../../constant/url/url'
-
+  import {routePath} from '../../constant/url/routePath'
+  import {InputAttributeFieldName,InputTempDataFieldName,ValidatePart} from '../../constant/enum/nonValueEnum'
 
   export default {
     components:{selfFormItem},
@@ -119,6 +125,7 @@
     methods: {
       //获得整体验证结果后，立即设置button状态
       setFormItemResult(result){
+        // inf('setFormItemResult',result)
         let type=this.currentType
         this.validateFormItemResult[type]=result
         this.checkSubmitButtonStatus()
@@ -214,6 +221,7 @@
             }else{
               //消除global（最顶上）的错误
               this.globalResultMsg[this.currentType]=''
+              routeTo({that:this,path:routePath.main})
             }
       },
 

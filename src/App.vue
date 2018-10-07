@@ -8,10 +8,10 @@
 </template>
 
 <script>
-  import selfFooter from './components/subLayoutComponents/footer.vue'
+  // import selfFooter from './components/subLayoutComponents/footer.vue'
 export default {
   name: 'App',
-  components:{selfFooter},
+  // components:{selfFooter},
 }
 </script>
 

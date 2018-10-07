@@ -36,6 +36,7 @@
         imgHeight:'100px',
         imgPadding:'4px',
       }
+      //merge pass in setting to default setting
       for(let singleKey in defaultSetting){
         if(undefined===this.userIconInfo[singleKey]){
           usedUserIconInfo[singleKey]=defaultSetting[singleKey]

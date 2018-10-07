@@ -1,0 +1,18 @@
+.font-serif {
+  font-family: Serif;
+}
+.font-monospace {
+  font-family: monospace;
+}
+.font-fantasy {
+  font-family: fantasy;
+}
+.font-cursive {
+  font-family: cursive;
+}
+.bold {
+  font-weight: bold;
+}
+.bolder {
+  font-weight: bolder;
+}

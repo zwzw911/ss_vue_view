@@ -9,7 +9,7 @@ const inputAttribute={
     admin_penalize:{
         punishedId:{"label":"受罚人","placeHolder":["受罚人账号，手机号或者邮件地址"],"placeHolderBkup":["受罚人账号，手机号或者邮件地址"]},
         reason:{"label":"受罚原因","placeHolder":["受罚原因，至少15个字符"],"placeHolderBkup":["受罚原因，至少15个字符"]},
-        penalizeType:{"label":"受罚类型","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"禁止创建","2":"禁止读取","3":"禁止更新","4":"禁止删除","9":"禁止所有操作"}},
+        penalizeType:{"label":"受罚类型","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"禁止文档","2":"禁止评论","3":"禁止创建系列","4":"禁止踩赞","10":"禁止评论举报","20":"禁止好友分组","21":"禁止添加好友","30":"禁止创建群","31":"禁止加入群","40":"禁止上传头像","50":"禁止目录相关操作","60":"禁止举报","61":"禁止操作举报"}},
         penalizeSubType:{"label":"受罚子类型","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"禁止创建","2":"禁止读取","3":"禁止更新","4":"禁止删除","9":"禁止所有操作"}},
         duration:{"label":"受罚时长","placeHolder":[""],"placeHolderBkup":[""]},
         revokeReason:{"label":"撤销原因","placeHolder":[""],"placeHolderBkup":[""]},
@@ -17,7 +17,7 @@ const inputAttribute={
     admin_user:{
         name:{"label":"用户名","placeHolder":[""],"placeHolderBkup":[""],"unique":true},
         password:{"label":"密码","placeHolder":[""],"placeHolderBkup":[""]},
-        userType:{"label":"管理员类型","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"浏览举报","2":"分配举报","3":"处理举报","10":"创建管理员","11":"删除管理员","12":"更新管理员","20":"处罚用户","21":"撤销处罚"}},
+        userType:{"label":"管理员类型","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"超级管理员","2":"管理员"}},
         userPriority:{"label":"用户权限","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"浏览举报","2":"分配举报","3":"处理举报","10":"创建管理员","11":"删除管理员","12":"更新管理员","20":"处罚用户","21":"撤销处罚"}},
     },
     category:{
@@ -26,7 +26,7 @@ const inputAttribute={
     },
     resource_profile:{
         name:{"label":"资源配置名称","placeHolder":[""],"placeHolderBkup":[""],"unique":true},
-        range:{"label":"资源配置范围","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"基本资源配置","2":"高级资源配置"}},
+        range:{"label":"资源配置范围","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"用户文档所有资源","10":"文档图片","12":"文档附件","14":"单次举报最大可插入图片资源","16":"举报附件资源","18":"整个举报过程中最大可插入图片资源","20":"整个举报过程中用户最大可插入图片资源","100":"最大目录数量","102":"最大朋友群数量","105":"最大朋友数量","106":"最大未处理的添加朋友的请求数","110":"新建但未做过任何处理的文档数","112":"最大文档数","114":"文档最大评论数","116":"用户对文档的最大评论数","118":"用户最大编辑中举报数","120":"最大撤销举报数","122":"用户最大提交当未被处理的举报数","124":"每个举报中每个用户最多创建的评论","126":"每个用户最大可创建的公共群数","130":"入群最大被拒次数"}},
         type:{"label":"资源配置类型","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"基本资源配置","2":"高级资源配置"}},
         maxNum:{"label":"最大文件数量","placeHolder":[""],"placeHolderBkup":[""]},
         maxDiskSpaceInMb:{"label":"最大存储空间","placeHolder":[""],"placeHolderBkup":[""]},
@@ -46,7 +46,7 @@ const inputAttribute={
         htmlContent:{"label":"文档内容","placeHolder":["文档内容"],"placeHolderBkup":["文档内容"]},
         tags:{"label":"文档标签","placeHolder":["文档标签，2至20个字符"],"placeHolderBkup":["文档标签，2至20个字符"]},
         categoryId:{"label":"分类","placeHolder":[""],"placeHolderBkup":[""]},
-        allowComment:{"label":"允许评论","placeHolder":[""],"placeHolderBkup":[""]},
+        allowComment:{"label":"允许评论","placeHolder":[""],"placeHolderBkup":[""],"enumValue":{"1":"允许评论","2":"禁止评论"}},
     },
     article_comment:{
         articleId:{"label":"文档","placeHolder":[""],"placeHolderBkup":[""]},

@@ -5,7 +5,7 @@
     </div>
     <Row class="flex-flow-row-nowrap justify-content-space-between marginTX" style="flex:1">
       <Col span="20">
-        <self-update-article :article-info="articleInfo"  @validateAllItemResult="validateAllItemResult"></self-update-article>
+        <self-read-article ref="article"></self-read-article>
       </Col>
     </Row>
     <div class="footer">
@@ -20,7 +20,8 @@
   /******************************/
   import selfFooter from '../components/subLayoutComponents/footer.vue'
   import selfHeader from '../components/subLayoutComponents/header.vue'
-  import selfUpdateArticle from '../components/subComponents/articleForUpdate.vue'
+  import selfReadArticle from '../components/subComponents/articleForRead.vue'
+
   /******************************/
   /**         3rd              **/
   /******************************/
@@ -36,32 +37,33 @@
   import {routePath} from '../constant/url/routePath'
 
   export default {
-      components:{selfUpdateArticle,selfFooter,selfHeader},
+      components:{selfReadArticle,selfFooter,selfHeader},
       computed:{
 
       },
-    mounted(){
-        //尚未登录，设置错误信息并显示登录页面
+    async mounted(){
+/*        //尚未登录，设置错误信息并显示登录页面
       if(false===misc.ifUserLogin({that:this})){
         this.$store.commit("setRedirectMsg",{msg:'redirect test'})
         misc.routeTo({that:this,path:routePath.redirectToLogin})
-      }
+      }*/
+      await this.$refs.article.getArticle_async()
     },
     data () {
       return {
-        articleInfo:componentInfo.articleInfo(),
+        // articleInfo:componentInfo.articleInfo(),
         headerInfo:componentInfo.headerInfo,
         footerInfo:componentInfo.footerInfo,
-        validateResult:false,
+        // validateResult:false,
       }
     },
     methods:{
-      switchEditable(){
+/*      switchEditable(){
         this.editable=!this.editable
       },
       validateAllItemResult(result){
         this.validateResult=!result
-      },
+      },*/
     }
   }
 </script>

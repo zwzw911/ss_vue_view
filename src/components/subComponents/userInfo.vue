@@ -3,7 +3,7 @@
 <template>
 <div style="">
   <div class="flex-flow-column-nowrap" style="overflow: auto">
-    <p style="text-align:left" class="h3 font-monospace">基本信息</p>
+    <span style="text-align:left;width:100px;font-weight: bold" class="h3 font-monospace color-dark-primary">基本信息</span>
     <hr class="marginT2">
     <div class="flex-flow-row-nowrap justify-content-flex-start align-items-center marginT4" >
       <label style="color:gray;" :style="{width:userIconLabelWidth+'px'}">头像</label>
@@ -12,46 +12,62 @@
 
       <!--'border-width':cropBorderWidth.top+'px'+' '+cropBorderWidth.left+'px'-->
       <self-crop id="selfCropId" :ref="ref.crop.cropForUserInfo" :style="{visibility:cropHidden,}"
-                 style=" position: fixed;width:100%;height:100%;top:0px;left:0px;border-style:solid;border-color:rgba(15,15,15,0.7);"
-                 :crop-info="userInfo.cropInfo" @exitWithCroppedImg="getCroppedImg" z-index="2000"></self-crop>
+                 :crop-info="userInfo.cropInfo" @exitWithCroppedImg="getCroppedImg" ></self-crop>
 
     </div>
 
   </div>
-  <div class="marginT7">
-    <p style="text-align:left" class="h3 font-monospace">详细信息</p>
+  <div class="flex-flow-column-nowrap marginT7">
+    <span style="text-align:left;width:100px;font-weight: bold" class="h3 font-monospace color-dark-primary">详细信息</span>
     <hr class="marginT2">
-    <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4 marginT4"  label-position="left"
-          :ref="ref.form.formForUserInfo" :model="formItemInfoForNonIconInput.inputValue" :rules="formItemInfoForNonIconInput.rule"
-          :label-width="undefined===formItemInfoForNonIconInput.labelWidth ? 0:formItemInfoForNonIconInput.labelWidth"
-          @submit.native.prevent
-    >
-      <self-form-item :form-item-info="formItemInfoForNonIconInput"
-                      :ref="ref.formItem.formItemForUserInfo"
-                      @validateAllItemResult="setFormItemWholeValidateResult" @uniqueCheckResult="setUniqueCheckResult"></self-form-item>
-    </Form>
+    <div>
+      <Form class=" paddingH4 marginT4"  label-position="left"
+            :ref="ref.form.formForUserInfo" :model="formItemInfoForNonIconInput.inputValue" :rules="formItemInfoForNonIconInput.rule"
+            :label-width="undefined===formItemInfoForNonIconInput.labelWidth ? 0:formItemInfoForNonIconInput.labelWidth"
+            @submit.native.prevent
+      >
+        <self-form-item :form-item-info="formItemInfoForNonIconInput"
+                        :ref="ref.formItem.formItemForUserInfo"
+                        @validateAllItemResult="setFormItemWholeValidateResult" @uniqueCheckResult="setUniqueCheckResult"></self-form-item>
+      </Form>
+    </div>
+
       <!--<self-form-item :form-item-info=""></self-form-item>-->
   </div>
   <!--;-->
-  <Button size="large"  type="primary" @click="saveUserInfo_async" :style="validateFormItemResult ? '':buttonDisableStyle" :disabled="!validateFormItemResult">保存</Button>
+  <Button class="marginT7" size="large"  type="primary" @click="saveUserInfo_async" :style="validateFormItemResult ? '':buttonDisableStyle" :disabled="!validateFormItemResult">保存</Button>
 
 </div>
 </template>
 <script>
-  // import {} from
-  import * as misc from "../../function/misc"
-  // import
-  import {myAxios,pageViewWH,calcCenterParams} from "../helperLib/componentsHelperLib"
-  import {sendRequestGetResult_async} from '../../function/network'
-  import {urlConfiguration} from '../../constant/url/url'
-
-  import {InputAttributeFieldName,InputTempDataFieldName,ValidatePart} from '../../constant/enum/nonValueEnum'
-  import {inf} from 'awesomeprint'
-  // import {unique} from '../../constant/inputValue/manual/not_used_uniqueCheck'
-
+  /******************************/
+  /*****      component     ****/
+  /******************************/
   import selfUserIcon from '../basicComponent/userIcon'
   import selfCrop from '../basicComponent/crop'
   import selfFormItem from '../basicComponent/formItem'
+  /******************************/
+  /****  common function    ****/
+  /******************************/
+  import * as misc from "../../function/misc"
+  import {commonHandlerForErrorResult,commonHandlerForSuccessResult} from "../../function/handleResult"
+  // import {showErrorInCenterMessage} from "../../function/showResult"
+  /******************************/
+  /****        网络         ****/
+  /******************************/
+  import {myAxios,pageViewWH,calcCenterParams} from "../helperLib/componentsHelperLib"
+  import {sendRequestGetResult_async} from '../../function/network'
+  import {urlConfiguration} from '../../constant/url/url'
+  /******************************/
+  /****   common constant   ****/
+  /******************************/
+  import {InputAttributeFieldName,InputTempDataFieldName,ValidatePart} from '../../constant/enum/nonValueEnum'
+  /******************************/
+  /****      3rd            ****/
+  /******************************/
+  import {inf} from 'awesomeprint'
+  // import {unique} from '../../constant/inputValue/manual/not_used_uniqueCheck'
+
 
   export default {
     components:{selfUserIcon,selfCrop,selfFormItem},
@@ -61,7 +77,9 @@
       window.onresize= ()=>{
         this.setCropCenter()
       }
-      await this.getUserInfo_async()
+
+      //作为子组件，由父组件决定何时getUserInfo_async，否则组件载入就会调用，可能短时间内和其他组件的请求集中在一起发送
+      // await this.getUserInfo_async()
     },
     methods:{
 /*      switchEditable(){
@@ -69,52 +87,75 @@
       },*/
       async getUserInfo_async(){
         let result=await sendRequestGetResult_async({urlOption:urlConfiguration.user.getUserInfo})
+        // inf('result',result)
         if(result.rc>0){
-          alert(result.msg)
+          commonHandlerForErrorResult({that:this,response:result})
+          // if(result.rc===50100){
+          //   showErrorInCenterMessage({that:this,msg:result.msg})
+          // }
         }else{
           this.$refs[this.ref.userIcon.userIconForUserInfo].setImgSrc(result.msg['photoDataUrl'])
-
-          for(let singleField in this.formItemInfoForNonIconInput.inputValue){
+          /****   设置formItem数据  ***/
+          let neededFields=['name']
+          let neededValue=misc.extractPartObject({sourceObj:result.msg,neededKeyNames:neededFields})
+          // inf('neededValue',neededValue)
+          this.$refs[this.ref.form.formForUserInfo].resetFields()
+          this.$refs[this.ref.formItem.formItemForUserInfo].clearAllItemError()
+          this.$refs[this.ref.formItem.formItemForUserInfo].loadData({valueFromDb:neededValue})
+/*          for(let singleField in this.formItemInfoForNonIconInput.inputValue){
             if(undefined!==result.msg[singleField]){
               this.formItemInfoForNonIconInput.inputValue[singleField]=this.formItemInfoForNonIconInput.originInputValue[singleField]=result.msg[singleField]
             }
-          }
+          }*/
 
         }
       },
       async saveUserInfo_async(){
-        let value={}
-        //获得修改的数据
-        for(let singleField in this.formItemInfoForNonIconInput.inputValue){
+        let that=this
+        //1. 触发form的方法，检测是否所有input都符合条件，结果传递给本组件变量validResult
+        await this.$refs[this.ref.formItem.formItemForUserInfo].validateIfAllItemPass()
+        if(false===this.validResult){
+          commonHandlerForErrorResult({that:this,response:{rc:98765,msg:'某些输入项不正确'}})
+          return
+        }
+        //2. 上传数据
+        let data={values:{}}
+        //2.1 获得发生变化的字段
+        data.values[ValidatePart.RECORD_INFO]=this.$refs[this.ref.formItem.formItemForUserInfo].sanityInputValueBeforeSendToServer()
+/*        for(let singleField in this.formItemInfoForNonIconInput.inputValue){
           if(this.formItemInfoForNonIconInput.inputValue[singleField]!==this.formItemInfoForNonIconInput.originInputValue[singleField]){
             value[singleField]=this.formItemInfoForNonIconInput.inputValue[singleField]
           }
         }
         let finalValues={values:{
           [ValidatePart.RECORD_INFO]:value
-          }}
-        if(Object.keys(value).length>0){
-          let result=await sendRequestGetResult_async({urlOption:urlConfiguration.user.saveUserInfo,data:finalValues})
+          }}*/
+        if(Object.keys(data.values[ValidatePart.RECORD_INFO]).length>0){
+          let result=await sendRequestGetResult_async({urlOption:urlConfiguration.user.saveUserInfo,data:data})
           // inf('res',result)
           if(result.rc>0){
-
+            commonHandlerForErrorResult({that:this,response:result})
           }else{
+            result.msg='用户信息更改成功'
+            commonHandlerForSuccessResult({that:this,response:result})
             //button变成不可编辑状态
             this.validateFormItemResult=false
           }
         }
       },
       async getCroppedImg(croppedImg){
-        this.userIconInfo.imgSrc=croppedImg
+        // inf('croppedImg',croppedImg)
+        this.userInfo.userIconInfo.imgSrc=croppedImg
+        // inf('this.userInfo.userIconInfo.imgSrc',this.userInfo.userIconInfo.imgSrc)
         //隐藏crop组件
         this.$options.methods.hideCrop.bind(this)()
         //
-        this.$refs[this.ref.userIcon.userIconForUserInfo].setImgSrc(croppedImg)
+
         //上传dataUrl
         let data={
           values:{
             // [ValidatePart.METHOD]:Method.UPLOAD,
-            [ValidatePart.RECORD_INFO]:{
+            [ValidatePart.SINGLE_FIELD]:{
               'photoDataUrl':croppedImg,
               // 'name':'test',
             }
@@ -122,7 +163,9 @@
         }
         let result=await sendRequestGetResult_async({urlOption:urlConfiguration.user.uploadUserPhoto,data:data})
         if(result.rc>0){
-          alert(result)
+          commonHandlerForErrorResult({that:this,response:result})
+        }else{
+          this.$refs[this.ref.userIcon.userIconForUserInfo].setImgSrc(croppedImg)
         }
       },
       showCrop(){
@@ -140,16 +183,19 @@
       },
       //从formItem获得整体验证结果
       setFormItemWholeValidateResult(result){
-// inf('change result',result)
+// inf('setFormItemWholeValidateResult result',result)
+//         inf('this.$refs[this.ref.formItem.formItemForUserInfo].ifAnyFieldValueChanged() result',this.$refs[this.ref.formItem.formItemForUserInfo].ifAnyFieldValueChanged())
 //         return result
-        this.validateFormItemResult=result && !this.validateIfInputValueNotChange()
+        this.validateFormItemResult=result && this.$refs[this.ref.formItem.formItemForUserInfo].ifAnyFieldValueChanged()
         // this.checkSubmitButtonStatus()
       },
       setUniqueCheckResult(result){
         //返回：account重复
         if(result.fieldName==='name' && result.rc===61160){
           //判断是否和自己重复（通过判断是否修改了account）
-          if(this.formItemInfoForNonIconInput.inputValue['name']===this.formItemInfoForNonIconInput.originInputValue['name']){
+          // if(this.formItemInfoForNonIconInput.inputValue['name']===this.formItemInfoForNonIconInput.originInputValue['name']){
+          if(true===this.$refs[this.ref.formItem.formItemForUserInfo].ifSingleFieldValueChanged({keyName:'name'})){
+            inf('name not change')
             this.formItemInfoForNonIconInput.inputTempData['name'][InputTempDataFieldName.VALID_RESULT]=''
             // inf('after set null',this.formItemInfoForNonIconInput.inputTempData['name'][InputTempDataFieldName.VALID_RESULT])
             this.$refs[this.ref.formItem.formItemForUserInfo].validateIfAllItemPass()
@@ -157,7 +203,7 @@
         }
       },
 
-      validateIfInputValueNotChange(){
+/*      validateIfInputValueNotChange(){
         for(let singleField in this.formItemInfoForNonIconInput.inputValue){
           if(this.formItemInfoForNonIconInput.inputValue[singleField]!==this.formItemInfoForNonIconInput.originInputValue[singleField]){
             return false
@@ -165,7 +211,7 @@
         }
 
         return true
-      }
+      }*/
       //每个input blur或者check box click，都要检查素有input valida的状态以及check box的状态，以便决定是否enable 注册按钮
       /*checkSubmitButtonStatus() {
         // inf('checkSubmitButtonStatus in')
@@ -196,66 +242,14 @@
     },
     props:['userInfo'],
     data(){
-      // inf('this.userInfo.userIconInfo',this.userInfo.userIconInfo)
-      // let userIconInfo=misc.objectDeepCopy(this.userInfo.userIconInfo)
-      // inf('userIconInfo',userIconInfo)
-      //2 part: userIcon和其他userInfo：userIcon使用单独API处理
-      // let allowFields=['photoDataUrl']
-      // let userIconInput=misc.genNeedInput({source:this.$store.state.inputRelatePropertyInfo,collName:'user',allowFields:allowFields})
-
-      // let allowFields=['name']
-      // let userNonIconInput=misc.genNeedInput({collName:'user',allowFields:allowFields})
-      this.userInfo.formItemInfo['originInputValue']=misc.objectDeepCopy(this.userInfo.formItemInfo['inputValue'])
+      // this.userInfo.formItemInfo['originInputValue']=misc.objectDeepCopy(this.userInfo.formItemInfo['inputValue'])
       return {
         // editable:false,
         formItemInfoForNonIconInput:this.userInfo.formItemInfo,
-      /*{
-          rule:userNonIconInput['rule'],
-          inputAttribute:userNonIconInput['inputAttribute'],
-          inputTempData:userNonIconInput['inputTempData'],
-          originInputValue:misc.objectDeepCopy(userNonIconInput['inputValue']),//保存原始数据，判断是否可以发送update请求
-          inputValue:userNonIconInput['inputValue'],
-          // icon:icon,
-          iconColor:'#5cadff',
-          //如果未设置captchaInfo，就不会出现captcha
-/!*          captchaInfo:{
-            captchaImgWidth:80, //px。事先确定好长宽，以便刷新时，如果有refreshIcon存在，此icon位置不会变化
-            captchaImgHeight:33,
-            refreshIcon:'refresh',//空：无刷新icon；否则显示
-            captchaImgId:'captchaImgId',
-            captchaURL:'/user/captcha',
-          },*!/
-          unique:unique['user'], //如果未设，将不执行unique check，否则根据inputValue/manual/uniqueCheck.js中的设置，blur时执行unique
-          labelWidth:60, //0或者undefined，则不显示label；其他数值，显示label
 
-            allowFields:allowFields,
-          //span:this.loginInfo.span, //formItem的宽度和offset
-        },*/
         validateFormItemResult:false,//默认验证不通过或者尚未验证
         buttonDisableStyle:this.$store.state.style.button.primary.disable,
-        /*formItemInfoForIconInput:{
-          rule:userNonIconInput['rule'],
-          inputAttribute:userNonIconInput['inputAttribute'],
-          inputTempData:userNonIconInput['inputTempData'],
-          inputValue:userNonIconInput['inputValue'],
-          // icon:icon,
-          iconColor:'#5cadff',
-          //如果未设置captchaInfo，就不会出现captcha
-          /!*          captchaInfo:{
-                      captchaImgWidth:80, //px。事先确定好长宽，以便刷新时，如果有refreshIcon存在，此icon位置不会变化
-                      captchaImgHeight:33,
-                      refreshIcon:'refresh',//空：无刷新icon；否则显示
-                      captchaImgId:'captchaImgId',
-                      captchaURL:'/user/captcha',
-                    },*!/
-          // unique:unique['user'], //如果未设，将不执行unique check，否则根据inputValue/manual/uniqueCheck.js中的设置，blur时执行unique
-          labelWidth:60, //0或者undefined，则不显示label；其他数值，显示label
 
-          //span:this.loginInfo.span, //formItem的宽度和offset
-        },*/
-        // userNonIconInput:userNonIconInput,
-
-        // userIconInfo:misc.objectDeepCopy(this.userInfo.userIconInfo),
         ref:{
           formItem:{
             formItemForUserInfo:'formItemForUserInfo',
@@ -271,11 +265,7 @@
             userIconForUserInfo:'userIconForUserInfo',
           },
         },
-
-// userInfoNew:this.userInfo,
-        // cropInfo:this.userInfo.cropInfo,
         cropHidden:'hidden',
-
         //计算crop组件的虚拟位置（不包括padding）
         cropVirtualPos:{
           top:0,

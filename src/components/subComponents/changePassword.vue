@@ -3,30 +3,30 @@
 
 <template>
   <div class="">
-    <div>
+<!--    <div>
       <p class="h4 font-fantasy">修改密码</p>
-    </div>
+    </div>-->
 
-    <div class="flex-flow-row-nowrap justify-content-flex-start paddingH4 marginV2">
+<!--    <div class="flex-flow-row-nowrap justify-content-flex-start paddingH4 marginV2">
       <p style="" class="color-red h5">
         <span>{{globalResultMsg}}</span>
         <span style="visibility:hidden">1</span>
       </p>
-    </div>
+    </div>-->
 
     <!--:label-width="80"-->
     <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4 "  label-position="left"
           :ref="ref.form.formForChangePassword" :model="formItemInfo.inputValue" :rules="formItemInfo.rule"
           :label-width="undefined===formItemInfo.labelWidth ? 0:formItemInfo.labelWidth">
-      <self-form-item :ref="ref.formItem.formItemChangePassword" :form-item-info="formItemInfo" @validateAllItemResult="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
+      <self-form-item :ref="ref.formItem.formItemChangePassword" :form-item-info="formItemInfo" @checkIfAllItemValidatedAndPass="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
 
 
       <!--<FormItem class="">-->
-        <Button long size="large" shape="circle" type="primary" @click="sendChangePasswordInfo_async()" :style="submitButtonDisable ? buttonDisableStyle:''" :disabled="submitButtonDisable">修改</Button>
+
         <!--<Button type="ghost" @click="handleReset('userInputValue')" style="margin-left: 8px">Reset</Button>-->
       <!--</FormItem>-->
     </Form>
-
+    <Button size="large"  type="primary" @click="sendChangePasswordInfo_async()" :style="submitButtonDisable ? buttonDisableStyle:''" :disabled="submitButtonDisable">修改</Button>
       <!--<span class="h4">already?<a>link</a></span>-->
 
   </div>
@@ -34,14 +34,30 @@
 
 <script>
   'use strict'
-  // import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
+  /******************************/
+  /**         component       **/
+  /******************************/
+  import selfFormItem from '../basicComponent/formItem'
+  /******************************/
+  /**    common function       **/
+  /******************************/
   import {objectDeepCopy,objectPartlyDeepCopy} from  '../../function/misc'
+  import * as handleResult from '../../function/handleResult'
+  /******************************/
+  /**     common constant     **/
+  /******************************/
   import {InputAttributeFieldName,InputTempDataFieldName,Method,ValidatePart} from '../../constant/enum/nonValueEnum'
-  // import {myAxios,mergeAdditionalField} from '../helperLib/componentsHelperLib'
+  /******************************/
+  /**         3rd              **/
+  /******************************/
   import {inf,wrn,err} from 'awesomeprint'
+  /******************************/
+  /**          网络            **/
+  /******************************/
   import {sendRequestGetResult_async} from '../../function/network'
   import {urlConfiguration} from '../../constant/url/url'
-  import selfFormItem from '../basicComponent/formItem'
+
+
   export default {
     components:{selfFormItem},
     props:['changePasswordInfo'], //
@@ -51,7 +67,7 @@
       /********************************************/
       //获得整体验证结果后，立即设置button状态
       setFormItemResult(result){
-        // inf('setFormItemResult in',result)
+        inf('setFormItemResult in',result)
         this.validateFormItemResult=result
         this.checkSubmitButtonStatus()
       },
@@ -84,8 +100,13 @@
         }
 
         let result=await sendRequestGetResult_async({urlOption: urlConfiguration.user.changePassword,data:data})
-        // =await this.sendLoginInfo()
         if(result.rc>0){
+          handleResult.commonHandlerForErrorResult({that:this,response:result})
+        }else{
+          handleResult.commonHandlerForSuccessResult({that:this,response:{rc:0,msg:'密码修改成功'}})
+          this.$refs[this.ref.formItem.formItemChangePassword].initFormItemInfo()
+        }
+ /*       if(result.rc>0){
           // captcha错误显示在input下
           let setCaptchaResult=this.$refs[this.ref.formItem.formItemChangePassword].checkIfCaptchaErrAndShow({data:result})
           //否则，显示在最顶上
@@ -95,15 +116,13 @@
               this.globalResultMsg=result.msg
             }
           }
-
           if(undefined!==this.formItemInfo.captchaInfo){
             await this.$refs[this.ref.formItem.formItemChangePassword].getCaptchaImg_async()
           }
+
           // this.showResultFlag=true
         }else{
-
-
-        }
+        }*/
       },
 
 

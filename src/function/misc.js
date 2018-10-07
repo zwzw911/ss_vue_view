@@ -18,6 +18,8 @@ import {additionalInputValue} from '../constant/additionalInputValue/inputValue'
 import {additionalRuleForCreate,additionalRuleForUpdate} from '../constant/additionalInputValue/rule'
 import {additionalIcon} from '../constant/additionalInputValue/icon'
 
+import {host} from '../constant/envConfiguration/appSetting'
+
 const source={
   inputValueForCreate:inputValueForCreate,
   inputValueForUpdate:inputValueForUpdate,
@@ -176,6 +178,25 @@ function objectPartlyDeepCopy({sourceObj,expectedKey}){
   }
   return copyObject
 }
+
+/*  从sourceObj，将neededKeyNames提取到一个新的object
+*   return: 一个object，是对sourceObj的引用而不是复制
+* */
+function extractPartObject({sourceObj,neededKeyNames}){
+  let extractObj
+  if(neededKeyNames.length>0){
+    extractObj={}
+    for(let singleKyeName of neededKeyNames){
+      if(undefined!==sourceObj[singleKyeName]){
+        extractObj[singleKyeName]=sourceObj[singleKyeName]
+      }
+    }
+    return extractObj
+  }else{
+    //没有设置任何needed key name，则返回原始object
+    return sourceObj
+  }
+}
 /*  childArray中的每个元素都包含在parentArray中
 *
 * */
@@ -298,7 +319,9 @@ function routeTo({that,path}){
   that.$router.push(path)
 }
 
-
+function openNewPage({url}){
+  window.open(`${host}${url}`)
+}
 
 
 export {
@@ -306,6 +329,8 @@ export {
   mergeInputAttribute,
   objectPartlyDeepCopy,
   objectDeepCopy,
+  extractPartObject,
+
   ifArrayContainArray,
   searchEmptyValueIdxInArray,
   deleteDefinedEleInArray,
@@ -314,6 +339,7 @@ export {
   ifUserLogin,
   routeTo,
 
+  openNewPage,
   // countDown,
 }
 

@@ -13,7 +13,8 @@ const routePath={
 
   'userCenter':'/userCenter',
 
-  'updateArticle':'/updateArticle/:articleId',
+  'updateArticle':'/updateArticle/:articleId',//'/updateArticle',
+  'readArticle':'/getArticle/:articleId',
 
   'redirectToLogin':'/redirectToLogin',
 }

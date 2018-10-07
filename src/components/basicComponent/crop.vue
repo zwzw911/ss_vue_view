@@ -8,13 +8,13 @@
 
 <template>
   <!--:style="{height:containerHeight+'px'}"-->
-  <div class="" style="background-color: rgba(255,255,255,0.9);" >
+  <div class="" style="background-color: rgba(255,255,255,1);position: fixed;width:100%;height:100%;top:0px;left:0px;border-style:solid;border-color:rgba(15,15,15,0.7);z-index:2000" >
     <div class="flex-flow-row-nowrap justify-content-center align-items-center" style="z-index:4000;position:fixed;width:100%;height:100%;background: rgba(0, 0, 0, 0.8);top:0px;left:0px;" :style="{display:showPreviewFlag ? '':'none'}"
       @click="hidePreview"
     >
       <img id="croppedImg" style="padding:5px;border:1px solid rgb(200,200,200);border-radius:5px;"  :style="{width:cropImgWH.width+'px',height:cropImgWH.height+'px'}" class="" :src="cropImgDataUrl">
     </div>
-    <div id="cropContainer" class="flex-flow-row-nowrap justify-content-flex-start" style="z-index:3000"
+    <div id="cropContainer" class="flex-flow-row-nowrap justify-content-flex-start"
          :style="{margin:containerMargin.top+'px'+' '+containerMargin.right+'px'+' '+containerMargin.bottom+'px'+' '+containerMargin.left+'px',
          }">
 
@@ -50,7 +50,7 @@
         <!--,top:L1OrigImagePos.top+'px', left:L1OrigImagePos.left+'px',-->
         <!--width:L1OrigImagePos.width+'px',height:L1OrigImagePos.height+'px'-->
         <!--width:elementHideFlag.L1_origImg ? '':L1OrigImagePos.width+'px',height:elementHideFlag.L1_origImg ? '':L1OrigImagePos.height+'px'-->
-        <div id='L2_coverZone' style="position: absolute;border-style:solid;border-color:rgba(255,255,255,0.9);"
+        <div id='L2_coverZone' style="position: absolute;border-style:solid;border-color:rgba(255,255,255,0.7);"
              :style="{display:elementHideFlag.L2_coverZone ? 'none':'',width:L2CoverZonePos.width+'px',height:L2CoverZonePos.height+'px',left:L2CoverZonePos.left+'px',top:L2CoverZonePos.top+'px',
              }"
 
@@ -162,6 +162,7 @@
         }
       },
       hidePreview(){
+        // inf('click hidePreview')
         this.showPreviewFlag=false
       },
       showPreview(){

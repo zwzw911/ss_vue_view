@@ -1,65 +1,58 @@
 <template>
-  <div class="container" style="overflow: auto">
-    <!--<Layout>-->
-    <!--type="flex" justify="center"-->
-    <Row >
-      <Col span="16">
+  <div class="container flex-flow-column-nowrap align-content-space-between" style=";height: 100%;">
+<!--    <div class="header">
+      <selfHeader :header-info="headerInfo"></selfHeader>
+    </div>-->
+    <Row class="" style="flex:1">
+      <Tabs :animated="false" class="flex-flow-column-nowrap" @on-click="clickTab" :value="currentTabName">
+        <TabPane label="我的文档"   name="myArticle" class="paddingH4 marginT6">
+          <!--<Col span="8">-->
+            <self-tree></self-tree>
+          <!--</Col>-->
+        </TabPane>
+        <TabPane label="用户信息"   name="userInfo" class="paddingH4 marginT6">
+          <Col span="12" offset="4">
+          <!--<self-change-password :change-password-info="changePasswordInfo"></self-change-password>-->
+            <self-user-info :user-info="userInfo" ref="userCenterUserInfo"></self-user-info>
+          </Col>
+        </TabPane>
+        <TabPane label="修改密码"   name="changePassword" class="paddingH4 marginT6">
+          <Col span="12" offset="4">
+            <self-change-password :change-password-info="changePasswordInfo"></self-change-password>
 
-      <!--<router-view />-->
-      <!--<selfLogin :login-info="loginInfo"></selfLogin>-->
-      <!--<selfRegister  :register-info="registerInfo"></selfRegister>-->
-      <selfChangePassword :change-password-info="changePasswordInfo"></selfChangePassword>
-      <!--<self-user-icon :user-icon-info="userIconInfo"></self-user-icon>-->
-      <!--<selfUserInfo :user-info="userInfo"></selfUserInfo>-->
-      <!--<self-auto-gen-form-item :auto-gen-form-item-info="autoGenFormItemInfo" :editable="true"></self-auto-gen-form-item>-->
-      <!--<self-article-for-update :article-info="articleInfo" :editable="true" @validateAllItemResult="validateAllItemResult"></self-article-for-update>-->
-        <!--<Icon type="md-add-circle" size="32"></Icon>-->
-      <self-tree></self-tree>
-      <!--<self-logout></self-logout>-->
-      </Col>
+          </Col>
+        </TabPane>
+      </Tabs>
     </Row>
 
     <!--<Button @click="switchEditable" :disabled="validateResult">siwtch</Button>-->
       <!--</div>-->
-
-      <div class="footer">
-        <!--<selfFooter :footer-info="footerInfo"></selfFooter>-->
-      </div>
+    <div class="footer">
+      <selfFooter :footer-info="footerInfo"></selfFooter>
+    </div>
     <!--</Layout>-->
     <!--<selfModalResult></selfModalResult>-->
-
-
-
-
-
-
-
-
-
   </div>
 </template>
 
 <script>
-  /*import selfRegister from '../components/subComponents/register.vue'
-  import selfLogin from '../components/subComponents/login.vue'
-  import selfChangePassword from '../components/subComponents/changePassword.vue'
-  import selfUserInfo from '../components/subComponents/userInfo.vue'
 
-
-  import selfCrop from '../components/basicComponent/crop.vue'
-  import selfUserIcon from '../components/basicComponent/userIcon.vue'
-  import selfAutoGenFormItem from '../components/basicComponent/autoGenFormItem.vue'
-
-  import selfArticleForUpdate from '../components/subComponents/articleForUpdate.vue'*/
   /******************************/
   /**         component       **/
   /******************************/
   import selfTree from '../components/basicComponent/articleTree'
-/*  import selfLogout from '../components/basicComponent/logout'
+  import selfChangePassword from '../components/subComponents/changePassword'
+  import selfUserInfo from '../components/subComponents/userInfo'
 
-  import selfSidebar from '../components/subLayoutComponents/sidebar.vue'
+  // import selfSidebar from '../components/subLayoutComponents/sidebar.vue'
   import selfFooter from '../components/subLayoutComponents/footer.vue'
-  import selfHeader from '../components/subLayoutComponents/header.vue'*/
+  import selfHeader from '../components/subLayoutComponents/header.vue'
+  /******************************/
+  /**          网络            **/
+  /******************************/
+  import {sendRequestGetResult_async} from '../function/network'
+  import {urlConfiguration} from '../constant/url/url'
+  import {host} from '../constant/envConfiguration/appSetting'
   /******************************/
   /**         3rd              **/
   /******************************/
@@ -74,30 +67,51 @@
   import * as componentInfo from '../constant/globalConfiguration/componentInfo'
 
   export default {
-      components:{selfTree},
-      computed:{
+    components:{selfTree,selfChangePassword,selfUserInfo,selfFooter,selfHeader},
+    computed:{
 
-      },
+    },
+    created(){
+
+    },
     data () {
       return {
-      /*  loginInfo:componentInfo.loginInfo,
-        userInfo:componentInfo.userInfo,
-        registerInfo:componentInfo.registerInfo,*/
         changePasswordInfo:componentInfo.changePasswordInfo(),
-       /* autoGenFormItemInfo:componentInfo.autoGenFormItemInfo,
-        articleInfo:componentInfo.articleInfo,
-
-        editable:false,*/
-
+        headerInfo:componentInfo.headerInfo,
+        userInfo:componentInfo.userInfo(),
+        footerInfo:componentInfo.footerInfo,
         validateResult:false,
+
+        /**********************/
+        /******  tab     *****/
+        /**********************/
+        currentTabName:'',
       }
     },
     methods:{
-      switchEditable(){
-        this.editable=!this.editable
-      },
+      /********************/
+      /**   网络操作    **/
+      /********************/
+
       validateAllItemResult(result){
         this.validateResult=!result
+      },
+
+      /********************/
+      /**    tab操作     **/
+      /********************/
+      async clickTab(name){
+        this.currentTabName=name
+        switch (name){
+          case 'myArticle':
+            break;
+          case 'userInfo':
+            await this.$refs['userCenterUserInfo'].getUserInfo_async()
+            break;
+          case 'changePassword':
+            break;
+          default:
+        }
       },
     }
   }

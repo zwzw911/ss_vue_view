@@ -34,8 +34,10 @@
   /**    common function       **/
   /******************************/
   import {sendRequestGetResult_async,setUpdateValue} from '../../function/network'
-  import {showErrorInModal} from '../../function/showErrorResult'
-  import {objectDeepCopy,genNeedInput,ifUserLogin} from '../../function/misc'
+  // import {showErrorInModal} from '../../function/showResult'
+  import * as handleResult from '../../function/handleResult'
+  import {objectDeepCopy,genNeedInput,ifUserLogin,routeTo,openNewPage} from '../../function/misc'
+  // import {ifUserLogin,routeTo} from '../../function/misc'
   /******************************/
   /**     common constant     **/
   /******************************/
@@ -47,10 +49,11 @@
 
   export default {
     components:{modalFolderName,selfSpin},
-    created(){
+    async created(){
       if(false===ifUserLogin({that:this})){
         this.$router.push('/login');
       }
+      // await this.loadNode()
     },
     data() {
 
@@ -127,7 +130,7 @@
         data.values[ValidatePart.RECORD_INFO]=inputValueForUpdate_folder
         let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.createFolder,data:data})
         if(result.rc>0){
-          return showErrorInModal({that:this,msg:result.msg})
+          return handleResult.commonHandlerForErrorResult({that:this,response:result,showType:'modal'})
         }
         result.msg['childNum']=0
         result.msg['isFolder']=true
@@ -154,7 +157,7 @@
         }
         let  result =await sendRequestGetResult_async({urlOption:urlConfiguration.folder.updateFolder,data:data})
         if(result.rc>0){
-          return showErrorInModal({that:this,msg:result.msg})
+          return handleResult.commonHandlerForErrorResult({that:this,response:result,showType:'modal'})
         }
       },
       /** 删除folder **/
@@ -163,7 +166,7 @@
         data.values[ValidatePart.RECORD_ID]=nodeData.id
         let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.deleteFolder,data:data})
         if(result.rc>0){
-          return showErrorInModal({that:this,msg:result.msg})
+          return handleResult.commonHandlerForErrorResult({that:this,response:result,showType:'modal'})
         }
         this.$refs.tree.remove(nodeData)
         return Promise.resolve(0)
@@ -214,7 +217,7 @@
 
           let result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.updateFolder,data:data})
           if(result.rc>0){
-            return showErrorInModal({that:this,msg:result.msg})
+            return handleResult.commonHandlerForErrorResult({that:this,response:result,showType:'modal'})
           }
           // return Promise.resolve(0)
         }
@@ -232,7 +235,7 @@
           // data.values[ValidatePart.RECORD_INFO]=inputValueForUpdate.folder
           let result=await sendRequestGetResult_async({urlOption:urlConfiguration.article.updateArticle,data:data})
           if(result.rc>0){
-            return showErrorInModal({that:this,msg:result.msg})
+            return handleResult.commonHandlerForErrorResult({that:this,response:result,showType:'modal'})
           }
           // 更新parentFolder的isLeaf属性
           if(true===dropNode.data.isFolder){
@@ -255,7 +258,9 @@
         // console.log('handleNodeClick data', this.$refs.tree.currentNode.node.parent.data);
         if(data.isArticle===true){
           // this.$store.commit('setArticleId',data.id)
-          window.open(`http://127.0.0.1:8080/updateArticle/${data.id}`);//update/${data.id}
+          // routeTo({that:this,path:`/updateArticle/${data.id}`})
+          openNewPage({url:`/updateArticle/${data.id}`})
+          // window.open(`http://127.0.0.1:8080/updateArticle/${data.id}`);//update/${data.id}
         }
       },
       /**   自定义icon     **/
@@ -394,7 +399,9 @@
         return result
       },
       async loadNode(node, resolve) {
-
+        if(false===ifUserLogin({that:this})){
+          this.$router.push('/login');
+        }
         // inf('this.$store.state.userName',this.$store.state.headerInfo.userName)
         let convertResult
 
@@ -411,7 +418,7 @@
           // console.log('level >0 loaded node', node.key);
           result=await sendRequestGetResult_async({urlOption:urlConfiguration.folder.readFolderContent,data:node.key})
          /* if(result.rc>0){
-            return showErrorInModal({that:this,msg:result.msg})
+            return handleResult.commonHandlerForErrorResult({that:this,msg:result.msg,showType:'modal'})
           }
           // console.log('level >0 loaded result', result);
           // console.log('loadNode(node', result.msg)
@@ -421,7 +428,7 @@
           return resolve(convertResult);*/
         }
         if(result.rc>0){
-          return showErrorInModal({that:this,msg:result.msg})
+          return handleResult.commonHandlerForErrorResult({that:this,response:result,showType:'modal'})
         }
         convertResult=this.convertTreeData(result.msg)
         // this.data=convertResult

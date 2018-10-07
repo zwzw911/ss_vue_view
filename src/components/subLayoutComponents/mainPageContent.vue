@@ -3,20 +3,22 @@
 
 <template>
   <div class="">
+    <div id="wangEditor" style="display:none"></div>
     <div class="flex-flow-row-nowrap justify-content-space-between align-items-center bg-primary color-white radius1" >
       <span class="h4 paddingV1 paddingL4">最新文档</span>
       <span class="paddingR4">更多...</span>
     </div>
     <div class="marginT2 flex-flow-column-nowrap">
       <template v-for="(item,index) in contentInfo"  >
-        <div class="flex-flow-row-nowrap  marginB4">
+        <div class="flex-flow-row-nowrap  marginB4" @click="readArticle({articleId:item['id']})">
           <div class="flex-flow-column-nowrap">
-            <img :style="{ width: userThumb.maxWidth+'px', height: userThumb.maxHeight + 'px'}" :src="item.authorInfo.userThumbSrc"/>
+            <img :style="{ width: userThumb.maxWidth+'px', height: userThumb.maxHeight + 'px'}" :src="item.authorId.photoDataUrl"/>
             <!--src: item.authorInfo.userThumbSrc-->
-            <p >{{item.authorInfo.userName}}</p>
+            <p >{{item.authorId.name}}</p>
           </div>
-          <div class="flex-flow-column-nowrap flex-grow-1">
-            <p class="font_serif paddingL4 h4 long-word-break text-align-left " >{{item.articleInfo.content}}</p>
+          <div class="flex-flow-column-nowrap flex-grow-1" >
+            <p class="font_serif paddingL4 h4 long-word-break text-align-left h4 bold font-serif" >{{item.name}}</p>
+            <p class="font_serif paddingL4 h4 long-word-break text-align-left h5 marginT4" style="color:grey" >{{item.htmlContent}}</p>
             <div class="flex-flow-row-nowrap justify-content-flex-end marginT4">
               <p class="">详细...</p>
             </div>
@@ -29,40 +31,57 @@
 </template>
 
 <script>
+  /******************************/
+  /****        配置         ****/
+  /******************************/
   import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
+  /******************************/
+  /****  common function    ****/
+  /******************************/
+  import * as misc from "../../function/misc"
+  import {commonHandlerForErrorResult,commonHandlerForSuccessResult} from "../../function/handleResult"
+  /******************************/
+  /****        网络         ****/
+  /******************************/
+  import {sendRequestGetResult_async} from '../../function/network'
+  import {urlConfiguration} from '../../constant/url/url'
+  /******************************/
+  /****        3rd          ****/
+  /******************************/
+  import E from 'wangeditor'
+  import {routePath} from "../../constant/url/routePath";
 
   export default {
-    props:['contentInfo'], //{articleInfo:[{title,content:}]}
+    // props:['contentInfo'], //{articleInfo:[{title,content:}]}
+    async mounted(){
+      this.getMainPageArticle_async()
+    },
       methods:{
-        /*menuChange(name){
-//          console.log(`menuchange in ${name}`)
-        },
-        clickMenu(name){
-//            console.log(`${typeof TABLE.billType}`)
-            console.log(`sidebar cilic is ${JSON.stringify(name)}`)
-          let cName=''
-          for(let submenu in this.sidebarName){
-                for(let menuKey in this.sidebarName[submenu].children){
-                    if(name===menuKey){
-                      cName=this.sidebarName[submenu]['children'][menuKey]['name']
-                      break
-                    }
-                }
+        async getMainPageArticle_async(){
+          let result=await sendRequestGetResult_async({urlOption:urlConfiguration.article.getMainPageArticle})
+          // inf('result',result)
+          if(result.rc>0){
+            commonHandlerForErrorResult({that:this,response:result})
+            // if(result.rc===50100){
+            //   showErrorInCenterMessage({that:this,msg:result.msg})
+            // }
+          }else{
+            //生成一个wangeditor来转换html为纯文本
+            let editor=new E('wangEditor')
+            editor.create()
+            for(let idx in result.msg){
+              //首先设置
+              editor.txt.html(result.msg[idx]['htmlContent'])
+              result.msg[idx]['htmlContent']=editor.txt.text()
+            }
+            this.contentInfo=result.msg
+            // return Promise.resolve()
+            // commonHandlerForSuccessResult({that:this,response:{rc:0,m}})
           }
-
-          this.$store.commit('setClickedTableAndMenu',{table:name,chineseName:cName})
-          this.$store.commit('setClickedTable',{table:name,chineseName:cName})
-          this.$store.commit('setCurrentTabelHeader',{currentColl:name})
-//          console.log(`after commit`)
-//          this.$store.commit('initAllACValue')
-          //为当前coll的所有字段获得ac，以便为coll的所有记录服务
-//          this.$store.dispatch('getAllFieldACValueByUpdate',{})
-
-          this.$store.dispatch('search',{searchParams:{},currentPage:1})
-          //点击coll时，初始获得所有外键的AC信息
-//          this.$store.dispatch('initGetAllFieldValue',{searchParams:{},currentPage:1,currentColl:name})
-//          console.log(`after dispatch`)
-        }*/
+        },
+        readArticle({articleId}){
+          misc.openNewPage({url:`/getArticle/${articleId}`})
+        },
       },
 
     computed:{
@@ -76,7 +95,7 @@
     },
       data(){
         return {
-          // contentInfo:this.contentInfo,
+          contentInfo:[],
           userThumb:uploadFileDefine.user_photo,
         }
           /*return {

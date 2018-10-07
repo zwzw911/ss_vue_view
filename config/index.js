@@ -16,6 +16,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: generateProxyTable({
       baseUrl:[
+        '/user/uploadUserPhoto',
         '/user',
         '/article',
         '/article_comment',
@@ -28,7 +29,9 @@ module.exports = {
         '/user_friend_group',
         '/public_group',
         '/join_public_group_request',
-        '/folder'
+        '/folder',
+
+        '/userCenter',
       ]
     }),
     //   {

@@ -1,7 +1,7 @@
 <style scoped>
 </style>
 <template>
-  <span @click="logout">退出</span>
+  <span @click="not_used_logout">退出</span>
 </template>
 <script>
     import {sendRequestGetResult_async} from '../../function/network'

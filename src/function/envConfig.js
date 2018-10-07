@@ -3,6 +3,7 @@
  */
 'use strict'
 // import {inf} from 'awesomeprint'
+
 // const ap=require('awesomeprint')
 //baseUrl: 数组，基本路由，每个元素如/user,/article
 function generateProxyTable({baseUrl}){
@@ -18,6 +19,7 @@ function generateProxyTable({baseUrl}){
       }
     }
   }
+// ap.inf('generateProxyTable result',result)
   return result
 }
 

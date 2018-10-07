@@ -25,74 +25,56 @@
 
 </style>-->
 <template>
-  <div class="">
-  <!--<div class="layout-header">-->
-    <!--<div class="container height8 flex-flow-row-nowrap align-items-center">-->
+  <div class="container bg-primary paddingV2 ">
+    <div class="flex-flow-row-nowrap justify-content-space-between">
+      <span class="color-white marginR4 cursor-pointer h4" @click="createArticle"><Icon type="ios-create-outline" class="marginR1"/>写文档</span>
+      <div v-if="userLogin">
+        <span @click="routeToAfterLogin('userName')" class="color-white marginR4 cursor-pointer">{{userName}}</span>
+        <span @click="routeToAfterLogin('logout')" class="color-white marginR4 cursor-pointer">退出</span>
+      </div>
+      <div v-else >
+        <span @click="routeToBeforeLogin('login')" class="color-white marginR4 cursor-pointer">登录</span>
+        <span @click="routeToBeforeLogin('register')" class="color-white marginR4 cursor-pointer">注册</span>
+      </div>
+    </div>
 
-      <!--<div class=" ">-->
-        <!--<Row type="flex" justify="start" >-->
-          <template v-if="userLogin">
-            <Menu mode="horizontal" :theme="theme" active-name="1" @on-select="routeToAfterLogin">
-              <div class="flex-flow-row-nowrap justify-content-space-between">
-                <div>
-                  <MenuItem name="userName" >
-                    {{userName}}
-                  </MenuItem>
-                  <MenuItem name="logout" >
-                    退出
-                  </MenuItem>
-                </div>
-                <div>
-                  <MenuItem name="myArticle">
-                    我的文档
-                  </MenuItem>
-                  <MenuItem name="myCollection">
-                    我的收藏
-                  </MenuItem>
-                </div>
-              </div>
+    <!--<template v-if="userLogin">
+      <Menu mode="horizontal" :theme="theme" active-name="1" @on-select="routeToAfterLogin">
+        <div class="flex-flow-row-nowrap justify-content-space-between">
+          <div>
+            <MenuItem name="userName" >
+              {{userName}}
+            </MenuItem>
+            <MenuItem name="logout" >
+              退出
+            </MenuItem>
+          </div>
+          <div>
+            <MenuItem name="myArticle">
+              我的文档
+            </MenuItem>
+            <MenuItem name="myCollection">
+              我的收藏
+            </MenuItem>
+          </div>
+        </div>
 
-            </Menu>
-
-<!--            <Dropdown  placement="bottom-start" transfer="transfer" :class="itemMargin">
-              <a href="javascript:void(0)" class="a-text-color-white" :class="itemFontSize">
-                {{userName}}
-                <Icon type="arrow-down-b"></Icon>
-              </a>
-              <DropdownMenu slot="list">
-                <DropdownItem>a</DropdownItem>
-                <DropdownItem>b</DropdownItem>
-
-              </DropdownMenu>
-            </Dropdown>-->
-
-            <!--<a href="#" class="a-text-color-white" :class="itemFontSize">退出</a>-->
-          </template>
-          <template v-else >
-            <Menu mode="horizontal" :theme="theme" active-name="1" @on-select="routeToBeforeLogin">
-              <div class="flex-flow-row-nowrap-reverse justify-content-space-between">
-                <div>
-                  <MenuItem name="login" >
-                    登录
-                  </MenuItem>
-                  <MenuItem name="register" >
-                    注册
-                  </MenuItem>
-                </div>
-              </div>
-            </Menu>
-              <!--<a  @click="routeToLogin" class="a-text-color-white a-hover-color-dark-white" :class="[itemMargin,itemFontSize]">登录 </a>-->
-              <!--<a @click="routeToRegister" class="a-text-color-white a-hover-color-dark-white" :class="itemFontSize">注册</a>-->
-            <!--</Col>-->
-
-          </template>
-        <!--</Row>-->
-
-
-      <!--</div>-->
-
-
-    <!--</div>-->
+      </Menu>
+    </template>
+    <template v-else >
+      <Menu mode="horizontal" :theme="theme" active-name="1" @on-select="routeToBeforeLogin">
+        <div class="flex-flow-row-nowrap-reverse justify-content-space-between">
+          <div>
+            <MenuItem name="login" >
+              登录
+            </MenuItem>
+            <MenuItem name="register" >
+              注册
+            </MenuItem>
+          </div>
+        </div>
+      </Menu>
+    </template>-->
 
   </div>
 </template>
@@ -102,10 +84,10 @@
   /******************************/
   /**    common function       **/
   /******************************/
-  // import {sendRequestGetResult_async,setUpdateValue} from '../../function/network'
-  // import {showErrorInModal} from '../../function/showErrorResult'
-  import {ifUserLogin,routeTo} from '../../function/misc'
-  import {sendRequestGetResult_async} from '../../function/network'
+  import * as network from '../../function/network'
+  import * as handleResult from '../../function/handleResult'
+  import * as misc from '../../function/misc'
+  // import {sendRequestGetResult_async} from '../../function/network'
 
   /******************************/
   /**         3rd              **/
@@ -117,6 +99,7 @@
   /******************************/
   import {urlConfiguration} from '../../constant/url/url'
   import {routePath} from '../../constant/url/routePath'
+  // import * as appSetting from '../../constant/envConfiguration/appSetting'
 
   export default {
       props:['headerInfo'],
@@ -132,10 +115,10 @@
       routeToBeforeLogin(menuName){
           switch (menuName){
             case 'login':
-              routeTo({that:this,path:'/login'})
+              misc.routeTo({that:this,path:'/login'})
                   break;
             case 'register':
-              routeTo({that:this,path:'/register'})
+              misc.routeTo({that:this,path:'/register'})
                   break;
 
           }
@@ -143,23 +126,35 @@
       async routeToAfterLogin(menuName){
           switch (menuName){
             case 'userName':
-              routeTo({that:this,path:'/userCenter'})
+              misc.routeTo({that:this,path:'/userCenter'})
+              // window.open(`http://127.0.0.1:8080/userCenter`)
               break;
             case 'logout':
-              let serverResult=await sendRequestGetResult_async({urlOption:urlConfiguration.user.logout})
+              let serverResult=await network.sendRequestGetResult_async({urlOption:urlConfiguration.user.logout})
               let result=this.$cookies.remove('connect.sid')
               this.$cookies.remove('loginDone')
               /**   logout，直接转到主页   **/
               //如果不是主页，执行跳转
-              routeTo({that:this,path:routePath.main})
+              misc.routeTo({that:this,path:routePath.main})
               //如果已经是主页，不会执行跳转
               this.userLogin=false
 // this.userLogin()
               // this.userLogin()
               break;
           }
-
-        // routeTo({that:this,path:'/userCenter'})
+      },
+      async createArticle(){
+        if(false===misc.ifUserLogin){
+          handleResult.commonHandlerForErrorResult({that:this,response:{rc:98765,msg:'尚未登录，无法写文档'}})
+          return
+        }
+        let result=await network.sendRequestGetResult_async({urlOption:urlConfiguration.article.createArticle})
+        inf('result',result)
+        if(result.rc>0){
+          handleResult.commonHandlerForErrorResult({that:this,response:result})
+          return
+        }
+        misc.openNewPage({url:`/updateArticle/${result.msg['id']}`})
       },
     },
     data(){

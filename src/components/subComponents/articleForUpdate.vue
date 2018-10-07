@@ -21,7 +21,7 @@
       >
 
         <self-form-item
-          :editable="editable"
+          :editable="attachmentListPropsInfo.editable"
           :form-item-info="articleInfo.formItemInfo"
           :formRefName="articleInfo.ref.form.articleForm"
           @validateAllItemResult="validateAllItemResult"
@@ -34,7 +34,7 @@
       <self-attachment-list :attachmentListPropsInfo="attachmentListPropsInfo"></self-attachment-list>
     </div>
 
-    <div class="flex-flow-row-wrap justify-content-center">
+    <div class="flex-flow-row-wrap justify-content-center marginTX">
       <Button type="primary" :disabled="false===validResult" @click="saveUpdate">保存</Button>
       <Button type="default"  class="marginH5">取消</Button>
       <!--<Button type="success" :disabled="editable">编辑</Button>-->
@@ -59,7 +59,8 @@
   /******************************/
   /**      错误（函数）       **/
   /******************************/
-  import {showErrorInCenterMessage} from '../../function/showErrorResult'
+  // import {showErrorInCenterMessage,showSuccessInCenterMessage} from '../../function/showResult'
+  import * as handleResult from '../../function/handleResult'
   /******************************/
   /**           enum           **/
   /******************************/
@@ -72,9 +73,15 @@
   /**     common constant     **/
   /******************************/
   // import * as componentInfo from '../../constant/globalConfiguration/componentInfo'
-
-  /**   打印函数   ***/
+  /******************************/
+  /*******     3rd     *********/
+  /******************************/
   import {inf} from 'awesomeprint'
+  /******************************/
+  /**    common function       **/
+  /******************************/
+  import * as misc from '../../function/misc'
+
     export default {
       components:{selfFormItem,selfAutoGenFormItem,selfAttachmentList},
       props: {'articleInfo':{type:Object}},
@@ -87,25 +94,64 @@
         /********************/
         async getUpdateArticle_async(){
           let that=this
-          sendRequestGetResult_async({urlOption:urlConfiguration.article.getUpdatedArticle,data:this.$route.params.articleId}).then(function (response) {
+          sendRequestGetResult_async({urlOption:urlConfiguration.article.getUpdatedArticle,data:this.articleId}).then(function (response) {
+            if(response.rc>0){
+              handleResult.commonHandlerForErrorResult({that:that,response:response})
+              return
+            }
             // inf('resononse',response)
+            // console.log(that)
+            let neededFields=['name','status','allowComment','tags','htmlContent']
+
+            let neededValue=misc.extractPartObject({sourceObj:response.msg,neededKeyNames:neededFields})
+            // for(let neededField of neededFields){
+            //   // that.articleInfo.formItemInfo.inputValue[neededField]=response.msg[neededField]
+            //   neededValue[neededField]=response.msg[neededField]
+            // }
+            that.$refs[that.articleInfo.ref.formItem.articleFormItem].loadData({valueFromDb:neededValue})
             that.attachmentListPropsInfo.currentAttachmentFileInfo=response.msg['articleAttachmentsId']
           },function (err) {
 
           })
         },
         async saveUpdate(){
-          //1. 出发form的方法，检测是否所有input都符合条件，结果传递给本组件变量validResult
-          await this.$refs[this.articleInfo.ref.formItem.articleFormItem].validateIfAllItemPass()
-          // console.log('this.validResult',this.validResult)
-          if(true===this.validResult){
-            let data={values:{}}
-            data.values[ValidatePart.RECORD_ID]=''
-            //生成数据
-            for(let singleKey in this.articleInfo.formItemInfo.inputTempData){
-              //根据inputTempData的值判断inputValue是否被更改
+          let that=this
+          //1. 触发form的方法，检测是否所有input都符合条件，结果传递给本组件变量validResult
+          this.$refs[this.articleInfo.ref.form.articleForm].validate((validResult)=>{
+            // inf('validResult',validResult)
+            that.validResult=validResult
+
+            if(false===that.validResult){
+              handleResult.commonHandlerForErrorResult({that:that,response:{rc:98765,msg:'某些输入项不正确'}})
+              return
             }
-          }
+            //2. 上传数据
+            let data={values:{}}
+            data.values[ValidatePart.RECORD_ID]=that.articleId
+            //2.1 获得发生变化的字段
+            data.values[ValidatePart.RECORD_INFO]=that.$refs[that.articleInfo.ref.formItem.articleFormItem].sanityInputValueBeforeSendToServer()
+            if(0===Object.keys(data.values[ValidatePart.RECORD_INFO]).length){
+              // alert('未作任何更改')
+              handleResult.commonHandlerForSuccessResult({that:that,response:{rc:0,msg:'未作任何更改，无需保存'}})
+              return
+            }
+
+            sendRequestGetResult_async({urlOption:urlConfiguration.article.updateArticle,data:data}).then(function (response) {
+              // inf('update article resononse',response)
+              // that.attachmentListPropsInfo.currentAttachmentFileInfo=response.msg['articleAttachmentsId']
+              if(response.rc>0){
+                handleResult.commonHandlerForErrorResult({that:that,response:response})
+              }else{
+                handleResult.commonHandlerForSuccessResult({that:that,response:{rc:0,msg:'文档更新成功'}})
+              }
+            },function (err) {
+              // inf('update article err',err)
+              handleResult.commonHandlerForErrorResult({that:that,response:err})
+            })
+          })
+
+
+
 
         },
         /*************************/
@@ -125,14 +171,15 @@
       data() {
         // inf('this.route',this.$route.params)
           return {
+            articleId:this.$route.params.articleId,
             // editable:false,
             // additionalData:{recordId:'test'},
             // host:host,
             // articleInfo:componentInfo.articleInfo,
 
-            validResult:true,
+            validResult:false,
 
-            editable:true,//不是通过父组件传入，而是通过本组件的按钮 来控制
+            // editable:true,//不是通过父组件传入，而是通过本组件的按钮 来控制
             attachmentListPropsInfo:{
               configuration:{
                 action:`${host}/article/articleAttachment/${this.$route.params.articleId}`,
@@ -145,6 +192,7 @@
                 deleteAttachmentUrl:urlConfiguration.article.deleteAttachment,
               },
               currentAttachmentFileInfo:[],
+              editable:true,
             },
           }
       },

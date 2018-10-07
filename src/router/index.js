@@ -8,6 +8,7 @@ import updateArticle from '@/layout/updateArticle'
 import userCenter from '@/layout/userCenter'
 import redirectToLogin from '@/layout/redirectToLogin'
 import registerAgreement from '@/layout/registerAgreement'
+import readArticle from '@/layout/readArticle'
 /**   routePath   **/
 import {routePath} from "../constant/url/routePath";
 
@@ -23,6 +24,7 @@ export default new Router({
     {path: routePath.userCenter,name: 'userCenter',component: userCenter,},
     {path: routePath.updateArticle,name: 'updateArticle',component: updateArticle},
     {path: routePath.redirectToLogin,name: 'redirectToLogin',component: redirectToLogin,},
+    {path: routePath.readArticle,name: 'readArticle',component: readArticle,},
     /*{
       path: '/',
       name: 'registerAndLogin',

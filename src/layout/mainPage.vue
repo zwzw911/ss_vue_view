@@ -54,7 +54,7 @@
   }*/
 </style>
 <template>
-  <div class="container" >
+  <div class="container flex-flow-column-nowrap align-content-space-between" style="height:100%">
     <!--<Layout>-->
       <div class="header">
         <selfHeader :header-info="headerInfo"></selfHeader>
@@ -62,7 +62,7 @@
       <div class="">
         <selfSearch :search-info="searchInfo"></selfSearch>
       </div>
-      <div class="flex-flow-row-nowrap marginT7 " >
+      <div class="flex-flow-row-nowrap marginT7 flex-grow-1" >
         <div class="sideBar" style="" >
           <selfSideBar></selfSideBar>
         </div>
@@ -87,37 +87,43 @@
   /**         component       **/
   /******************************/
   import selfHeader from '../components/subLayoutComponents/header.vue'
-  import selfSearch from '../components/subLayoutComponents/search.vue'
   import selfFooter from '../components/subLayoutComponents/footer.vue'
+  import selfSearch from '../components/subLayoutComponents/search.vue'
   import selfSideBar from '../components/subLayoutComponents/sidebar.vue'
   import selfContent from '../components/subLayoutComponents/mainPageContent.vue'
   /******************************/
   /**    common function       **/
   /******************************/
   import {ifUserLogin,routeTo} from '../function/misc'
-
+  /******************************/
+  /**     common constant     **/
+  /******************************/
+  import * as componentInfo from '../constant/globalConfiguration/componentInfo'
 
   export default {
-      components:{selfHeader,selfSearch,selfSideBar,selfContent,selfFooter},
+      components:{selfSearch,selfSideBar,selfContent,selfHeader,selfFooter},
       computed:{
 
 
       },
     data () {
       return {
-        headerInfo:{
-          itemsInHeader:[{name:"注册",href:"register"},{name:"登录",href:"login"}],
-          userName:this.$store.state.headerInfo.userName
-        },
+        // headerInfo:{
+        //   itemsInHeader:[{name:"注册",href:"register"},{name:"登录",href:"login"}],
+        //   userName:this.$store.state.headerInfo.userName
+        // },
+        headerInfo:componentInfo.headerInfo,
+        footerInfo:componentInfo.footerInfo,
         searchInfo:{
           config:{
             logoSrc:'/static/logo.png',
             buttonType:'primary',
           },
         },
-        footerInfo:{
-          year:this.$store.state.footerInfo.year
-        },
+
+        // footerInfo:{
+        //   year:this.$store.state.footerInfo.year
+        // },
         contentInfo:[
           {
             articleInfo:

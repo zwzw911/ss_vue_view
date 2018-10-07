@@ -5,8 +5,8 @@
   <div class="flex-flow-column-wrap align-content-flex-start align-items-flex-start">
     <div v-for="(val,idx) in attachmentListPropsInfo.currentAttachmentFileInfo" class="attachment-delete-icon-hover-show h4 marginT2">
       <a>{{attachmentListPropsInfo.currentAttachmentFileInfo[idx]['name']}}</a>
-      <Tooltip placement="right" :delay=1000 content="删除附件">
-        <Icon type="md-trash" class="color-error marginL2 cursor-pointer" style="align-self: flex-end" @click="deleteAttachment_async({idx:idx})"></Icon>
+      <Tooltip placement="right" :delay=1000 content="删除附件" v-if="true===attachmentListPropsInfo.editable">
+        <Icon type="md-trash" class="color-error marginL2 cursor-pointer" style="align-self: flex-end" @click="deleteAttachment_async({idx:idx})" v-if="true===attachmentListPropsInfo.editable"></Icon>
       </ToolTip>
     </div>
     <!--<div class="">-->
@@ -24,7 +24,7 @@
         <!--:max-size="uploadFileDefine.article.article_attachment.maxSizeInMB*1024"-->
 
         <!--<Button icon="md-add-circle">添加附件</Button>-->
-        <Button type="primary" icon="md-cloud-upload">上传附件</Button>
+        <Button type="primary" icon="md-cloud-upload" v-if="true===attachmentListPropsInfo.editable">上传附件</Button>
       </Upload>
 
     <!--</div>-->
@@ -45,7 +45,8 @@
   /******************************/
   /**      错误（函数）       **/
   /******************************/
-  import {showErrorInCenterMessage} from '../../function/showErrorResult'
+  // import {handleResult.commonHandlerForErrorResult} from '../../function/showResult'
+  import * as handleResult from '../../function/handleResult'
   /******************************/
   /**        constant          **/
   /******************************/
@@ -73,8 +74,10 @@
         // inf('data',data)
         // inf('this.attachmentListPropsInfo.url.deleteAttachmentUrl',this.attachmentListPropsInfo.url.deleteAttachmentUrl)
         let result=await sendRequestGetResult_async({urlOption:this.attachmentListPropsInfo.url.deleteAttachmentUrl,data:data})
-        if(undefined===result && result.rc===0){
-        this.attachmentListPropsInfo.currentAttachmentFileInfo.splice(idx,1)
+        if(undefined!==result && result.rc===0){
+          let fileName=this.attachmentListPropsInfo.currentAttachmentFileInfo[idx]['name']
+          this.attachmentListPropsInfo.currentAttachmentFileInfo.splice(idx,1)
+          handleResult.commonHandlerForSuccessResult({that:this,response:{rc:0,msg:`附件 ${fileName} 删除成功`}})
         }
       },
       addAttachment_async(){},
@@ -84,7 +87,7 @@
       //格式不支持
       handleFormatError (file) {
         let that=this
-        showErrorInCenterMessage({that:that,msg:`文件${file.name}的格式不支持`})
+        handleResult.commonHandlerForErrorResult({that:that,response:{rc:98765,msg:`文件${file.name}的格式不支持`}})
         /*          this.$Notice.warning({
                     title: 'The file format is incorrect',
                     desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
@@ -93,7 +96,7 @@
       //尺寸超出
       handleMaxSize (file) {
         let that=this
-        showErrorInCenterMessage({that:that,msg:`文件${file.name}大小超过上限${this.attachmentListPropsInfo.maxSize}kb`})
+        handleResult.commonHandlerForErrorResult({that:that,response:{rc:98765,msg:`文件${file.name}大小超过上限${this.attachmentListPropsInfo.maxSize}kb`}})
         /*          this.$Notice.warning({
                     title: 'Exceeding file size limit',
                     desc: 'File  ' + file.name + ' is too large, no more than 2M.'
@@ -101,7 +104,7 @@
       },
       handleUploadSuccess(response, file, fileList){
         if(response.rc>0){
-          showErrorInCenterMessage({that:this,msg:response.msg})
+          handleResult.commonHandlerForErrorResult({that:this,response:response})
           return
         }
         this.attachmentListPropsInfo.currentAttachmentFileInfo.push(response.msg[0])

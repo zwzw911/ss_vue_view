@@ -5,6 +5,7 @@
 /*
 * span:{width,offset}
 * inputType:
+* width: 如果是select，可以自定义宽度。单位px。
 * autoGen:boolean，input是否需要自增
 * autoSize：当inputType为textarea，才需要设置
 * uniqueCheckUrl:如果字段需要unique check，对应的urlConfiguration（url+method）
@@ -46,7 +47,12 @@ const extraAttribute={
       inputType:'text'
     },
     status:{
-      // inputType:'text'
+      inputType:'select',
+      width:100,
+    },
+    allowComment:{
+      inputType:'select',
+      width:100,
     },
     tags:{
       inputType:'text',

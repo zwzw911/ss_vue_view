@@ -15,6 +15,7 @@ import {extraAttribute} from '../inputValue/manual/extraAttribute'
 
 import {mergeInputAttribute,objectPartlyDeepCopy,objectDeepCopy,genNeedInput} from '../../function/misc'
  import {RichTextEditor} from '../../constant/enum/keyEnum'
+import {InputAttributeFieldName,InputTempDataFieldName,ValidatePart} from '../../constant/enum/nonValueEnum'
 
 import * as globalConfiguration from './globalConfiguration'
 import {inf} from 'awesomeprint'
@@ -70,8 +71,8 @@ function registerInfo(){
 function loginInfo(){
   let allowFields=['account','password']
   let loginMergeResult=genNeedInput({source:source,collName:'user',allowFields:allowFields,additionalFields:['captcha']})
-  let loginInfo={
-    formItemInfo:{
+  // let loginInfo={
+  let formItemInfo={
       inputValue:objectDeepCopy(loginMergeResult['inputValue']),
       inputAttribute:loginMergeResult['inputAttribute'],
       rule:loginMergeResult['rule'],
@@ -90,9 +91,16 @@ function loginInfo(){
         captchaURL:urlConfiguration.standAlone.captcha,
         getAfterMounted:true,
       },
-    },
+    // },
   }
-  return loginInfo
+  formItemInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER]=['账号（手机号或邮箱）']
+  formItemInfo.inputAttribute.account[InputAttributeFieldName.PLACE_HOLDER_BKUP]=['账号（手机号或邮箱）']
+  formItemInfo.inputAttribute.account[InputAttributeFieldName.UNIQUE]=false //登录时无需检测账号unique
+
+  formItemInfo.rule.account[0].message='账号不能为空'
+  formItemInfo.rule.account[1].message='账号必须是有效的手机号或邮箱'
+
+  return formItemInfo
 }
 
 // inf('loginMergeResult[\'rule\']',loginMergeResult['rule'])
@@ -179,7 +187,7 @@ let captchaInfo={
 
 let headerInfo={
   itemsInHeader:[{name:"注册",href:"register"},{name:"登录",href:"login"}],
-    // userName:this.$store.state.headerInfo.userName
+  // userName:this.$store.state.headerInfo.userName,
 }
 
 let footerInfo={
@@ -223,7 +231,7 @@ function autoGenFormItemInfo(){
 // inputValueForCreate.article.tags=[]
 
 function articleInfo(){
-  let allowFieldForArticle=['name','tags','htmlContent']//
+  let allowFieldForArticle=['name','status','allowComment','tags','htmlContent']//
   let articleInput=genNeedInput({collName:'article',allowFields:allowFieldForArticle})
 // inf(' maxNum:articleInput[\'addItemButtonDisable\']', maxNum:articleInput['addItemButtonDisable'])
   let articleInfo={
@@ -245,7 +253,7 @@ function articleInfo(){
       // iconColor:'#5cadff',
       labelWidth:160, //若要实现label-left的效果，必须设置width，以便实现margin-left
       showStarForRequire:true,
-      inputLabelSize:'inputLabelH3',
+      inputLabelSize:'inputLabelH4',
       inputSize:'inputH6',
       /**   richTextEditor configuration    **/
       richTextEditorConfiguration:{

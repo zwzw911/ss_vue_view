@@ -30,6 +30,7 @@ const urlConfiguration={
   },
   article:{
     getArticle:{url:'/article',method:RequestMethod.GET},
+    getMainPageArticle:{url:'/article/mainPage',method:RequestMethod.GET},
     getUpdatedArticle:{url:'/article/getUpdateArticle',method:RequestMethod.GET},
     createArticle:{url:'/article',method:RequestMethod.POST},//no any params
     updateArticle:{url:'/article',method:RequestMethod.PUT},//recordId+recordInfo

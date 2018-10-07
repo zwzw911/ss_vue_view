@@ -30,6 +30,8 @@ const proxySetting={
         {"target":"http://localhost:3000","changeOrigin":true,"pathRewrite":{"^/join_public_group_request":"/join_public_group_request"}},
     '/folder':
         {"target":"http://localhost:3000","changeOrigin":true,"pathRewrite":{"^/folder":"/folder"}},
+    '/routerOnly':
+        {"target":"http://localhost:3000","changeOrigin":true,"pathRewrite":{"^/routerOnly":"/routerOnly"}},
 }
 
 

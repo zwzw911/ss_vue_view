@@ -63,7 +63,7 @@ example
     /******************************/
     import {getPosPara} from '../helperLib/componentsHelperLib'
     import {sendRequestGetResult_async} from '../../function/network'
-    import {showErrorInModal} from '../../function/showErrorResult'
+    import * as handleResult from '../../function/handleResult'
     // import {showErrorInModal} from '../../function/showErrorResult'
     import {urlConfiguration} from '../../constant/url/url'
 
@@ -75,9 +75,9 @@ example
           }
       },
       methods: {
-test(){
-  alert('test')
-},
+// test(){
+//   alert('test')
+// },
         captchaLoaded(){
           // inf('captchaLoaded in')
           let imgPosPara=getPosPara(this.dom.captchaImg)
@@ -93,7 +93,7 @@ test(){
           }
         },
         getCaptchaImg_async(){
-          inf('getCaptchaImg_async in')
+          // inf('getCaptchaImg_async in')
           let that=this
           sendRequestGetResult_async({urlOption:urlConfiguration.standAlone.captcha}).then(function (response) {
             that.dealCorrectCaptchaResult(response)
@@ -106,7 +106,7 @@ test(){
             if(err.status && err.status===504){
               err.data='无法连接服务器，请稍后重试'
             }
-            return showErrorInModal({that:that,msg:err.data})
+            return handleResult.commonHandlerForErrorResult({that:that,response:err,showType:'modal'})
 
           })
           // let result=await sendRequestGetResult_async({urlOption:urlConfiguration.standAlone.captcha})
@@ -132,7 +132,7 @@ test(){
           // }
         },
         async dealCorrectCaptchaResult(result){
-          inf('dealCorrectCaptchaResult in')
+          // inf('dealCorrectCaptchaResult in')
           this.captchaImgLoadedFlag=false
           if(result.rc===0){
             this.captchaImgHideFlag=false

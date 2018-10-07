@@ -63,7 +63,7 @@
   /**    common function       **/
   /******************************/
   import {sendRequestGetResult_async} from '../../function/network'
-  import {showErrorInModal} from '../../function/showErrorResult'
+  // import {showErrorInModal} from '../../function/showResult'
   import {objectDeepCopy,genNeedInput,ifUserLogin,routeTo} from '../../function/misc'
 
   /******************************/
@@ -102,7 +102,7 @@
       /********************************************/
       //获得整体验证结果，然后设置button的状态
       setFormItemResult(result){
-// inf('change result',result)
+inf('change result',result)
         this.validateFormItemResult=result
         this.checkSubmitButtonStatus()
       },
