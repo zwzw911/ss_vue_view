@@ -9,21 +9,21 @@
         {{readArticleError}}
       </div>
       <div id="article" v-if="''===readArticleError && undefined!==articleInfo">
-        <p>{{articleId.articleInfo}}</p>
+        <p id="articleTitle" class="h1 bolder font-serif">{{articleInfo.name}}</p>
 
-        <div id="authorInfo" class="flex-flow-row-wrap justify-content-flex-start">
-          <img :style="{ width: userThumb.maxWidth+'px', height: userThumb.maxHeight + 'px'}" :src="articleInfo.authorId.photoDataUrl"/>
-          <div class="flex-flow-column-nowrap justify-content-space-between marginL4">
-            <p class="text-align-left">{{articleInfo.authorId.name}}</p>
-            <p>
-              <span>{{articleInfo.cDate}}</span>
-              <span>阅读：{{}}</span>
+        <div id="authorInfo" class="flex-flow-row-wrap justify-content-flex-start marginT7">
+          <img :style="{ width: '50px', height:  '50px'}" :src="articleInfo.authorId.photoDataUrl"/>
+          <div class="flex-flow-column-wrap justify-content-space-between marginL4">
+            <p class="h4 text-align-left">{{articleInfo.authorId.name}}</p>
+            <p class="color-grey">
+              <span class="marginR2">{{articleInfo.cDate}}</span>
+              <span class="marginR2">阅读{{}}</span>
               <span>评论:{{}}</span>
             </p>
           </div>
         </div>
 
-        <p class="marginT7">{{articleInfo.htmlContent}}</p>
+        <p class="marginTX text-align-left" v-html="articleInfo.htmlContent">{{}}</p>
 
         <self-attachment-list :attachment-list-props-info="attachmentListPropsInfo"></self-attachment-list>
       </div>

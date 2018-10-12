@@ -25,7 +25,7 @@
                   @submit.native.prevent
             >
 
-              <self-form-item :ref="ref.formItem.phone" :form-item-info="formItemInfo.phone" @checkIfAllItemValidatedAndPass="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
+              <self-form-item :ref="ref.formItem.phone" :form-item-info="formItemInfo.phone" @checkIfAllItemValidatedResultPass="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
               <!--<selfCaptcha ref="selfCaptchaForEmail" :captcha-info="captchaInfo"></selfCaptcha>-->
               <!--term of service-->
 <!--              <div class="flex-flow-row-nowrap justify-content-flex-start marginV4">

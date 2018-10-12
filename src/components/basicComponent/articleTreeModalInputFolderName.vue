@@ -13,7 +13,7 @@
             @submit.native.prevent
       >
         <!--<p>test</p>-->
-        <selfFromItem :editable="editable" :form-item-info="formItemInfo" @checkIfAllItemValidatedAndPass="setFormItemResult" @onBlur="checkSubmitButtonStatus"></selfFromItem>
+        <selfFromItem :editable="editable" :form-item-info="formItemInfo" @checkIfAllItemValidatedResultPass="setFormItemResult" @onBlur="checkSubmitButtonStatus"></selfFromItem>
       </Form>
       <div slot="footer">
         <Button type="default" size="large" @click="cancel" >取消</Button>

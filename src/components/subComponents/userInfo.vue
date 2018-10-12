@@ -113,7 +113,7 @@
       async saveUserInfo_async(){
         let that=this
         //1. 触发form的方法，检测是否所有input都符合条件，结果传递给本组件变量validResult
-        await this.$refs[this.ref.formItem.formItemForUserInfo].validateIfAllItemPass()
+        await this.$refs[this.ref.formItem.formItemForUserInfo].validateAllItemResult()
         if(false===this.validResult){
           commonHandlerForErrorResult({that:this,response:{rc:98765,msg:'某些输入项不正确'}})
           return
@@ -198,7 +198,7 @@
             inf('name not change')
             this.formItemInfoForNonIconInput.inputTempData['name'][InputTempDataFieldName.VALID_RESULT]=''
             // inf('after set null',this.formItemInfoForNonIconInput.inputTempData['name'][InputTempDataFieldName.VALID_RESULT])
-            this.$refs[this.ref.formItem.formItemForUserInfo].validateIfAllItemPass()
+            this.$refs[this.ref.formItem.formItemForUserInfo].validateAllItemResult()
           }
         }
       },

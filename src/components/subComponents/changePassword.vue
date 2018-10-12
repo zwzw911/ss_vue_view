@@ -18,7 +18,7 @@
     <Form class="flex-flow-column-nowrap justify-content-flex-start flex-grow-1 paddingH4 "  label-position="left"
           :ref="ref.form.formForChangePassword" :model="formItemInfo.inputValue" :rules="formItemInfo.rule"
           :label-width="undefined===formItemInfo.labelWidth ? 0:formItemInfo.labelWidth">
-      <self-form-item :ref="ref.formItem.formItemChangePassword" :form-item-info="formItemInfo" @checkIfAllItemValidatedAndPass="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
+      <self-form-item :ref="ref.formItem.formItemChangePassword" :form-item-info="formItemInfo" @checkIfAllItemValidatedResultPass="setFormItemResult" @onBlur="checkSubmitButtonStatus"></self-form-item>
 
 
       <!--<FormItem class="">-->

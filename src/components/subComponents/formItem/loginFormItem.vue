@@ -25,7 +25,7 @@ onblur/onchange会emit event，带1个结果，是否可以自行login操作（i
             :label-width="formItemInfo.labelWidth"
             @submit.native.prevent
       >
-        <self-form-item :ref="ref.formItem.formItemForLogin" :editable=true :form-item-info="formItemInfo" @checkIfAllItemValidatedAndPass="getAllItemValidatedResult" @onFocus="resetGlobalMsg" @onBlur=""></self-form-item>
+        <self-form-item :ref="ref.formItem.formItemForLogin" :editable=true :form-item-info="formItemInfo" @checkIfAllItemValidatedResultPass="getAllItemValidatedResult" @onFocus="resetGlobalMsg" @onBlur=""></self-form-item>
 
 
         <!--不影响是否可以执行-->

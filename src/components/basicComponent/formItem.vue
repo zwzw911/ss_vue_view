@@ -36,8 +36,8 @@ formItemInfo:
           >
             <Input
               @on-focus="focusInputPlaceHolderDisappear({keyName:'captcha'});onFocus()"
-              @on-blur="blurInputPlaceHolderRestore({keyName:'captcha'});validSingleInputValue({fieldName:'captcha'});checkIfAllItemValidatedAndPass();onBlur();"
-              @on-change="validSingleInputValue({fieldName:'captcha'});checkIfAllItemValidatedAndPass();"
+              @on-blur="blurInputPlaceHolderRestore({keyName:'captcha'});validSingleInputValueAndStoreResult({fieldName:'captcha'});checkIfAllItemValidatedResultPass();onBlur();"
+              @on-change="validSingleInputValueAndStoreResult({fieldName:'captcha'});checkIfAllItemValidatedResultPass();"
               :type="formItemInfo.inputAttribute['captcha']['inputType']" v-model="formItemInfo.inputValue['captcha']" :placeholder="formItemInfo.inputAttribute['captcha']['placeHolder'][0]"
             >
             </Input>
@@ -84,8 +84,8 @@ formItemInfo:
 
                 <Input
                   @on-focus="focusInputPlaceHolderDisappear({keyName:k,idx:idx});dismissError({keyName:k,idx:idx});onFocus()"
-                  @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});checkIfAllItemValidatedAndPass();onBlur({k:k,idx:idx});xssCheck({keyName:k,idx:idx});"
-                  @on-change="validateDuplicate({keyName:k,idx:idx});validateAllAutoGenItem({keyName:k});checkIfAllItemValidatedAndPass();xssCheck({keyName:k,idx:idx})"
+                  @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenAffButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();onBlur({k:k,idx:idx});xssCheck({keyName:k,idx:idx});"
+                  @on-change="validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenAffButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();xssCheck({keyName:k,idx:idx})"
 
                   :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                   v-model="formItemInfo.inputValue[k][idx]" :placeholder="formItemInfo.inputArrayAttribute[k][idx]['placeHolder'][0]"
@@ -100,7 +100,7 @@ formItemInfo:
                         </span>
                   <span slot="append" style="" :style="{visibility: editable ? 'visible':'hidden'}" class="cursorPointer"
                         v-if="editable===true"
-                        @click="removeItem({keyName:k,idx:idx});validateIfAllItemPass">
+                        @click="removeItem({keyName:k,idx:idx});validateAllItemResult">
                           <Icon type="md-remove-circle" size="18"  color="#aaaaaa" title="移除"></Icon>
                         </span>
                 </Input>
@@ -110,11 +110,14 @@ formItemInfo:
               <Icon type="md-add-circle"
 
                     :disabled="formItemInfo.addItemButtonDisable[k]"
-                    :class="[{hidden:!editable},undefined===formItemInfo.inputLabelSize ? '':formItemInfo.inputLabelSize.replace('inputLabelH','h'),formItemInfo.addItemButtonDisable[k] ? '':'color-primary cursor-pointer']"
-                    @click="addItem_async({keyName:k});checkIfAllItemValidatedAndPass()"
+                    :class="[{hidden:!editable},undefined===formItemInfo.inputLabelSize ? '':formItemInfo.inputLabelSize.replace('inputLabelH','h'),formItemInfo.addItemButtonDisable[k] ? 'color-grey':'color-primary cursor-pointer']"
+                    @click="addItem({keyName:k});checkIfAllItemValidatedResultPass()"
               >
                 添加
               </Icon>
+              <span v-if="null!==formItemInfo.inputTempData[k]['validResult'] || ''!==formItemInfo.inputTempData[k]['validResult']" class="color-error marginL2">
+                {{formItemInfo.inputTempData[k]['validResult']}}
+              </span>
             </div>
           </div>
         </template>
@@ -157,8 +160,8 @@ formItemInfo:
                       <!--复用formItem的validator-->
                       <Input
                         @on-focus="focusInputPlaceHolderDisappear({keyName:k});onFocus()"
-                        @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValue({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedAndPass();onBlur();xssCheck({keyName:k});"
-                        @on-change="validSingleInputValue({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedAndPass();xssCheck({keyName:k})"
+                        @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();onBlur();xssCheck({keyName:k});"
+                        @on-change="validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();xssCheck({keyName:k})"
                         :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                         v-model="formItemInfo.inputValue[k]" :placeholder="!editable ? '':formItemInfo.inputAttribute[k]['placeHolder'][0]"
                         :class="[editable ? '':'inputUnEditAble inputDisabled', 'title'===formItemInfo.inputAttribute[k]['inputSize'] ? 'inputTitle':'']"
@@ -173,8 +176,8 @@ formItemInfo:
                   <template v-else>
                     <Input
                       @on-focus="focusInputPlaceHolderDisappear({keyName:k});onFocus()"
-                      @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValue({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedAndPass();onBlur();xssCheck({keyName:k})"
-                      @on-change="validSingleInputValue({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedAndPass();xssCheck({keyName:k})"
+                      @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();onBlur();xssCheck({keyName:k})"
+                      @on-change="validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();xssCheck({keyName:k})"
                       :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                       v-model="formItemInfo.inputValue[k]" :placeholder="!editable ? '':formItemInfo.inputAttribute[k]['placeHolder'][0]"
                       :class="[editable ? '':'inputUnEditAble inputDisabled', 'title'===formItemInfo.inputAttribute[k]['inputSize'] ? 'inputTitle':'']"
@@ -291,9 +294,9 @@ formItemInfo:
         this.formItemInfo.inputValue[keyName] = content
         this.$parent.validateField(keyName, (validResult) => {
           // inf('fieldName',fieldName)
-          // inf('validSingleInputValue',validResult)
+          // inf('validSingleInputValueAndStoreResult',validResult)
           this.formItemInfo.inputTempData[keyName][InputTempDataFieldName.VALID_RESULT] = validResult
-          this.checkIfAllItemValidatedAndPass()
+          this.checkIfAllItemValidatedResultPass()
           // inf('this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]',this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT])
         })
       },
@@ -310,6 +313,21 @@ formItemInfo:
             }
           }
         }
+      },
+      /************************/
+      /****    common      ***/
+      /************************/
+      //获得字段的required的定义，返回true/false(undefined 也被视为false)
+      getFieldRequiredefinition({fieldName}){
+
+        for(let fieldSingleRuleDefinition of this.formItemInfo.rule[fieldName]){
+          if(undefined!==fieldSingleRuleDefinition['required']){
+            return {'required':fieldSingleRuleDefinition['required'],'message':fieldSingleRuleDefinition['message']}
+          }
+        }
+
+        //undefined 被视为false
+        return {'required':false,'message':`${this.formItemInfo.inputAttribute[fieldName][InputAttributeFieldName.LABEL]}不能为空`}
       },
       /************************/
       /****   预处理数据    ***/
@@ -359,7 +377,7 @@ formItemInfo:
         // inf('load done')
         // inf('his.formItemInfo.inputArrayTempData',this.formItemInfo.inputArrayTempData)
         //loadData完毕，需要对数据进行验证，以便设置validateResult（否则都是null，会造成checkIfAllItemValidatedAndPass返回false）
-        this.validateIfAllItemPass()
+        this.validAllInputValueAndStoreResult()
       },
       //发送请求到server前，对数据进行处理
       sanityInputValueBeforeSendToServer(){
@@ -478,22 +496,17 @@ formItemInfo:
 
       //如果离开input时，inputValue为空，需要恢复placeholder内容
       blurInputPlaceHolderRestore({keyName,idx}) {
-        // inf('blurInputPlaceHolderRestore in')
-
-        // inf('blurInputPlaceHolderRestore keyName',keyName)
-        // inf('blurInputPlaceHolderRestore idx',idx)
-        // inf('this.formItemInfo.inputAttribute[keyName]',this.formItemInfo.inputAttribute[keyName])
-        // inf('this.formItemInfo.ref.form.articleForm',this.formRefName)
-        // this.$parent.validate()
+// inf('blurInputPlaceHolderRestore keyName',keyName)
+//         inf('blurInputPlaceHolderRestore idx',idx)
         let fieldAttribute=this.formItemInfo.inputAttribute[keyName]
         //如果是autoGen，直接在inputArrayTempData操作
         if(true===fieldAttribute[InputAttributeFieldName.AUTO_GEN]) {
           if (undefined === idx) {
             err(`for autoGen field ${keyName}, miss parameter idx`)
           } else {
-            inf('before valud reulst',this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT])
+            // inf('before valud reulst',this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT])
             if (null === this.formItemInfo.inputValue[keyName][idx] || '' === this.formItemInfo.inputValue[keyName][idx] ) {
-              this.formItemInfo.inputArrayAttribute[keyName][idx][InputAttributeFieldName.PLACE_HOLDER] = this.formItemInfo.inputAttribute[keyName][InputAttributeFieldName.PLACE_HOLDER_BKUP]
+              this.formItemInfo.inputArrayAttribute[keyName][idx][InputAttributeFieldName.PLACE_HOLDER] = this.formItemInfo.inputArrayAttribute[keyName][idx][InputAttributeFieldName.PLACE_HOLDER_BKUP]
             }
           }
         }
@@ -527,92 +540,6 @@ formItemInfo:
       /*********************/
       /****  validate  ****/
       /*********************/
-      //存储 单个input 的检测结果（null：为检测，非空字符：检测通过，空字符：检测通过）
-      validSingleInputValue({fieldName}) {
-        //非编辑状态，不执行validate
-        if(this.editable===false){
-          return
-        }
-        //formItem放在2层template中，所以大概需要数组来引用
-        this.$parent.validateField(fieldName, (validResult) => {
-          // inf('fieldName',fieldName)
-          // inf('validSingleInputValue',validResult)
-          this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT] = validResult
-          // this.checkIfAllItemValidatedAndPass()
-/*          if(validResult===""){
-            this.$emit('validSingleInputValue',validResult)
-          }*/
-
-          // inf('this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]',this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT])
-        })
-      },
-      /**   通过检测validaResult来判断是否所有item都pass（而不是直接调用iview的valida方法，否则，没有做过输入的input会出现错误，不好看）**/
-      checkIfAllItemValidatedAndPass() {
-        inf('checkIfAllItemValidatedAndPass in')
-        //非编辑状态，不执行validate
-        if(this.editable===false){
-          return
-        }
-        let flag=true //默认通过validate
-        for (let singleFieldName in this.formItemInfo.inputAttribute) {
-          let fieldAttribute=this.formItemInfo.inputAttribute[singleFieldName]
-          inf('singleFieldName',singleFieldName)
-          inf('this.formItemInfo.inputAttribute[singleFieldName]',this.formItemInfo.inputAttribute[singleFieldName])
-          if(true===fieldAttribute[InputAttributeFieldName.AUTO_GEN]){
-            //autoGen的验证结果保存在inputArrayTempData中
-            inf('this.validateAllAutoGenItem({keyName:singleFieldName})',this.validateAllAutoGenItem({keyName:singleFieldName}))
-            if(this.validateAllAutoGenItem({keyName:singleFieldName})===false){
-              flag=false
-              break
-            }
-            /*if(undefined===this.formItemInfo.inputArrayTempData[singleFieldName]){
-              err(`field ${singleFieldName} is autoGen, but no related inputArrayTempData`)
-            }else{
-              for(let idx in this.formItemInfo.inputArrayTempData[singleFieldName]){
-                let eleValidateResult=this.formItemInfo.inputArrayTempData[singleFieldName][idx][InputTempDataFieldName.VALID_RESULT]
-/!*                if(null===eleValidateResult){
-                  this.validateSingleAutoGenItem({keyName:singleFieldName,idx:idx})
-                }*!/
-                if(null !==eleValidateResult && '' !==eleValidateResult){
-                  flag=false
-                  break
-                }
-              }
-            }*/
-          }
-          //non autoGen
-          else{
-            let singleFieldValidResult = this.formItemInfo.inputTempData[singleFieldName][InputTempDataFieldName.VALID_RESULT]
-            // inf('singleFieldName',singleFieldName)
-            let singleFieldRequired=this.formItemInfo.rule[singleFieldName][0]['required']
-            // inf('singleFieldRequired',singleFieldRequired)
-            //必须字段未经验证，或者字段验证失败
-            if ( true===singleFieldRequired && (null === singleFieldValidResult || '' !== singleFieldValidResult)) {
-
-              // inf('checkIfAllItemValidatedAndPass non autogen result false')
-              // this.$emit('validateAllItemResult',false)
-              // return
-              flag=false
-              break
-            }
-          }
-        }
-        this.$emit('checkIfAllItemValidatedAndPass',flag)
-      },
-      //通过检测inputTempData中所有字段的valid_result，判断是否所有item validate pass
-      //产生事件validateAllItemResult，返回boolean
-      async validateIfAllItemPass() {
-        // inf('validateIfAllItemPass in')
-        this.$parent.validate((validResult)=>{
-          // inf('validateIfAllItemPass result',validResult)
-          this.$emit('validateAllItemResult',validResult)
-        })
-
-      },
-/*      async validateByRule_async(){
-        let result=await this.$parent.validate()
-        return Promise.resolve(result)
-      },*/
       //字段的unique检测
       //不知道为啥，props,data和computed中的数据，不能放在promise的then中使用，如果要做设置，只能通过参数传递
       async validateUnique({fieldName,formItemInfo}) {
@@ -649,7 +576,7 @@ formItemInfo:
 
           }
           //因为是异步函数，需要在Promise返回后，手工调用validateIfAllItemPass_async进行检查
-          // this.$options.methods.validateIfAllItemPass.bind(this)()
+          // this.$options.methods.validateAllItemResult.bind(this)()
           // inf('err done')
           // this.$options.methods.onBlur.bind(this)()
           //如果需要对检查结果做特殊处理(例如，不需要显示错误结果)，此处为钩子
@@ -680,6 +607,141 @@ formItemInfo:
         }
         // this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT] =''
       },
+      //存储 单个input 的检测结果（null：为检测，非空字符：检测通过，空字符：检测通过）
+      validSingleInputValueAndStoreResult({fieldName,idx}) {
+        //非编辑状态，不执行validate
+        if(this.editable===false){
+          return
+        }
+//
+        if(true===this.formItemInfo.inputAttribute[fieldName][InputAttributeFieldName.AUTO_GEN]){
+          //如果是autoGen的inputValue不是null，那么一一检测单个元素(并消除全局错误消息)
+          if(null!==this.formItemInfo.inputValue[fieldName] && undefined!==idx){
+            //并消除全局错误消息
+            this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]=''
+        //     inf('validSingleInputValueAndStoreResult fieldName',fieldName)
+        // inf('validSingleInputValueAndStoreResult idx',idx)
+            this.$parent.validateField(`${fieldName}.${idx}`, (validResult) => {
+              this.formItemInfo.inputArrayTempData[fieldName][idx][InputTempDataFieldName.VALID_RESULT] = validResult
+            })
+          }else{
+            //否则，根据rule中require的定义，对字段设置整体结果
+            //如果没有任何数据，则要结合rule中定义，是否require，autogen的全局validResult(直接放置在inputTempData)
+            let requiredDefine = this.getFieldRequiredefinition({fieldName: fieldName})
+            // inf('requiredDefine', requiredDefine)
+            //autoGen为必须字段，但是没有任何值（没有任何元素），需要（手工）设置全局错误
+            if(true===requiredDefine['required']){
+              // let fieldChineseName=this.formItemInfo.inputAttribute[fieldName][InputAttributeFieldName.LABEL]
+              this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]=requiredDefine['message']
+            }
+          }
+
+        }else{
+          //普通字段
+          this.$parent.validateField(fieldName, (validResult) => {
+            // inf('fieldName',fieldName)
+            // inf('validSingleInputValueAndStoreResult',validResult)
+            this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT] = validResult
+            // this.checkIfAllItemValidatedResultPass()
+            /*          if(validResult===""){
+                        this.$emit('validSingleInputValueAndStoreResult',validResult)
+                      }*/
+
+            // inf('this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]',this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT])
+          })
+        }
+
+      },
+      validAllInputValueAndStoreResult(){
+        // 对所有数据（无论是否null）进行检查
+        // if( undefined!==this.formItemInfo.inputValue){
+          for(let singleKey in this.formItemInfo.inputValue){
+            //autoGen，且有inputValue，那么需要对每个元素验证
+            if(true===this.formItemInfo.inputAttribute[singleKey][InputAttributeFieldName.AUTO_GEN]){
+              if(null!== this.formItemInfo.inputValue[singleKey] && this.formItemInfo.inputValue[singleKey].length>0){
+                for(let idx in this.formItemInfo.inputValue[singleKey]){
+                  this.validSingleInputValueAndStoreResult({fieldName:singleKey,idx:idx})
+                }
+              }else {
+                this.validSingleInputValueAndStoreResult({fieldName:singleKey})
+              }
+            }else{
+              // inf('singleKey',singleKey)
+              this.validSingleInputValueAndStoreResult({fieldName:singleKey})
+            }
+
+          }
+        // }
+      },
+      /**   通过检测validaResult来判断是否所有item都pass（而不是直接调用iview的valida方法，否则，没有做过输入的input会出现错误，不好看）**/
+      checkIfAllItemValidatedResultPass() {
+        // inf('checkIfAllItemValidatedResultPass in')
+        //非编辑状态，不执行validate
+        if(this.editable===false){
+          return
+        }
+        let flag=true //默认通过validate
+        for (let singleFieldName in this.formItemInfo.inputAttribute) {
+          let fieldAttribute=this.formItemInfo.inputAttribute[singleFieldName]
+          // inf('singleFieldName',singleFieldName)
+          // inf('this.formItemInfo.inputAttribute[singleFieldName]',this.formItemInfo.inputAttribute[singleFieldName])
+          if(true===fieldAttribute[InputAttributeFieldName.AUTO_GEN]){
+            //autoGen的验证结果保存在inputArrayTempData中
+            // inf('this.checkIfAllAutoGenItemValidatedResultPass({keyName:singleFieldName})',this.checkIfAllAutoGenItemValidatedResultPass({keyName:singleFieldName}))
+            if(this.checkIfAllAutoGenItemValidatedResultPass({keyName:singleFieldName})===false){
+              flag=false
+              break
+            }
+            /*if(undefined===this.formItemInfo.inputArrayTempData[singleFieldName]){
+              err(`field ${singleFieldName} is autoGen, but no related inputArrayTempData`)
+            }else{
+              for(let idx in this.formItemInfo.inputArrayTempData[singleFieldName]){
+                let eleValidateResult=this.formItemInfo.inputArrayTempData[singleFieldName][idx][InputTempDataFieldName.VALID_RESULT]
+/!*                if(null===eleValidateResult){
+                  this.validateSingleAutoGenItemAndStoreResult({keyName:singleFieldName,idx:idx})
+                }*!/
+                if(null !==eleValidateResult && '' !==eleValidateResult){
+                  flag=false
+                  break
+                }
+              }
+            }*/
+          }
+          //non autoGen
+          else{
+            let singleFieldValidResult = this.formItemInfo.inputTempData[singleFieldName][InputTempDataFieldName.VALID_RESULT]
+            // inf('singleFieldName',singleFieldName)
+            let singleFieldRequired=this.formItemInfo.rule[singleFieldName][0]['required']
+            // inf('singleFieldRequired',singleFieldRequired)
+            //必须字段未经验证，或者字段验证失败
+            if ( true===singleFieldRequired && (null === singleFieldValidResult || '' !== singleFieldValidResult)) {
+
+              // inf('checkIfAllItemValidatedResultPass non autogen result false')
+              // this.$emit('validateAllItemResult',false)
+              // return
+              flag=false
+              break
+            }
+          }
+        }
+        // inf('checkIfAllItemValidatedResultPass flag',flag)
+        this.$emit('checkIfAllItemValidatedResultPass',flag)
+      },
+      //通过检测inputTempData中所有字段的valid_result，判断是否所有item validate pass
+      //产生事件validateAllItemResult，返回boolean
+      async validateAllItemResult() {
+        // inf('validateAllItemResult in')
+        this.$parent.validate((validResult)=>{
+          // inf('validateAllItemResult result',validResult)
+          this.$emit('validateAllItemResult',validResult)
+        })
+
+      },
+/*      async validateByRule_async(){
+        let result=await this.$parent.validate()
+        return Promise.resolve(result)
+      },*/
+
       xssCheck({keyName,idx}){
         if(undefined!==this.formItemInfo.inputArrayAttribute
             && undefined!==this.formItemInfo.inputArrayAttribute[keyName]
@@ -700,10 +762,11 @@ formItemInfo:
 
       },
       //根据keyName判断一个autoGen的所有item是否已经都valid了
-      validateAllAutoGenItem({keyName}){
+      checkIfAllAutoGenItemValidatedResultPass({keyName}){
         //判断所有元素是否验证通过（如果validResult为null，则要结合是否为require来判断），无法继续添加
-        // inf('validateAllAutoGenItem keyName',keyName)
-        if(undefined!==this.formItemInfo.inputValue[keyName]){
+        // inf('this.formItemInfo.inputValue[keyName]',this.formItemInfo.inputValue[keyName])
+        //inputValue初始化成null
+        if(null!==this.formItemInfo.inputValue[keyName]){
           // inf('this.formItemInfo.inputValue[keyName]',this.formItemInfo.inputValue[keyName])
           let length=this.formItemInfo.inputValue[keyName].length
           if(length>0){
@@ -711,7 +774,7 @@ formItemInfo:
             // inf('last validResult',this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult'])
             while (length>0){
 /*              if(null===this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult']){
-                await this.validateSingleAutoGenItem({keyName:keyName,idx:length})
+                await this.validateSingleAutoGenItemAndStoreResult({keyName:keyName,idx:length})
               }*/
 // inf('this.formItemInfo.inputArrayTempData[keyName][length-1][\'validResult\']',this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult'])
               //如果validResult为null，则要结合是否为require来判断
@@ -728,7 +791,7 @@ formItemInfo:
                 // this.formItemInfo.addItemButtonDisable[keyName]=true
                 // showErrorInCenterMessage({that:that,msg:'有尚未填入内容的标签'})
                 // this.formItemInfo.inputArrayTempData[keyName][length-1][InputTempDataFieldName.VALID_RESULT] = `文档标签不能为空啊`
-                this.formItemInfo.addItemButtonDisable[keyName]=true
+                // this.formItemInfo.addItemButtonDisable[keyName]=true
                 return false
                 }
               }
@@ -736,38 +799,44 @@ formItemInfo:
             }
           }
         }
-        this.formItemInfo.addItemButtonDisable[keyName]=false
+        // this.formItemInfo.addItemButtonDisable[keyName]=false
         return true
       },
+      setAutoGenAffButtonStatusByCheckValidatedResult({keyName}){
+        this.formItemInfo.addItemButtonDisable[keyName]=!this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName})
+      },
       /***    not used for array    **/
-      async validateSingleAutoGenItem({keyName,idx}){
+      /*async validateSingleAutoGenItemAndStoreResult({keyName,idx}){
+        let that=this
         return new Promise(function(resolve, reject){
-          this.$parent.validateField(`${keyName}`, (validResult) => {
+          that.$parent.validateField(`${keyName}.${idx}`, (validResult) => {
             // inf('fieldName',keyName)
-            // inf('validateSingleAutoGenItem validResult',validResult)
+            // inf('validateSingleAutoGenItemAndStoreResult validResult',validResult)
             // inf(' this.formItemInfo.inputArrayTempData[keyName]', this.formItemInfo.inputArrayTempData[keyName])
             // inf(' this.formItemInfo.inputArrayTempData[keyName][idx]', this.formItemInfo.inputArrayTempData[keyName][idx])
-            resolve(this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT] = validResult)
-            // this.validateIfAllItemPass()
+            resolve(that.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT] = validResult)
+            // this.validateAllItemResult()
             // inf('this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]',this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT])
           })
         })
 
-      },
-      async addItem_async({keyName}){
+      },*/
+      addItem({keyName}){
         // inf('keyname',keyName)
         let that=this
-        this.formItemInfo.addItemButtonDisable[keyName]=false
+        this.formItemInfo.addItemButtonDisable[keyName]=true
         //如果inputValue未设置，则初始化
         if( null===this.formItemInfo.inputValue[keyName] || undefined=== this.formItemInfo.inputValue[keyName]){
           this.formItemInfo.inputValue[keyName]=[]
         }
         //判断是否所有已经存在的item都验证通过
-        let existItemValidateResult=this.validateAllAutoGenItem({keyName:keyName})
+        let existItemValidateResult=this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName})
         // inf('existItemValidateResult',existItemValidateResult)
         if(false===existItemValidateResult){
           return
         }
+        //去除全局错误
+        this.formItemInfo.inputTempData[keyName][InputTempDataFieldName.VALID_RESULT]=''
         //判断是否已经达到最大数量，如果没有，创建一个新的value/attribute/tempData
         let length=this.formItemInfo.inputValue[keyName].length
         if(length>=this.formItemInfo.numRange[keyName]['max']){
@@ -776,27 +845,44 @@ formItemInfo:
         }else{
           this.formItemInfo.inputValue[keyName].push('')
           this.formItemInfo.inputArrayAttribute[keyName].push(misc.objectDeepCopy(this.formItemInfo.inputAttribute[keyName]))
-          // inf('misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName])',misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName]))
-          this.formItemInfo.inputArrayTempData[keyName].push(misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName]))
           this.formItemInfo.addItemButtonDisable[keyName]=true
 
-          // this.checkIfAllItemValidatedAndPass()
-          // //添加完成后，还要进行验证
-          // inf('this.validateAllAutoGenItem({keyName:keyName})',this.validateAllAutoGenItem({keyName:keyName}))
-          // return this.validateAllAutoGenItem({keyName:keyName})
-        }
-        // if(length<this.formItemInfo.numRange[keyName]['max']){
+          // this.$nextTick(function () {
+            //设置tempData，需要设置validResult，以便运行checkIfAllItemPass(),且在界面上是否显示错误，提示用户输入（然而直接设置validResult和调用validField方法（报错）都无法触发界面错误）
+            let newItemTempData=misc.objectDeepCopy(that.formItemInfo.inputTempData[keyName])
+            // inf('before newItemTempData',newItemTempData)
+            let requiredDefine = that.getFieldRequiredefinition({fieldName: keyName})
+            if(true===requiredDefine['required']){
+              newItemTempData[InputTempDataFieldName.VALID_RESULT]=requiredDefine['message']
+            }
+            // inf('after newItemTempData',newItemTempData)
+            that.formItemInfo.inputArrayTempData[keyName].push(newItemTempData)
+          // })
 
-        // }
-        // this.autoEliminateMarginLeft()
+
+
+
+          // this.checkIfAllItemValidatedResultPass()
+          //添加完成后，还要进行验证
+          //不知为啥，不能直接使用validSingleInputValueAndStoreResult来验证已经存在的autoGen的元素（包prop不正确），所以手动修改
+
+          // inf('this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName})',this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName}))
+          // inf('this.formItemInfo.inputValue[keyName]',this.formItemInfo.inputValue[keyName])
+
+        }
+
       },
       removeItem({keyName,idx}){
         this.formItemInfo.inputValue[keyName].splice(idx,1)
         this.formItemInfo.inputArrayAttribute[keyName].splice(idx,1)
         this.formItemInfo.inputArrayTempData[keyName].splice(idx,1)
-        // inf('this.validateAllAutoGenItem({keyName:keyName})',this.validateAllAutoGenItem({keyName:keyName}))
-        this.validateAllAutoGenItem({keyName:keyName})
-        this.validateIfAllItemPass()
+        // inf('this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName})',this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName}))
+        this.setAutoGenAffButtonStatusByCheckValidatedResult({keyName:keyName})
+        //如果删除autoGen所有元素，需要进行全局（整个字段）检查
+        if(this.formItemInfo.inputValue[keyName].length===0){
+          this.validSingleInputValueAndStoreResult({fieldName:keyName})
+        }
+        // this.validateAllItemResult()
       },
       /***************************************************/
       /**************   初始化formItem数据   *************/

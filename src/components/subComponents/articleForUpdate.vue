@@ -24,7 +24,7 @@
           :editable="attachmentListPropsInfo.editable"
           :form-item-info="articleInfo.formItemInfo"
           :formRefName="articleInfo.ref.form.articleForm"
-          @validateAllItemResult="validateAllItemResult"
+          @checkIfAllItemValidatedResultPass="checkIfAllItemValidatedResultPass"
           :ref="articleInfo.ref.formItem.articleFormItem"
         ></self-form-item>
 
@@ -157,7 +157,7 @@
         /*************************/
         /**   子组件formItem emit事件   **/
         /*************************/
-        validateAllItemResult(result){
+        checkIfAllItemValidatedResultPass(result){
           // inf('validateAllItemResult result',result)
           this.validResult=result
         },

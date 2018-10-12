@@ -156,14 +156,14 @@ props:
           }
         },
         //存储 单个input 的检测结果（null：为检测，非空字符：检测通过，空字符：检测通过）
-        validSingleInputValue({idx}) {
-          // inf('validSingleInputValue in')
+        validSingleInputValueAndStoreResult({idx}) {
+          // inf('validSingleInputValueAndStoreResult in')
           // inf('formVariantName',formVariantName)
           // inf('type',type)
           // inf('a',Object.keys(this.$refs))
           //formItem放在2层template中，所以大概需要数组来引用
 /*          this.$refs[this.autoGenFormItemInfo.refName].validateField(idx, (validResult) => {
-            // inf('validSingleInputValue',validResult)
+            // inf('validSingleInputValueAndStoreResult',validResult)
             this.inputTempData[idx][InputTempDataFieldName.VALID_RESULT] = validResult
             // inf('this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]',this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT])
           })*/

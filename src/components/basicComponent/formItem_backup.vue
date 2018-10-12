@@ -40,8 +40,8 @@ formItemInfo:
           >
             <Input
               @on-focus="focusInputPlaceHolderDisappear({keyName:'captcha'});onFocus()"
-              @on-blur="blurInputPlaceHolderRestore({keyName:'captcha'});validSingleInputValue({fieldName:'captcha'});onBlur();"
-              @on-change="validSingleInputValue({fieldName:'captcha'});"
+              @on-blur="blurInputPlaceHolderRestore({keyName:'captcha'});validSingleInputValueAndStoreResult({fieldName:'captcha'});onBlur();"
+              @on-change="validSingleInputValueAndStoreResult({fieldName:'captcha'});"
               :type="formItemInfo.inputAttribute['captcha']['inputType']" v-model="formItemInfo.inputValue['captcha']" :placeholder="formItemInfo.inputAttribute['captcha']['placeHolder'][0]"
             >
             </Input>
@@ -91,8 +91,8 @@ formItemInfo:
                   <!--复用formItem的validator-->
                   <Input
                     @on-focus="focusInputPlaceHolderDisappear({keyName:k});onFocus()"
-                    @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValue({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});onBlur();xssCheck({keyName:k});"
-                    @on-change="validSingleInputValue({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});xssCheck({keyName:k})"
+                    @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});onBlur();xssCheck({keyName:k});"
+                    @on-change="validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});xssCheck({keyName:k})"
                     :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                     v-model="formItemInfo.inputValue[k]" :placeholder="!editable ? '':formItemInfo.inputAttribute[k]['placeHolder'][0]"
                     :class="[editable ? '':'inputUnEditAble inputDisabled', 'title'===formItemInfo.inputAttribute[k]['inputSize'] ? 'inputTitle':'']"
@@ -111,8 +111,8 @@ formItemInfo:
               <template v-else>
                 <Input
                   @on-focus="focusInputPlaceHolderDisappear({keyName:k});onFocus()"
-                  @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValue({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});onBlur();xssCheck({keyName:k})"
-                  @on-change="validSingleInputValue({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});xssCheck({keyName:k})"
+                  @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});onBlur();xssCheck({keyName:k})"
+                  @on-change="validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});xssCheck({keyName:k})"
                   :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                   v-model="formItemInfo.inputValue[k]" :placeholder="!editable ? '':formItemInfo.inputAttribute[k]['placeHolder'][0]"
                   :class="[editable ? '':'inputUnEditAble inputDisabled', 'title'===formItemInfo.inputAttribute[k]['inputSize'] ? 'inputTitle':'']"
@@ -182,12 +182,12 @@ formItemInfo:
                 <!--:class="{noStarForRequire: !formItemInfo.showStarForRequire,'inputLabel-hidden':idx>0}"-->
                 <!--<div>-->
                 <!--,'margin-left': idx===0 &&formItemInfo.labelWidth!==undefined ? formItemInfo.labelWidth+'px':''-->
-                <!--@on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validateIfAllItemPass();onBlur();"-->
+                <!--@on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validateAllItemResult();onBlur();"-->
 
                 <Input
                   @on-focus="focusInputPlaceHolderDisappear({keyName:k,idx:idx});dismissError({keyName:k,idx:idx});onFocus()"
                   @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});onBlur({k:k,idx:idx});xssCheck({keyName:k,idx:idx});"
-                  @on-change="validateDuplicate({keyName:k,idx:idx});validateAllAutoGenItem({keyName:k});xssCheck({keyName:k,idx:idx})"
+                  @on-change="validateDuplicate({keyName:k,idx:idx});checkIfAllAutoGenItemValidatedResultPass({keyName:k});xssCheck({keyName:k,idx:idx})"
 
                   :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                   v-model="formItemInfo.inputValue[k][idx]" :placeholder="formItemInfo.inputArrayAttribute[k][idx]['placeHolder'][0]"
@@ -202,7 +202,7 @@ formItemInfo:
                     </span>
                 <span slot="append" style="" :style="{visibility: editable ? 'visible':'hidden'}" class="cursorPointer"
                       v-if="editable===true"
-                      @click="removeItem({keyName:k,idx:idx});validateIfAllItemPass">
+                      @click="removeItem({keyName:k,idx:idx});validateAllItemResult">
                       <Icon type="md-remove-circle" size="18"  color="#aaaaaa" title="移除"></Icon>
                     </span>
                 </Input>
@@ -213,7 +213,7 @@ formItemInfo:
 
                     :disabled="formItemInfo.addItemButtonDisable[k]"
                     :class="[{hidden:!editable},undefined===formItemInfo.inputLabelSize ? '':formItemInfo.inputLabelSize.replace('inputLabelH','h'),formItemInfo.addItemButtonDisable[k] ? '':'color-primary cursor-pointer']"
-                    @click="addItem({keyName:k});validateIfAllItemPass()"
+                    @click="addItem({keyName:k});validateAllItemResult()"
                     >
                 添加
               </Icon>
@@ -238,8 +238,8 @@ formItemInfo:
         &lt;!&ndash;&ndash;&gt;
         <Input
           @on-focus="focusInputPlaceHolderDisappear({keyName:'captcha'});onFocus()"
-          @on-blur="blurInputPlaceHolderRestore({keyName:'captcha'});validSingleInputValue({fieldName:'captcha'});validateIfAllItemPass();onBlur();"
-          @on-change="validSingleInputValue({fieldName:'captcha'});validateIfAllItemPass();"
+          @on-blur="blurInputPlaceHolderRestore({keyName:'captcha'});validSingleInputValueAndStoreResult({fieldName:'captcha'});validateAllItemResult();onBlur();"
+          @on-change="validSingleInputValueAndStoreResult({fieldName:'captcha'});validateAllItemResult();"
           :type="formItemInfo.inputAttribute['captcha']['inputType']" v-model="formItemInfo.inputValue['captcha']" :placeholder="formItemInfo.inputAttribute['captcha']['placeHolder'][0]"
         >
         </Input>
@@ -348,9 +348,9 @@ formItemInfo:
         this.formItemInfo.inputValue[keyName] = content
         this.$parent.validateField(keyName, (validResult) => {
           // inf('fieldName',fieldName)
-          // inf('validSingleInputValue',validResult)
+          // inf('validSingleInputValueAndStoreResult',validResult)
           this.formItemInfo.inputTempData[keyName][InputTempDataFieldName.VALID_RESULT] = validResult
-          this.validateIfAllItemPass()
+          this.validateAllItemResult()
           // inf('this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]',this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT])
         })
       },
@@ -583,7 +583,7 @@ formItemInfo:
       /****  validate  ****/
       /*********************/
       //存储 单个input 的检测结果（null：为检测，非空字符：检测通过，空字符：检测通过）
-      validSingleInputValue({fieldName}) {
+      validSingleInputValueAndStoreResult({fieldName}) {
         //非编辑状态，不执行validate
         if(this.editable===false){
           return
@@ -591,19 +591,19 @@ formItemInfo:
         //formItem放在2层template中，所以大概需要数组来引用
         this.$parent.validateField(fieldName, (validResult) => {
           // inf('fieldName',fieldName)
-          // inf('validSingleInputValue',validResult)
+          // inf('validSingleInputValueAndStoreResult',validResult)
           this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT] = validResult
-          this.checkIfAllItemValidatedAndPass()
+          this.checkIfAllItemValidatedResultPass()
 /*          if(validResult===""){
-            this.$emit('validSingleInputValue',validResult)
+            this.$emit('validSingleInputValueAndStoreResult',validResult)
           }*/
 
           // inf('this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]',this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT])
         })
       },
       /**   通过检测validaResult来判断是否所有item都pass（而不是直接调用iview的valida方法，否则，没有做过输入的input会出现错误，不好看）**/
-      checkIfAllItemValidatedAndPass() {
-        inf('validateIfAllItemPass in')
+      checkIfAllItemValidatedResultPass() {
+        inf('validateAllItemResult in')
         //非编辑状态，不执行validate
         if(this.editable===false){
           return
@@ -642,14 +642,14 @@ formItemInfo:
             }
           }
         }
-        this.$emit('checkIfAllItemValidatedAndPass',flag)
+        this.$emit('checkIfAllItemValidatedResultPass',flag)
       },
       //通过检测inputTempData中所有字段的valid_result，判断是否所有item validate pass
       //产生事件validateAllItemResult，返回boolean
-      async validateIfAllItemPass() {
-        // inf('validateIfAllItemPass in')
+      async validateAllItemResult() {
+        // inf('validateAllItemResult in')
         this.$parent.validate((validResult)=>{
-          // inf('validateIfAllItemPass result',validResult)
+          // inf('validateAllItemResult result',validResult)
           this.$emit('validateAllItemResult',validResult)
         })
 
@@ -694,7 +694,7 @@ formItemInfo:
 
           }
           //因为是异步函数，需要在Promise返回后，手工调用validateIfAllItemPass_async进行检查
-          this.$options.methods.validateIfAllItemPass.bind(this)()
+          this.$options.methods.validateAllItemResult.bind(this)()
           // inf('err done')
           // this.$options.methods.onBlur.bind(this)()
           //如果需要对检查结果做特殊处理(例如，不需要显示错误结果)，此处为钩子
@@ -745,7 +745,7 @@ formItemInfo:
 
       },
       //根据keyName判断一个autoGen的所有item是否已经都valid了
-      async validateAllAutoGenItem({keyName}){
+      async checkIfAllAutoGenItemValidatedResultPass({keyName}){
         //判断所有元素是否验证通过，无法继续添加
         if(undefined!==this.formItemInfo.inputValue[keyName]){
           let length=this.formItemInfo.inputValue[keyName].length
@@ -754,7 +754,7 @@ formItemInfo:
             // inf('last validResult',this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult'])
             while (length>0){
 /*              if(null===this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult']){
-                await this.validateSingleAutoGenItem({keyName:keyName,idx:length})
+                await this.validateSingleAutoGenItemAndStoreResult({keyName:keyName,idx:length})
               }*/
               if(""!==this.formItemInfo.inputArrayTempData[keyName][length-1]['validResult'] ){
                 // this.formItemInfo.addItemButtonDisable[keyName]=true
@@ -770,14 +770,14 @@ formItemInfo:
         this.formItemInfo.addItemButtonDisable[keyName]=false
         return true
       },
-      async validateSingleAutoGenItem({keyName,idx}){
+      async validateSingleAutoGenItemAndStoreResult({keyName,idx}){
         this.$parent.validateField(`${keyName}`, (validResult) => {
           // inf('fieldName',keyName)
-          // inf('validateSingleAutoGenItem validResult',validResult)
+          // inf('validateSingleAutoGenItemAndStoreResult validResult',validResult)
           // inf(' this.formItemInfo.inputArrayTempData[keyName]', this.formItemInfo.inputArrayTempData[keyName])
           // inf(' this.formItemInfo.inputArrayTempData[keyName][idx]', this.formItemInfo.inputArrayTempData[keyName][idx])
           this.formItemInfo.inputArrayTempData[keyName][idx][InputTempDataFieldName.VALID_RESULT] = validResult
-          // this.validateIfAllItemPass()
+          // this.validateAllItemResult()
           // inf('this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]',this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT])
         })
       },
@@ -790,7 +790,7 @@ formItemInfo:
           this.formItemInfo.inputValue[keyName]=[]
         }
         //判断是否所有已经存在的item都验证通过
-        let existItemValidateResult=this.validateAllAutoGenItem({keyName:keyName})
+        let existItemValidateResult=this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName})
         if(false===existItemValidateResult){
           return
         }
@@ -815,9 +815,9 @@ formItemInfo:
         this.formItemInfo.inputValue[keyName].splice(idx,1)
         this.formItemInfo.inputArrayAttribute[keyName].splice(idx,1)
         this.formItemInfo.inputArrayTempData[keyName].splice(idx,1)
-        // inf('this.validateAllAutoGenItem({keyName:keyName})',this.validateAllAutoGenItem({keyName:keyName}))
-        this.validateAllAutoGenItem({keyName:keyName})
-        this.validateIfAllItemPass()
+        // inf('this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName})',this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName}))
+        this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName})
+        this.validateAllItemResult()
       },
       /***************************************************/
       /**************   初始化formItem数据   *************/

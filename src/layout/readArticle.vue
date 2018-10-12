@@ -3,7 +3,7 @@
     <div class="header">
       <selfHeader :header-info="headerInfo"></selfHeader>
     </div>
-    <Row class="flex-flow-row-nowrap justify-content-space-between marginTX" style="flex:1">
+    <Row class="flex-flow-row-nowrap justify-content-space-between marginT7" style="flex:1">
       <Col span="20">
         <self-read-article ref="article"></self-read-article>
       </Col>
