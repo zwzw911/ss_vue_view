@@ -3,11 +3,21 @@
 </style>
 <template>
   <div class="flex-flow-column-wrap align-content-flex-start align-items-flex-start">
-    <div v-for="(val,idx) in attachmentListPropsInfo.currentAttachmentFileInfo" class="attachment-delete-icon-hover-show h4 marginT2">
-      <a>{{attachmentListPropsInfo.currentAttachmentFileInfo[idx]['name']}}</a>
-      <Tooltip placement="right" :delay=1000 content="删除附件" v-if="true===attachmentListPropsInfo.editable">
-        <Icon type="md-trash" class="color-error marginL2 cursor-pointer" style="align-self: flex-end" @click="deleteAttachment_async({idx:idx})" v-if="true===attachmentListPropsInfo.editable"></Icon>
-      </ToolTip>
+    <div v-for="(val,idx) in attachmentListPropsInfo.currentAttachmentFileInfo" class=" h4 marginT2">
+      <span>{{attachmentListPropsInfo.currentAttachmentFileInfo[idx]['name']}}</span>
+      <span class="marginL2">
+        <Tooltip placement="right" :delay=500 content="删除附件" v-if="true===attachmentListPropsInfo.editable">
+          <Icon type="md-trash" class="color-error cursor-pointer" style="align-self: flex-end" @click="deleteAttachment_async({idx:idx})" v-if="true===attachmentListPropsInfo.editable"></Icon>
+        </ToolTip>
+        <Tooltip placement="right" :delay=500 content="下载附件" >
+          <!--@click="downloadAttachment_async({idx:idx})"-->
+          <a :href="[host+attachmentListPropsInfo.url.downloadAttachmentUrl.url+'/'+attachmentListPropsInfo.currentAttachmentFileInfo[idx]['id']]">
+            <Icon type="md-download" class="color-primary cursor-pointer" style="align-self: flex-end" >
+            </Icon>
+          </a>
+        </ToolTip>
+      </span>
+
     </div>
     <!--<div class="">-->
       <Upload
@@ -35,7 +45,7 @@
   /******************************/
   /**          网络            **/
   /******************************/
-  import {sendRequestGetResult_async} from '../../function/network'
+  import * as network from '../../function/network'
   import {urlConfiguration} from '../../constant/url/url'
   import {host} from '../../constant/envConfiguration/appSetting'
   /******************************/
@@ -69,11 +79,19 @@
       /*********   网络    ********/
       /****************************/
       getAttachmentList_async(){},
+/*      async downloadAttachment_async({idx}){
+        // inf('downloadAttachment_async in')
+        let result=await network.sendRequestGetResult_async({urlOption:this.attachmentListPropsInfo.url.downloadAttachmentUrl,data:this.attachmentListPropsInfo.currentAttachmentFileInfo[idx]['id']})
+        inf('downloadAttachment_async result',result)
+        if(result.rc===0){
+          network.downloadFile({fileContent:result.msg,fileName:result.msg.content.fileName})
+        }
+      },*/
       async deleteAttachment_async({idx}){
         let data={values:{[ValidatePart.RECORD_ID]:this.attachmentListPropsInfo.currentAttachmentFileInfo[idx]['id']}}
         // inf('data',data)
         // inf('this.attachmentListPropsInfo.url.deleteAttachmentUrl',this.attachmentListPropsInfo.url.deleteAttachmentUrl)
-        let result=await sendRequestGetResult_async({urlOption:this.attachmentListPropsInfo.url.deleteAttachmentUrl,data:data})
+        let result=await network.sendRequestGetResult_async({urlOption:this.attachmentListPropsInfo.url.deleteAttachmentUrl,data:data})
         if(undefined!==result && result.rc===0){
           let fileName=this.attachmentListPropsInfo.currentAttachmentFileInfo[idx]['name']
           this.attachmentListPropsInfo.currentAttachmentFileInfo.splice(idx,1)
@@ -116,6 +134,7 @@
     },
     data(){
       return {
+        host:host,
         // attachmentInfo:[{hanhName:'asdf.txt',name:'test.txt'},{hanhName:'asdf.txt',name:'test.txt'}], //记录附件信息{hashName:'用来执行操作',name:'只用于显示'},
       }
     },

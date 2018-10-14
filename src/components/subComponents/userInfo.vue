@@ -101,7 +101,7 @@
           // inf('neededValue',neededValue)
           this.$refs[this.ref.form.formForUserInfo].resetFields()
           this.$refs[this.ref.formItem.formItemForUserInfo].clearAllItemError()
-          this.$refs[this.ref.formItem.formItemForUserInfo].loadData({valueFromDb:neededValue})
+          this.$refs[this.ref.formItem.formItemForUserInfo].loadServerData({valueFromDb:neededValue})
 /*          for(let singleField in this.formItemInfoForNonIconInput.inputValue){
             if(undefined!==result.msg[singleField]){
               this.formItemInfoForNonIconInput.inputValue[singleField]=this.formItemInfoForNonIconInput.originInputValue[singleField]=result.msg[singleField]

@@ -172,6 +172,8 @@ function objectPartlyDeepCopy({sourceObj,expectedKey}){
 
   let copyObject={}
   for(let singleKey of expectedKey){
+    // inf('singleKey',singleKey)
+    // inf('sourceObj[singleKey]',sourceObj[singleKey])
     if(undefined!==sourceObj[singleKey]){
       copyObject[singleKey]=JSON.parse(JSON.stringify(sourceObj[singleKey]))
     }

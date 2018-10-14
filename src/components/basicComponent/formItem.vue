@@ -332,37 +332,41 @@ formItemInfo:
       /************************/
       /****   预处理数据    ***/
       /************************/
-      loadData({valueFromDb}){
+      loadServerData({valueFromDb}){
         // inf('load in')
         let copyOfValueFromDb=misc.objectDeepCopy(valueFromDb)
         // inf('copyOfValueFromDb',copyOfValueFromDb)
+        this.inputOriginalValue=copyOfValueFromDb
         for(let singleKey in copyOfValueFromDb){
           //autoGen，需要根据数量，自动更新对应的数组
           // inf('singleKey',singleKey)
           // inf('this.formItemInfo.inputAttribute[singleKey][InputAttributeFieldName.AUTO_GEN]',this.formItemInfo.inputAttribute[singleKey][InputAttributeFieldName.AUTO_GEN])
+
           if(true===this.formItemInfo.inputAttribute[singleKey][InputAttributeFieldName.AUTO_GEN]){
             //此autoGen字符有值（长度大于0）
             if(undefined!==copyOfValueFromDb[singleKey] && copyOfValueFromDb[singleKey].length>0){
-              this.formItemInfo.inputArrayAttribute[singleKey]=[]
-              this.formItemInfo.inputArrayTempData[singleKey]=[]
-              this.formItemInfo.inputValue[singleKey]=[]
-              this.inputOriginalValue[singleKey]=[]
-
               let length=copyOfValueFromDb[singleKey].length
+              this.formItemInfo.inputArrayAttribute[singleKey]=new Array(length)
+              this.formItemInfo.inputArrayTempData[singleKey]=new Array(length)
+              this.formItemInfo.inputValue[singleKey]=copyOfValueFromDb[singleKey]
+              // this.inputOriginalValue[singleKey]=copyOfValueFromDb[singleKey]
+
+              // let length=copyOfValueFromDb[singleKey].length
               let tmpLength=0
               while (tmpLength<length){
                 // inf('copyOfValueFromDb[singleKey][tmpLength]',copyOfValueFromDb[singleKey][tmpLength])
-                this.formItemInfo.inputValue[singleKey].push(copyOfValueFromDb[singleKey][tmpLength])
-                this.inputOriginalValue[singleKey].push(copyOfValueFromDb[singleKey][tmpLength])
-                this.formItemInfo.inputArrayAttribute[singleKey].push(misc.objectDeepCopy(this.formItemInfo.inputAttribute[singleKey]))
-                // inf('misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName])',misc.objectDeepCopy(this.formItemInfo.inputTempData[keyName]))
-                this.formItemInfo.inputArrayTempData[singleKey].push(misc.objectDeepCopy(this.formItemInfo.inputTempData[singleKey]))
+                // this.formItemInfo.inputValue[singleKey].push(copyOfValueFromDb[singleKey][tmpLength])
+                // this.inputOriginalValue[singleKey].push(copyOfValueFromDb[singleKey][tmpLength])
+/*                this.formItemInfo.inputArrayAttribute[singleKey].push(misc.objectDeepCopy(this.formItemInfo.inputAttribute[singleKey]))
+                this.formItemInfo.inputArrayTempData[singleKey].push(misc.objectDeepCopy(this.formItemInfo.inputTempData[singleKey]))*/
+                this.formItemInfo.inputArrayAttribute[singleKey][tmpLength]=misc.objectDeepCopy(this.formItemInfo.inputAttribute[singleKey])
+                this.formItemInfo.inputArrayTempData[singleKey][tmpLength]=misc.objectDeepCopy(this.formItemInfo.inputTempData[singleKey])
                 tmpLength++
               }
             }
           }else{
             this.formItemInfo.inputValue[singleKey]=copyOfValueFromDb[singleKey]
-            this.inputOriginalValue[singleKey]=copyOfValueFromDb[singleKey]
+            // this.inputOriginalValue[singleKey]=copyOfValueFromDb[singleKey]
             // this.formItemInfo.inputValue=misc.objectDeepCopy(valueFromDb)
             // this.inputOriginalValue=misc.objectDeepCopy(valueFromDb)
           }
@@ -376,8 +380,14 @@ formItemInfo:
         }
         // inf('load done')
         // inf('his.formItemInfo.inputArrayTempData',this.formItemInfo.inputArrayTempData)
-        //loadData完毕，需要对数据进行验证，以便设置validateResult（否则都是null，会造成checkIfAllItemValidatedAndPass返回false）
-        this.validAllInputValueAndStoreResult()
+        // inf('his.formItemInfo.inputValue',this.formItemInfo.inputValue)
+        //loadServerData完毕，需要对数据进行验证，以便设置validateResult（否则都是null，会造成checkIfAllItemValidatedAndPass返回false）
+        // setTimeout('this.validAllInputValueAndStoreResult()',1000)
+        let that=this
+        this.$nextTick(function () {
+          that.validAllInputValueAndStoreResult()
+        })
+
       },
       //发送请求到server前，对数据进行处理
       sanityInputValueBeforeSendToServer(){
@@ -609,6 +619,8 @@ formItemInfo:
       },
       //存储 单个input 的检测结果（null：为检测，非空字符：检测通过，空字符：检测通过）
       validSingleInputValueAndStoreResult({fieldName,idx}) {
+        // inf('validSingleInputValueAndStoreResult fieldName',fieldName)
+        // inf('validSingleInputValueAndStoreResult idx',idx)
         //非编辑状态，不执行validate
         if(this.editable===false){
           return
@@ -621,7 +633,12 @@ formItemInfo:
             this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]=''
         //     inf('validSingleInputValueAndStoreResult fieldName',fieldName)
         // inf('validSingleInputValueAndStoreResult idx',idx)
+        //     inf('this.formItemInfo.inputValue[fieldName][idx]',this.formItemInfo.inputValue[fieldName][idx])
+        //     inf('this.formItemInfo.inputAttribute[fieldName][idx]',this.formItemInfo.inputArrayAttribute[fieldName])
+
             this.$parent.validateField(`${fieldName}.${idx}`, (validResult) => {
+              // inf('validSingleInputValueAndStoreResult fieldName validate result',validResult)
+              // inf('validSingleInputValueAndStoreResult fieldName validate err',err)
               this.formItemInfo.inputArrayTempData[fieldName][idx][InputTempDataFieldName.VALID_RESULT] = validResult
             })
           }else{
@@ -641,6 +658,7 @@ formItemInfo:
           this.$parent.validateField(fieldName, (validResult) => {
             // inf('fieldName',fieldName)
             // inf('validSingleInputValueAndStoreResult',validResult)
+            // inf('validSingleInputValueAndStoreResult fieldName validate result',validResult)
             this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT] = validResult
             // this.checkIfAllItemValidatedResultPass()
             /*          if(validResult===""){
@@ -650,7 +668,7 @@ formItemInfo:
             // inf('this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]',this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT])
           })
         }
-
+        // inf('validSingleInputValueAndStoreResult fieldName done',fieldName)
       },
       validAllInputValueAndStoreResult(){
         // 对所有数据（无论是否null）进行检查
@@ -659,6 +677,7 @@ formItemInfo:
             //autoGen，且有inputValue，那么需要对每个元素验证
             if(true===this.formItemInfo.inputAttribute[singleKey][InputAttributeFieldName.AUTO_GEN]){
               if(null!== this.formItemInfo.inputValue[singleKey] && this.formItemInfo.inputValue[singleKey].length>0){
+                // inf(`atuo gen field ${singleKey} validate result by idx`)
                 for(let idx in this.formItemInfo.inputValue[singleKey]){
                   this.validSingleInputValueAndStoreResult({fieldName:singleKey,idx:idx})
                 }

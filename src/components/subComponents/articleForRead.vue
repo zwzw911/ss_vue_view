@@ -23,15 +23,24 @@
           </div>
         </div>
 
-        <p class="marginTX text-align-left" v-html="articleInfo.htmlContent">{{}}</p>
+        <p class="marginTX text-align-left marginBX" v-html="articleInfo.htmlContent">{{}}</p>
 
         <self-attachment-list :attachment-list-props-info="attachmentListPropsInfo"></self-attachment-list>
+      </div>
+
+      <div id="createComment">
+        <self-create-comment :create-comments-info="createCommentInfo"></self-create-comment>
+      </div>
+
+
+      <div id="commentList">
+        <self-comment-list></self-comment-list>
       </div>
     </div>
 
 
 
-    <self-comment></self-comment>
+
   </div>
 
 </template>
@@ -42,7 +51,8 @@
   // import selfFormItem from '../basicComponent/formItem'
   // import selfAutoGenFormItem from '../basicComponent/autoGenFormItem'
   import selfAttachmentList from '../subComponents/attachmentList'
-  import selfComment from '../basicComponent/comment'
+  import selfCommentList from '../basicComponent/commentList'
+  import selfCreateComment from '../basicComponent/createComment'
   import selfSpin from '../../components/basicComponent/spin'
   /******************************/
   /**          网络            **/
@@ -58,7 +68,8 @@
   /******************************/
   /**           enum           **/
   /******************************/
-  import {ValidatePart} from '../../constant/enum/nonValueEnum'
+  import * as nonValueEnum from '../../constant/enum/nonValueEnum'
+
   /******************************/
   /**          配置            **/
   /******************************/
@@ -67,6 +78,9 @@
   /**     common constant     **/
   /******************************/
   // import * as componentInfo from '../../constant/globalConfiguration/componentInfo'
+  import * as inputAttribute from '../../constant/inputValue/gen/inputAttribute'
+  import * as inputTempData from '../../constant/inputValue/gen/inputTempData'
+  import * as rule from '../../constant/rule/rule'
   /******************************/
   /*******     3rd     *********/
   /******************************/
@@ -76,8 +90,13 @@
   /******************************/
   import * as misc from '../../function/misc'
 
+
+  /**     generate specific constant  **/
+  let commentInputAttribute=misc.objectDeepCopy(inputAttribute.inputAttribute.article_comment.content)
+  commentInputAttribute[nonValueEnum.InputAttributeFieldName.PLACE_HOLDER]=commentInputAttribute[nonValueEnum.InputAttributeFieldName.PLACE_HOLDER_BKUP]=['评论内容至少15个字符']
+
     export default {
-      components:{selfAttachmentList,selfComment,selfSpin},
+      components:{selfAttachmentList,selfCommentList,selfCreateComment,selfSpin},
       // props: {'articleInfo':{type:Object}},
       async mounted(){
         await this.getArticle_async()
@@ -95,7 +114,7 @@
             that.spinInfo.show=false
             if(response.rc>0){
               if(response.rc===50284){
-                inf('response.msg',response.msg)
+                // inf('response.msg',response.msg)
                 that.readArticleError=response.msg
               }
               return
@@ -109,7 +128,7 @@
             //   // that.articleInfo.formItemInfo.inputValue[neededField]=response.msg[neededField]
             //   neededValue[neededField]=response.msg[neededField]
             // }
-            that.$refs[that.articleInfo.ref.formItem.articleFormItem].loadData({valueFromDb:neededValue})*/
+            that.$refs[that.articleInfo.ref.formItem.articleFormItem].loadServerData({valueFromDb:neededValue})*/
             that.articleInfo=response.msg
             that.attachmentListPropsInfo.currentAttachmentFileInfo=response.msg['articleAttachmentsId']
           },function (err) {
@@ -149,8 +168,19 @@
               //配置除了Upload的action之外，其他操作指定的url（例如，delete操作）
               url:{
                 deleteAttachmentUrl:urlConfiguration.article.deleteAttachment,
+                downloadAttachmentUrl:urlConfiguration.article.downloadAttachment,
               },
               currentAttachmentFileInfo:[],
+            },
+            createCommentInfo:{
+              inputValue:{
+                content:null,
+              },
+              inputAttribute:{
+                content:commentInputAttribute,
+              },
+              inputTempData:misc.objectPartlyDeepCopy({sourceObj:inputTempData.inputTempData.article_comment,expectedKey:['content']}),
+              rule:rule.ruleForCreate.article_comment,//rule不能copy，防止其中regexp出错
             },
           }
       },

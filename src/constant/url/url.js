@@ -41,6 +41,7 @@ const urlConfiguration={
 
     uploadAttachment:{url:'/article/articleAttachment',method:RequestMethod.POST},
     deleteAttachment:{url:'/article/articleAttachment',method:RequestMethod.DELETE},
+    downloadAttachment:{url:'/article/articleAttachment',method:RequestMethod.GET},
   },
 
   articleComment:{

@@ -371,7 +371,7 @@ formItemInfo:
       /************************/
       /****   预处理数据    ***/
       /************************/
-      loadData({valueFromDb}){
+      loadServerData({valueFromDb}){
         // inf('load in')
         let copyOfValueFromDb=misc.objectDeepCopy(valueFromDb)
         // inf('copyOfValueFromDb',copyOfValueFromDb)

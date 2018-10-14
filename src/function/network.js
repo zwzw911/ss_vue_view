@@ -20,7 +20,8 @@ const myAxios = axios.create({
   // headers: {
   // "Content-Type": "application/x-www-form-urlencoded"
   // },
-  withCredentials: true // 允许携带cookie
+  withCredentials: true, // 允许携带cookie
+  // responseType:'arraybuffer',
 })
 myAxios.interceptors.response.use(undefined,function axiosRetryInterceptor(err) {
   // inf('asiox error',err)
@@ -53,8 +54,16 @@ myAxios.interceptors.response.use(undefined,function axiosRetryInterceptor(err) 
     });
   }
 });
-async function sendRequestGetResult_async({urlOption,data}){
+async function sendRequestGetResult_async({urlOption,data,downloadFile=false}){
   let result
+
+  if(true===downloadFile){
+    myAxios.defaults.responseType='blob'
+    // myAxios.defaults.headers[urlOption.method]['Content-Type'] = 'application/x-download';
+    // inf(' myAxios.defaults', myAxios.defaults)
+  }else{
+    myAxios.defaults.responseType='json'
+  }
   // inf('send data',data)
   switch (urlOption.method){
     case RequestMethod.PUT:
@@ -93,9 +102,24 @@ async function sendRequestGetResult_async({urlOption,data}){
   }
  }
 
+ /**    URL放入a的href即可让浏览器识别下载文件   **/
+ /**    将从server端获得的内容，转换成文件    **/
+/*function downloadFile({fileContent,fileName}){
+   const blob = new Blob([fileContent])
+   if (window.navigator.msSaveOrOpenBlob) {
+     // 兼容IE10
+     navigator.msSaveBlob(blob, fileName)
+   } else {
+     // chrome/firefox
+     let aTag = document.createElement('a')
+     aTag.download = fileName
+     aTag.href = URL.createObjectURL(blob)
+     aTag.click()
+     URL.revokeObjectURL(aTag.href) }
+}*/
 
 export {
   sendRequestGetResult_async,
   setUpdateValue,
-
+  // downloadFile,
 }

@@ -85,7 +85,8 @@
     export default {
       components:{selfFormItem,selfAutoGenFormItem,selfAttachmentList},
       props: {'articleInfo':{type:Object}},
-      async mounted(){
+      async created(){
+        // inf('this.articleInfo.formItemInfo.inputValue',this.articleInfo.formItemInfo.inputValue)
         await this.getUpdateArticle_async()
       },
       methods: {
@@ -108,8 +109,11 @@
             //   // that.articleInfo.formItemInfo.inputValue[neededField]=response.msg[neededField]
             //   neededValue[neededField]=response.msg[neededField]
             // }
-            that.$refs[that.articleInfo.ref.formItem.articleFormItem].loadData({valueFromDb:neededValue})
+            // inf('response.msg[\'articleAttachmentsId\']',response.msg['articleAttachmentsId'])
+            that.$refs[that.articleInfo.ref.formItem.articleFormItem].loadServerData({valueFromDb:neededValue})
+
             that.attachmentListPropsInfo.currentAttachmentFileInfo=response.msg['articleAttachmentsId']
+            // that.$refs[that.articleInfo.ref.formItem.articleFormItem].validAllInputValueAndStoreResult()
           },function (err) {
 
           })
@@ -189,7 +193,8 @@
               },
               //配置除了Upload的action之外，其他操作指定的url（例如，delete操作）
               url:{
-                deleteAttachmentUrl:urlConfiguration.article.deleteAttachment,
+                deleteAttachmentUrl:urlConfiguration.article.deleteAttachment, //for axios. already include host
+                downloadAttachmentUrl:urlConfiguration.article.downloadAttachment,// for <a>, in subComponent include host
               },
               currentAttachmentFileInfo:[],
               editable:true,
