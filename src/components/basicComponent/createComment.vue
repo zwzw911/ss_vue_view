@@ -51,6 +51,10 @@
   /**           网络           **/
   /******************************/
   import * as network from '../../function/network'
+  /******************************/
+  /****  common function    ****/
+  /******************************/
+  import * as handleResult from "../../function/handleResult"
 
   export default {
     components: {},
@@ -94,6 +98,7 @@
       /*******      网络      *******/
       /******************************/
       async saveComment(){
+        let that=this
         let data={
           values:{
             [nonValueEnum.ValidatePart.RECORD_INFO]:{
@@ -104,7 +109,15 @@
         }
         network.sendRequestGetResult_async({urlOption:url.urlConfiguration.articleComment.createComment,data:data}).then(
           function(res){
-            inf('res',res)
+            if(res && res.rc ){
+              if( res.rc>0){
+                handleResult.commonHandlerForErrorResult({that:that,response:res})
+                return false
+              }else{
+                //将新 评论 添加到页面
+              }
+
+            }
           },
           function(err){
 

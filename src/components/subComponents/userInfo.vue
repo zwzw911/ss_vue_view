@@ -97,11 +97,12 @@
           this.$refs[this.ref.userIcon.userIconForUserInfo].setImgSrc(result.msg['photoDataUrl'])
           /****   设置formItem数据  ***/
           let neededFields=['name']
-          let neededValue=misc.extractPartObject({sourceObj:result.msg,neededKeyNames:neededFields})
+          // let neededValue=misc.extractPartObject({sourceObj:result.msg,neededKeyNames:neededFields})
           // inf('neededValue',neededValue)
           this.$refs[this.ref.form.formForUserInfo].resetFields()
           this.$refs[this.ref.formItem.formItemForUserInfo].clearAllItemError()
-          this.$refs[this.ref.formItem.formItemForUserInfo].loadServerData({valueFromDb:neededValue})
+          this.$refs[this.ref.formItem.formItemForUserInfo].loadServerData({valueFromDb:result.msg,neededFields:neededFields})
+          this.$refs[this.ref.formItem.formItemForUserInfo].saveAsOriginData({valueFromDb:result.msg,neededFields:neededFields})
 /*          for(let singleField in this.formItemInfoForNonIconInput.inputValue){
             if(undefined!==result.msg[singleField]){
               this.formItemInfoForNonIconInput.inputValue[singleField]=this.formItemInfoForNonIconInput.originInputValue[singleField]=result.msg[singleField]

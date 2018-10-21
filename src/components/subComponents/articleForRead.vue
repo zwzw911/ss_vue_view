@@ -1,41 +1,92 @@
 <style scoped>
+  .content-min-height{
+    min-height: 250px;
+  }
 </style>
 <template>
   <div >
 
     <self-spin :spin-info="spinInfo"></self-spin>
-    <div>
-      <div id="error" v-if="''!==readArticleError" class="color-error">
-        {{readArticleError}}
-      </div>
-      <div id="article" v-if="''===readArticleError && undefined!==articleInfo">
-        <p id="articleTitle" class="h1 bolder font-serif">{{articleInfo.name}}</p>
+    <div v-if="false===spinInfo.show">
+      <template v-if="''!==readArticleError">
+        <div id="error" v-if="" class="color-error">
+          {{readArticleError}}
+        </div>
+      </template>
+      <template v-else>
+        <div id="article" v-if="''===readArticleError && undefined!==articleInfo">
+          <p id="articleTitle" class="h1 bolder font-serif">{{articleInfo.name}}</p>
 
-        <div id="authorInfo" class="flex-flow-row-wrap justify-content-flex-start marginT7">
-          <img :style="{ width: '50px', height:  '50px'}" :src="articleInfo.authorId.photoDataUrl"/>
-          <div class="flex-flow-column-wrap justify-content-space-between marginL4">
-            <p class="h4 text-align-left">{{articleInfo.authorId.name}}</p>
-            <p class="color-grey">
-              <span class="marginR2">{{articleInfo.cDate}}</span>
-              <span class="marginR2">阅读{{}}</span>
-              <span>评论:{{}}</span>
-            </p>
+          <div id="authorInfo" class="flex-flow-row-wrap justify-content-flex-start marginT7">
+            <img :style="{ width: '50px', height:  '50px'}" :src="articleInfo.authorId.photoDataUrl"/>
+            <div class="flex-flow-column-wrap justify-content-space-between marginL4">
+              <p class="h4 text-align-left">
+                <span class="">
+                {{articleInfo.authorId.name}}
+                </span>
+                <!--<span class="h4 bg-color-darken-success">关注</span>-->
+                <Button type="success" size="small" class="" icon="md-add">关注</Button>
+              </p>
+
+              <p class="color-grey">
+
+                <span class="marginR2">{{articleInfo.cDate}}</span>
+                <span class="marginR2">阅读{{}}</span>
+                <span>评论:{{}}</span>
+              </p>
+            </div>
           </div>
+
+          <p class="text-align-left h4 marginT3">
+            <span class="cursor-pointer marginR2" @click="articleLike">
+              <Icon type="md-thumbs-up" class="color-success"/>
+              赞
+            </span>
+            <span class="marginR7 h5 color-grey">{{staticResult.like}}</span>
+            <span class="cursor-pointer marginR2"  @click="articleDislike">
+              <Icon type="md-thumbs-down" class="color-warning"/>
+              踩
+            </span>
+            <span class="marginR7 h5 color-grey">{{staticResult.dislike}}</span>
+            <span class="cursor-pointer marginR6"><Icon type="md-share" class="color-primary"/>分享</span>
+            <span class="cursor-pointer marginR6"><Icon type="md-filing" class="color-primary"/>收藏</span>
+          </p>
+          <p class="marginTX text-align-left marginBX content-min-height" v-html="articleInfo.htmlContent"></p>
+
+          <self-attachment-list :attachment-list-props-info="attachmentListPropsInfo"></self-attachment-list>
         </div>
 
-        <p class="marginTX text-align-left marginBX" v-html="articleInfo.htmlContent">{{}}</p>
 
-        <self-attachment-list :attachment-list-props-info="attachmentListPropsInfo"></self-attachment-list>
-      </div>
+        <template v-if="articleInfo.allowComment==='1'">
+          <template v-if="ifUserLogin===false">
+            <p class="bg-color-darken-white paddingAll3">
+              <span @click="routeToLogin" class="color-info cursor-pointer">登录</span>后发表评论
+            </p>
+          </template>
+          <template v-else>
+            <div id="createComment">
+              <self-create-comment :create-comments-info="createCommentInfo"></self-create-comment>
+            </div>
+          </template>
+          <div id="comment" >
 
-      <div id="createComment">
-        <self-create-comment :create-comments-info="createCommentInfo"></self-create-comment>
-      </div>
 
 
-      <div id="commentList">
-        <self-comment-list></self-comment-list>
-      </div>
+            <div id="commentList">
+              <self-comment-list :commentListInfo="commentListInfo"></self-comment-list>
+            </div>
+          </div>
+        </template>
+        <template v-else>
+          <p class="color-lighten-red text-align-left">作者禁止评论文档</p>
+        </template>
+
+
+
+
+
+      </template>
+
     </div>
 
 
@@ -57,7 +108,7 @@
   /******************************/
   /**          网络            **/
   /******************************/
-  import {sendRequestGetResult_async} from '../../function/network'
+  import * as network from '../../function/network'
   import {urlConfiguration} from '../../constant/url/url'
   import {host} from '../../constant/envConfiguration/appSetting'
   /******************************/
@@ -81,6 +132,8 @@
   import * as inputAttribute from '../../constant/inputValue/gen/inputAttribute'
   import * as inputTempData from '../../constant/inputValue/gen/inputTempData'
   import * as rule from '../../constant/rule/rule'
+  import {routePath} from '../../constant/url/routePath'
+  // import * as nonValueEnum from '../../constant/enum/nonValueEnum'
   /******************************/
   /*******     3rd     *********/
   /******************************/
@@ -89,7 +142,7 @@
   /**    common function       **/
   /******************************/
   import * as misc from '../../function/misc'
-
+  import * as formatData from '../../function/formatData'
 
   /**     generate specific constant  **/
   let commentInputAttribute=misc.objectDeepCopy(inputAttribute.inputAttribute.article_comment.content)
@@ -102,6 +155,9 @@
         await this.getArticle_async()
       },
       methods: {
+        routeToLogin(){
+          misc.routeTo({that:this,path:routePath.login})
+        },
         /********************/
         /**   网络操作    **/
         /********************/
@@ -110,38 +166,107 @@
 
           that.spinInfo.show=true
 
-          sendRequestGetResult_async({urlOption:urlConfiguration.article.getArticle,data:this.articleId}).then(function (response) {
+          network.sendRequestGetResult_async({urlOption:urlConfiguration.article.getArticle,data:this.articleId}).then(function (response) {
             that.spinInfo.show=false
             if(response.rc>0){
-              if(response.rc===50284){
+              // if(response.rc===50284){
                 // inf('response.msg',response.msg)
                 that.readArticleError=response.msg
-              }
+              // }
               return
             }
-            // inf('resononse',response)
-            // console.log(that)
-/*            let neededFields=['name','status','allowComment','tags','htmlContent','']
 
-            let neededValue=misc.extractPartObject({sourceObj:response.msg,neededKeyNames:neededFields})
-            // for(let neededField of neededFields){
-            //   // that.articleInfo.formItemInfo.inputValue[neededField]=response.msg[neededField]
-            //   neededValue[neededField]=response.msg[neededField]
-            // }
-            that.$refs[that.articleInfo.ref.formItem.articleFormItem].loadServerData({valueFromDb:neededValue})*/
-            that.articleInfo=response.msg
+            // let articleInfo=response.msg.article
+            // let staticResult=response.msg.staticResult
+
+            formatData.formatDate({record:response.msg.article,fieldsToBeFormat:["cDate"]})
+            that.articleInfo=response.msg.article
             that.attachmentListPropsInfo.currentAttachmentFileInfo=response.msg['articleAttachmentsId']
-          },function (err) {
 
+            formatData.formatDate({record:response.msg['articleCommentsId'],fieldsToBeFormat:["cDate"]})
+            that.commentListInfo=response.msg['articleCommentsId']
+
+
+            that.staticResult=response.msg.staticResult
+
+          },function (err) {
+            // handleResult.commonHandlerForErrorResult({that:that,response:err})
+            that.readArticleError=err.msg
+            that.spinInfo.show=false
+// inf('getArticle_async err',err)
           })
         },
 
 
+        async articleLike(){
+          // inf('articleLike in')
+          let that=this
+          let data={
+            values:{
+              [nonValueEnum.ValidatePart.SINGLE_FIELD]: {['articleId']: this.articleId},
+            }
+          }
+          // inf('articleLike data',data)
+          network.sendRequestGetResult_async({urlOption:urlConfiguration.articleLikeDislike.like,data:data}).then(function (response) {
+            // that.spinInfo.show=false
+            if(response.rc>0){
+              // if(response.rc===50284){
+              // inf('response.msg',response.msg)
+              handleResult.commonHandlerForErrorResult({that:that,response:response,showType:'modal'})
+              // that.readArticleError=response.msg
+              // }
+              return
+            }
+
+/*            formatData.formatDate({record:response.msg,fieldsToBeFormat:["cDate"]})
+            that.articleInfo=response.msg
+            that.attachmentListPropsInfo.currentAttachmentFileInfo=response.msg['articleAttachmentsId']
+
+            formatData.formatDate({record:response.msg['articleCommentsId'],fieldsToBeFormat:["cDate"]})
+            that.commentListInfo=response.msg['articleCommentsId']*/
+
+          },function (err) {
+            // handleResult.commonHandlerForErrorResult({that:that,response:err})
+            that.readArticleError=err.msg
+            // that.spinInfo.show=false
+// inf('getArticle_async err',err)
+          })
+        },
+        async articleDislike(){
+          let that=this
+          let data={
+            values:{
+              [nonValueEnum.ValidatePart.SINGLE_FIELD]: {['articleId']: this.articleId},
+            }
+          }
+
+          network.sendRequestGetResult_async({urlOption:urlConfiguration.articleLikeDislike.dislike,data:data}).then(function (response) {
+            // that.spinInfo.show=false
+            if(response.rc>0){
+              handleResult.commonHandlerForErrorResult({that:that,response:response,showType:'modal'})
+              return
+            }
+
+            /*            formatData.formatDate({record:response.msg,fieldsToBeFormat:["cDate"]})
+                        that.articleInfo=response.msg
+                        that.attachmentListPropsInfo.currentAttachmentFileInfo=response.msg['articleAttachmentsId']
+
+                        formatData.formatDate({record:response.msg['articleCommentsId'],fieldsToBeFormat:["cDate"]})
+                        that.commentListInfo=response.msg['articleCommentsId']*/
+
+          },function (err) {
+            // handleResult.commonHandlerForErrorResult({that:that,response:err})
+            that.readArticleError=err.msg
+            // that.spinInfo.show=false
+// inf('getArticle_async err',err)
+          })
+        },
       },
       computed: {},
       data() {
         // inf('this.route',this.$route.params)
           return {
+            ifUserLogin:misc.ifUserLogin({that:this}),
             spinInfo:{
               msg:'读取文档...',
               show:true,
@@ -154,7 +279,7 @@
             // additionalData:{recordId:'test'},
             // host:host,
             articleInfo:undefined,
-
+            staticResult:undefined,
 /*            validResult:true,
 
             editable:true,//不是通过父组件传入，而是通过本组件的按钮 来控制*/
@@ -182,6 +307,8 @@
               inputTempData:misc.objectPartlyDeepCopy({sourceObj:inputTempData.inputTempData.article_comment,expectedKey:['content']}),
               rule:rule.ruleForCreate.article_comment,//rule不能copy，防止其中regexp出错
             },
+
+            commentListInfo:undefined,
           }
       },
     }

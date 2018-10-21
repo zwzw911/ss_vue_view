@@ -25,6 +25,7 @@
           :form-item-info="articleInfo.formItemInfo"
           :formRefName="articleInfo.ref.form.articleForm"
           @checkIfAllItemValidatedResultPass="checkIfAllItemValidatedResultPass"
+          @ifAnyFieldValueChanged="ifAnyFieldValueChanged"
           :ref="articleInfo.ref.formItem.articleFormItem"
         ></self-form-item>
 
@@ -35,7 +36,7 @@
     </div>
 
     <div class="flex-flow-row-wrap justify-content-center marginTX">
-      <Button type="primary" :disabled="false===validResult" @click="saveUpdate">保存</Button>
+      <Button type="primary" :disabled="false===validResult || false===anyFieldValueChange" @click="saveUpdate">保存</Button>
       <Button type="default"  class="marginH5">取消</Button>
       <!--<Button type="success" :disabled="editable">编辑</Button>-->
       <!--<Button type="error" :disabled="!editable">删除</Button>-->
@@ -104,13 +105,14 @@
             // console.log(that)
             let neededFields=['name','status','allowComment','tags','htmlContent']
 
-            let neededValue=misc.extractPartObject({sourceObj:response.msg,neededKeyNames:neededFields})
+            // let neededValue=misc.extractPartObject({sourceObj:response.msg,neededKeyNames:neededFields})
             // for(let neededField of neededFields){
             //   // that.articleInfo.formItemInfo.inputValue[neededField]=response.msg[neededField]
             //   neededValue[neededField]=response.msg[neededField]
             // }
             // inf('response.msg[\'articleAttachmentsId\']',response.msg['articleAttachmentsId'])
-            that.$refs[that.articleInfo.ref.formItem.articleFormItem].loadServerData({valueFromDb:neededValue})
+            that.$refs[that.articleInfo.ref.formItem.articleFormItem].loadServerData({valueFromDb:response.msg,neededFields:neededFields})
+            that.$refs[that.articleInfo.ref.formItem.articleFormItem].saveAsOriginData({valueFromDb:response.msg,neededFields:neededFields})
 
             that.attachmentListPropsInfo.currentAttachmentFileInfo=response.msg['articleAttachmentsId']
             // that.$refs[that.articleInfo.ref.formItem.articleFormItem].validAllInputValueAndStoreResult()
@@ -147,6 +149,10 @@
                 handleResult.commonHandlerForErrorResult({that:that,response:response})
               }else{
                 handleResult.commonHandlerForSuccessResult({that:that,response:{rc:0,msg:'文档更新成功'}})
+                /***    文档更新成功，需要重新设置inputOriginValue   ***/
+                let neededFields=['name','status','allowComment','tags','htmlContent']
+                // let neededValue=misc.extractPartObject({sourceObj:response.msg,neededKeyNames:neededFields})
+                that.$refs[that.articleInfo.ref.formItem.articleFormItem].saveAsOriginData({valueFromDb:response.msg,neededFields:neededFields})
               }
             },function (err) {
               // inf('update article err',err)
@@ -165,7 +171,9 @@
           // inf('validateAllItemResult result',result)
           this.validResult=result
         },
-
+        ifAnyFieldValueChanged(result){
+          this.anyFieldValueChange=result
+        },
         /********************/
         /**   是否可编辑  **/
         /********************/
@@ -181,7 +189,8 @@
             // host:host,
             // articleInfo:componentInfo.articleInfo,
 
-            validResult:false,
+            validResult:false,//输入的值是否符合rule定义
+            anyFieldValueChange:false,//输入的值是否和原始值不一样
 
             // editable:true,//不是通过父组件传入，而是通过本组件的按钮 来控制
             attachmentListPropsInfo:{

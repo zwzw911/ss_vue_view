@@ -32,6 +32,8 @@ const urlConfiguration={
     getArticle:{url:'/article',method:RequestMethod.GET},
     getMainPageArticle:{url:'/article/mainPage',method:RequestMethod.GET},
     getUpdatedArticle:{url:'/article/getUpdateArticle',method:RequestMethod.GET},
+    getLatestArticle:{url:'/article/latestArticle',method:RequestMethod.GET},
+    getHottestArticle:{url:'/article/hottestArticle',method:RequestMethod.GET},
     createArticle:{url:'/article',method:RequestMethod.POST},//no any params
     updateArticle:{url:'/article',method:RequestMethod.PUT},//recordId+recordInfo
     // deleteArticle:{url:'/article',method:RequestMethod.DELETE},//recordId。 not support yet
@@ -92,6 +94,7 @@ const urlConfiguration={
   },
   /**   user friend group **/
   userFriendGroup:{
+    getAllFriendGroups:{url:'/user_friend_group',method:RequestMethod.GET},
     createFriendGroup:{url:'/user_friend_group',method:RequestMethod.POST},
     updateFriendGroup:{url:'/user_friend_group',method:RequestMethod.PUT},
     deleteFriendGroup:{url:'/user_friend_group',method:RequestMethod.DELETE},
@@ -119,6 +122,9 @@ const urlConfiguration={
     'delete':{url:'/admin_penalize',method:RequestMethod.DELETE},
   },
 
+  /******************************************/
+  /*************    static    **************/
+  /******************************************/
 
 
 }

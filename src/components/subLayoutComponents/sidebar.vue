@@ -11,120 +11,116 @@
       <Menu-item v-for="(child,childKey) in item.children" :name="childKey" :key="childKey" >{{child.name}}</Menu-item>
     </Submenu>
   </Menu>-->
-  <Menu class="" active-name="1-2"  width="auto" :open-names="['1']">
-    <Submenu name="1">
+<div>
+  <!--<self-spin :spin-info="spinInfoForLatest"></self-spin>-->
+
+  <Menu class="" active-name=""  width="auto" :open-names="['latestArticle','hottestArticle']">
+    <!--<Menu-item>-->
+
+    <Submenu name="latestArticle">
+
       <template slot="title">
-        <Icon type="ios-navigate"></Icon>
-        Item 1
+        <Icon type="md-flash" class="color-light-primary"></Icon>
+        最新文档
       </template>
-      <MenuItem name="1-1" >Option1</MenuItem>
-      <MenuItem name="1-2">Option2</MenuItem>
-      <MenuItem name="1-3">Option3</MenuItem>
+
+      <self-spin :spin-info="spinInfoForLatest"></self-spin>
+      <template v-if="false===spinInfoForLatest.show">
+        <template v-if="''!==errMsgForGetLatest">
+          <p class="long-word-break color-red">{{errMsgForGetLatest}}</p>
+        </template>
+        <template v-else>
+          <template v-for="(item,idx) in latestArticleInfo">
+            <MenuItem :name="item.name" @click="readArticle({articleId:item['id']})">{{item.name}}</MenuItem>
+          </template>
+        </template>
+      </template>
+
+
+
+      <!--        <MenuItem name="1-2">Option2</MenuItem>
+              <MenuItem name="1-3">Option3</MenuItem>-->
+    </Submenu>
+    <!--</Menu-item>-->
+    <Submenu name="hottestArticle">
+
+      <template slot="title">
+        <Icon type="md-flame" class="color-red"></Icon>
+        最新文档
+      </template>
     </Submenu>
   </Menu>
+</div>
+
 </template>
 
 <script>
-  // import {TABLE} from '../../assets/constant'
+  /******************************/
+  /**         component       **/
+  /******************************/
+  import selfSpin from '../../components/basicComponent/spin'
+
+  /******************************/
+  /**    common function       **/
+  /******************************/
+  import * as misc from '../../function/misc'
+  /******************************/
+  /**          网络            **/
+  /******************************/
+  import * as network from '../../function/network'
+  import {urlConfiguration} from '../../constant/url/url'
 
   export default {
+    components:{selfSpin},
+    async created(){
+      await this.getSideBarArticle_async()
+    },
       methods:{
-        /*menuChange(name){
-//          console.log(`menuchange in ${name}`)
-        },
-        clickMenu(name){
-//            console.log(`${typeof TABLE.billType}`)
-            console.log(`sidebar cilic is ${JSON.stringify(name)}`)
-          let cName=''
-          for(let submenu in this.sidebarName){
-                for(let menuKey in this.sidebarName[submenu].children){
-                    if(name===menuKey){
-                      cName=this.sidebarName[submenu]['children'][menuKey]['name']
-                      break
-                    }
+        /**   获得sidebar的文档信息（最新和最火的文档） **/
+        async getSideBarArticle_async(){
+          let that=this
+            network.sendRequestGetResult_async({urlOption:urlConfiguration.article.getLatestArticle}).then(
+              function(res){
+                if(res ){
+                  if( res.rc>0){
+                    that.errMsgForGetLatest=res.msg
+                  }else{
+                    that.latestArticleInfo=res.msg
+                  }
+                  that.spinInfoForLatest.show=false
                 }
-          }
+              },
+              function(err){
+                that.errMsgForGetLatest=err
+                that.spinInfoForLatest.show=false
+              },
+            )
+        },
 
-          this.$store.commit('setClickedTableAndMenu',{table:name,chineseName:cName})
-          this.$store.commit('setClickedTable',{table:name,chineseName:cName})
-          this.$store.commit('setCurrentTabelHeader',{currentColl:name})
-//          console.log(`after commit`)
-//          this.$store.commit('initAllACValue')
-          //为当前coll的所有字段获得ac，以便为coll的所有记录服务
-//          this.$store.dispatch('getAllFieldACValueByUpdate',{})
-
-          this.$store.dispatch('search',{searchParams:{},currentPage:1})
-          //点击coll时，初始获得所有外键的AC信息
-//          this.$store.dispatch('initGetAllFieldValue',{searchParams:{},currentPage:1,currentColl:name})
-//          console.log(`after dispatch`)
-        }*/
+        readArticle({articleId}){
+          misc.openNewPage({url:`/getArticle/${articleId}`})
+        },
       },
 
     computed:{
-     /* sidebarOpenMenus(){
-//          console.log(this.$store.state.mainState.sidebarOpenMenus)
-        return this.$store.state.sidebarState.sidebarOpenMenus
-      },
-      sidebarActiveMenu(){
-        return this.$store.state.sidebarState.sidebarActiveMenu
-      }*/
+
     },
       data(){
-        return {}
-          /*return {
-            sidebarName: {
-                configuration:{
-//              key:'configuration',
-//                name: 'configuration',
-                  name:'配置信息',
-                icon:'gear-b',
-                children:
-                  {
-        //submenu中，将key的值绑定到name属性，当此menu被点击（on-select），name（也就是sidebarName的key）会被返回，所以最好英文
-                    billType:{name: '单据类别'},
-                    department:{name:'部门信息'},
-                    employee:{name:  '员工信息'}
-                  }
-            },
-            reimbursement:{
-//              name: 'reimbursement',
-              name:'报销信息',
-              icon:'clipboard',
-              children:
-                {
-                  bill:{name: '报销记录'},
-                  'static':{name:'统计信息'}
-                }
-
-
-            }
+        return {
+          spinInfoForLatest:{
+            msg:'读取文档...',
+            show:true,
           },
-             /!* sidebarName:[
-              {
-                label: '配置信息',
-                name: 'configuration',
-                icon:'gear-b',
-                children: [
-                    //menu中，name属性作为key，会被返回，所以最好英文
-                  {name:TABLE.billType.toString(),label: '单据类别'},
-                  {name:TABLE.department.toString(), label: '部门信息'},
-                  {name:TABLE.employee.toString(), label: '员工信息'}
-                ]
+          errMsgForGetLatest:"",
+          latestArticleInfo:undefined,
 
-              },
-              {
-                label:'报销信息',
-                name: 'reimbursement',
-                icon:'clipboard',
-                children:[
-                  {name:TABLE.bill.toString(),label:'报销记录'},
-                  {label:'统计信息'}
-                ]
-
-              }
-            ],*!/
-          }*/
-
+          spinInfoForHottest:{
+            msg:'读取文档...',
+            show:true,
+          },
+          errMsgForGetHottest:"",
+          hottestArticle:undefined,
+        }
       }
   }
 </script>

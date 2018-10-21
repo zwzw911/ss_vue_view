@@ -84,8 +84,8 @@ formItemInfo:
 
                 <Input
                   @on-focus="focusInputPlaceHolderDisappear({keyName:k,idx:idx});dismissError({keyName:k,idx:idx});onFocus()"
-                  @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenAffButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();onBlur({k:k,idx:idx});xssCheck({keyName:k,idx:idx});"
-                  @on-change="validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenAffButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();xssCheck({keyName:k,idx:idx})"
+                  @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenAffButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();onBlur({k:k,idx:idx});xssCheck({keyName:k,idx:idx});"
+                  @on-change="validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenAffButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();xssCheck({keyName:k,idx:idx})"
 
                   :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                   v-model="formItemInfo.inputValue[k][idx]" :placeholder="formItemInfo.inputArrayAttribute[k][idx]['placeHolder'][0]"
@@ -138,7 +138,12 @@ formItemInfo:
                        :label="formItemInfo.inputAttribute[k]['label']"
                        :style="undefined!==formItemInfo.inputAttribute[k]['width'] ? 'width:'+formItemInfo.inputAttribute[k]['width'] +'px':''"
             >
-              <Select v-model="formItemInfo.inputValue[k]" :placeholder="formItemInfo.inputAttribute[k]['placeHolder'][0]" :style="undefined!==formItemInfo.inputAttribute[k]['width'] ? 'width:'+formItemInfo.inputAttribute[k]['width'] +'px':''">
+              <Select
+                v-model="formItemInfo.inputValue[k]"
+                :placeholder="formItemInfo.inputAttribute[k]['placeHolder'][0]"
+                :style="undefined!==formItemInfo.inputAttribute[k]['width'] ? 'width:'+formItemInfo.inputAttribute[k]['width'] +'px':''"
+                @on-change="checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged()"
+              >
                 <Option v-for="(enumValue,enumKey) in formItemInfo.inputAttribute[k]['enumValue']" :value="enumKey" :key="enumKey">{{enumValue}}</Option>
               </Select>
             </FormItem>
@@ -160,8 +165,8 @@ formItemInfo:
                       <!--复用formItem的validator-->
                       <Input
                         @on-focus="focusInputPlaceHolderDisappear({keyName:k});onFocus()"
-                        @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();onBlur();xssCheck({keyName:k});"
-                        @on-change="validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();xssCheck({keyName:k})"
+                        @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();onBlur();xssCheck({keyName:k});"
+                        @on-change="validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();xssCheck({keyName:k})"
                         :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                         v-model="formItemInfo.inputValue[k]" :placeholder="!editable ? '':formItemInfo.inputAttribute[k]['placeHolder'][0]"
                         :class="[editable ? '':'inputUnEditAble inputDisabled', 'title'===formItemInfo.inputAttribute[k]['inputSize'] ? 'inputTitle':'']"
@@ -173,11 +178,12 @@ formItemInfo:
                       </Input>
                     </template>
                   </template>
+                  <!--普通textarea-->
                   <template v-else>
                     <Input
                       @on-focus="focusInputPlaceHolderDisappear({keyName:k});onFocus()"
-                      @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();onBlur();xssCheck({keyName:k})"
-                      @on-change="validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();xssCheck({keyName:k})"
+                      @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();onBlur();xssCheck({keyName:k})"
+                      @on-change="validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();xssCheck({keyName:k})"
                       :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                       v-model="formItemInfo.inputValue[k]" :placeholder="!editable ? '':formItemInfo.inputAttribute[k]['placeHolder'][0]"
                       :class="[editable ? '':'inputUnEditAble inputDisabled', 'title'===formItemInfo.inputAttribute[k]['inputSize'] ? 'inputTitle':'']"
@@ -332,11 +338,16 @@ formItemInfo:
       /************************/
       /****   预处理数据    ***/
       /************************/
-      loadServerData({valueFromDb}){
+      //将传入数据保存为原始数据（载入已经更新数据之后），以便判断是否可以更新
+      saveAsOriginData({valueFromDb,neededFields}){
+        this.inputOriginalValue=misc.extractPartObject({sourceObj:valueFromDb,neededKeyNames:neededFields})
+      },
+      loadServerData({valueFromDb,neededFields}){
         // inf('load in')
-        let copyOfValueFromDb=misc.objectDeepCopy(valueFromDb)
+        // let copyOfValueFromDb=misc.objectDeepCopy(valueFromDb)
+        let copyOfValueFromDb=misc.extractPartObject({sourceObj:valueFromDb,neededKeyNames:neededFields})
         // inf('copyOfValueFromDb',copyOfValueFromDb)
-        this.inputOriginalValue=copyOfValueFromDb
+        // this.inputOriginalValue=copyOfValueFromDb
         for(let singleKey in copyOfValueFromDb){
           //autoGen，需要根据数量，自动更新对应的数组
           // inf('singleKey',singleKey)
@@ -430,7 +441,10 @@ formItemInfo:
         return true
       },
       ifAnyFieldValueChanged(){
-        //假设全部未变
+        let result=JSON.stringify(this.formItemInfo.inputValue)!==JSON.stringify(this.inputOriginalValue)
+        this.$emit('ifAnyFieldValueChanged',result)
+
+        /*//假设全部未变
         let result=false
         for(let singleKey in this.formItemInfo.rule){
           // inf('singleKey',singleKey)
@@ -439,7 +453,7 @@ formItemInfo:
             return true
           }
         }
-        return false
+        return false*/
       },
       /************************/
       /****  判断返回结果  ***/

@@ -30,7 +30,7 @@
     <div v-if="'clock'===countDownTimeInfo.type" class="flex-flow-row-wrap justify-content-space-between" :class="countDownTimeInfo.fontSize">
       <!--<span>{{countDownTimeInfo.msg}}</span>-->
       <span class="flex-flow-row-wrap justify-content-space-between" v-if="86400<=countDownTimeInfo.seconds || (undefined!==countDownTimeInfo.clock &&'day'===countDownTimeInfo.forceUnit)">
-        <span class="bg-darken-primary color-white paddingAll1 radius1" >
+        <span class="bg-color-darken-primary color-white paddingAll1 radius1" >
           {{formatCountDownLeftTime.day}}
         </span>
         <span class="paddingAll1" >
@@ -39,7 +39,7 @@
       </span>
 
       <span class="flex-flow-row-wrap justify-content-space-between" v-if="3600<=countDownTimeInfo.seconds || (undefined!==countDownTimeInfo.clock && ('day'===countDownTimeInfo.forceUnit || 'hour'===countDownTimeInfo.forceUnit))">
-        <span class="bg-darken-primary color-white paddingAll1 radius1" >
+        <span class="bg-color-darken-primary color-white paddingAll1 radius1" >
         {{formatCountDownLeftTime.hour}}
         </span>
         <span class="paddingAll1">
@@ -48,7 +48,7 @@
       </span>
 
       <span class="flex-flow-row-wrap justify-content-space-between" v-if="60<=countDownTimeInfo.seconds || (undefined!==countDownTimeInfo.clock && ('day'===countDownTimeInfo.forceUnit || 'hour'===countDownTimeInfo.forceUnit || 'minute'===countDownTimeInfo.forceUnit))">
-        <span class="bg-darken-primary color-white paddingAll1 radius1" >
+        <span class="bg-color-darken-primary color-white paddingAll1 radius1" >
           {{formatCountDownLeftTime.minute}}
         </span>
         <span class="paddingAll1" >
@@ -58,7 +58,7 @@
 
       <!--只是为了水平对齐-->
       <span class="flex-flow-row-wrap justify-content-space-between">
-        <span class="bg-darken-primary color-white paddingAll1 radius1">
+        <span class="bg-color-darken-primary color-white paddingAll1 radius1">
           {{formatCountDownLeftTime.second}}
         </span>
       </span>

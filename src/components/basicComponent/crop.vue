@@ -35,7 +35,7 @@
         </div>
       <!--</div>-->
 
-      <div id="L0_container" :style="{'width':L1OrigImgMaxWH.width+'px','height':L1OrigImgMaxWH.height+'px'}" style="position: relative;border:0px solid;" class="bg-silver"
+      <div id="L0_container" :style="{'width':L1OrigImgMaxWH.width+'px','height':L1OrigImgMaxWH.height+'px'}" style="position: relative;border:0px solid;" class="bg-color-silver"
            @mouseup="mouseUp">
         <!-- img 必须使用visibility，而不是display，否则，在display之前，会无法读取img的pos属性
               left/top/width/height不能预先设置（而是要通过js原生方法设置），否则无法正确设置

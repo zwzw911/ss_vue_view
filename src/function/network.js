@@ -9,7 +9,7 @@ import {RequestMethod} from '../constant/enum/network'
 
 import {error} from '../constant/error/error'
 
-axios.defaults.retry = 2
+axios.defaults.retry = 1
 axios.defaults.retryDelay = 1000
 // inf('asiox defaults',axios.defaults)
 

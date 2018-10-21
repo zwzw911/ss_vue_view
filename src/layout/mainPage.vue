@@ -66,8 +66,10 @@
         <div class="sideBar" style="" >
           <selfSideBar></selfSideBar>
         </div>
-        <!--flex-grow-1:占据所有剩余空间-->
-        <div  class="flex-grow-1 marginL4" >
+
+
+        <!--flex-grow-1:article 占据所有剩余空间-->
+        <div  class="flex-grow-1 marginL4">
           <selfContent :content-info="contentInfo"></selfContent>
         </div>
       </div>
@@ -108,6 +110,7 @@
       },
     data () {
       return {
+
         // headerInfo:{
         //   itemsInHeader:[{name:"注册",href:"register"},{name:"登录",href:"login"}],
         //   userName:this.$store.state.headerInfo.userName

@@ -25,7 +25,7 @@
 
 </style>-->
 <template>
-  <div class="container bg-primary paddingV2 ">
+  <div class="container bg-color-primary paddingV2 ">
     <div class="flex-flow-row-nowrap justify-content-space-between">
       <span class="color-white marginR4 cursor-pointer h4" @click="createArticle"><Icon type="ios-create-outline" class="marginR1"/>写文档</span>
       <div v-if="userLogin">
