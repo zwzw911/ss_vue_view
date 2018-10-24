@@ -1,14 +1,17 @@
 <style scoped>
 </style>
 <template>
-  <div v-if="true===chooseFriendGroupInfo.show">
-    <!---->
-    <RadioGroup  v-model="chosenFriendGroup">
-      <Radio v-for="(item,idx) in chosenFriendGroupRecords" :key="idx" :label="item.id">
-        <!--<Icon type="logo-apple"></Icon>-->
-        <span>{{item.friendGroupName}}</span>
-      </Radio>
-    </RadioGroup>
+  <div v-if="true===chooseFriendInfo.show">
+    <AutoComplete
+      v-model="chooseFriend"
+      :data="availableFriend"
+      @on-search="getAvailableFriends"
+      placeholder=""
+      style=""
+      icon="md-search"
+    >
+
+    </AutoComplete>
 
   </div>
 </template>
@@ -55,7 +58,7 @@
   import * as formatData from '../../function/formatData'
 
   export default {
-      props: {'chooseFriendGroupInfo': {type: Object}},
+      props: {'chooseFriendInfo': {type: Object}},
       components: {},
       mounted() {
       },
@@ -63,12 +66,12 @@
 /*        func_test(){
           inf('func_test in')
         },*/
-        async getAllFriendGroupRecords(){
+        async getAvailableFriends(){
           let that=this
-            network.sendRequestGetResult_async({urlOption:urlConfiguration.userFriendGroup.getAllFriendGroups}).then(
+            network.sendRequestGetResult_async({urlOption:urlConfiguration.userFriendGroup.searchFriend,queryString:`name=${this.chooseFriend}`}).then(
               function(res){
                 if(res && res.rc===0){
-                  that.chosenFriendGroupRecords=res.msg
+                  that.chooseFriendRecords=res.msg
                 }else{
                   handleResult.commonHandlerForErrorResult({that:that,response:res})
                 }
@@ -82,9 +85,10 @@
       },
       data() {
         return {
-          chosenFriendGroupRecords:undefined,
+          chooseFriendRecords:undefined,
           // show:false,
-          chosenFriendGroup:undefined,//最终选择的朋友分组
+          availableFriend:[],
+          chooseFriend:undefined,//查询朋友的值
           options:undefined,
         }
 

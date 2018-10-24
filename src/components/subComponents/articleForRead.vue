@@ -48,7 +48,14 @@
               踩
             </span>
             <span class="marginR7 h5 color-grey">{{staticResult.dislike}}</span>
-            <span class="cursor-pointer marginR6"><Icon type="md-share" class="color-primary"/>分享</span>
+            <span class="cursor-pointer marginR6" @click="chooseFriendGroup()" >
+              <Icon type="md-share" class="color-primary"/>
+              分享
+            </span>
+            <self-choose-friend-group :chooseFriendGroupInfo="chooseFriendGroupInfo" ref="refChooseFriendGroup"></self-choose-friend-group>
+            <self-choose-friend :chooseFriendInfo="chooseFriendInfo" ref="refChooseFriend"></self-choose-friend>
+            <!--<self-choose-user :chooseUserInfo="chooseUserInfo" ref="refChooseUser"></self-choose-user>-->
+            <self-add-friend></self-add-friend>
             <span class="cursor-pointer marginR6"><Icon type="md-filing" class="color-primary"/>收藏</span>
           </p>
           <p class="marginTX text-align-left marginBX content-min-height" v-html="articleInfo.htmlContent"></p>
@@ -81,10 +88,6 @@
           <p class="color-lighten-red text-align-left">作者禁止评论文档</p>
         </template>
 
-
-
-
-
       </template>
 
     </div>
@@ -105,6 +108,9 @@
   import selfCommentList from '../basicComponent/commentList'
   import selfCreateComment from '../basicComponent/createComment'
   import selfSpin from '../../components/basicComponent/spin'
+  import selfChooseFriendGroup from '../../components/basicComponent/chooseFriendGroup'
+  import selfChooseFriend from '../../components/basicComponent/chooseFriend'
+  import selfAddFriend from '../../components/subComponents/autoComplete/addFriend'
   /******************************/
   /**          网络            **/
   /******************************/
@@ -149,7 +155,7 @@
   commentInputAttribute[nonValueEnum.InputAttributeFieldName.PLACE_HOLDER]=commentInputAttribute[nonValueEnum.InputAttributeFieldName.PLACE_HOLDER_BKUP]=['评论内容至少15个字符']
 
     export default {
-      components:{selfAttachmentList,selfCommentList,selfCreateComment,selfSpin},
+      components:{selfAttachmentList,selfCommentList,selfCreateComment,selfSpin,selfChooseFriendGroup,selfChooseFriend,selfAddFriend},
       // props: {'articleInfo':{type:Object}},
       async mounted(){
         await this.getArticle_async()
@@ -169,10 +175,15 @@
           network.sendRequestGetResult_async({urlOption:urlConfiguration.article.getArticle,data:this.articleId}).then(function (response) {
             that.spinInfo.show=false
             if(response.rc>0){
+
               // if(response.rc===50284){
                 // inf('response.msg',response.msg)
                 that.readArticleError=response.msg
               // }
+              //文档编号不正确
+              if(response.rc===50206){
+                that.readArticleError="文档编号不正确，请登录后重新打开"
+              }
               return
             }
 
@@ -218,18 +229,11 @@
               return
             }
 
-/*            formatData.formatDate({record:response.msg,fieldsToBeFormat:["cDate"]})
-            that.articleInfo=response.msg
-            that.attachmentListPropsInfo.currentAttachmentFileInfo=response.msg['articleAttachmentsId']
-
-            formatData.formatDate({record:response.msg['articleCommentsId'],fieldsToBeFormat:["cDate"]})
-            that.commentListInfo=response.msg['articleCommentsId']*/
 
           },function (err) {
             // handleResult.commonHandlerForErrorResult({that:that,response:err})
             that.readArticleError=err.msg
-            // that.spinInfo.show=false
-// inf('getArticle_async err',err)
+
           })
         },
         async articleDislike(){
@@ -247,25 +251,30 @@
               return
             }
 
-            /*            formatData.formatDate({record:response.msg,fieldsToBeFormat:["cDate"]})
-                        that.articleInfo=response.msg
-                        that.attachmentListPropsInfo.currentAttachmentFileInfo=response.msg['articleAttachmentsId']
-
-                        formatData.formatDate({record:response.msg['articleCommentsId'],fieldsToBeFormat:["cDate"]})
-                        that.commentListInfo=response.msg['articleCommentsId']*/
-
           },function (err) {
             // handleResult.commonHandlerForErrorResult({that:that,response:err})
             that.readArticleError=err.msg
-            // that.spinInfo.show=false
-// inf('getArticle_async err',err)
+
           })
+        },
+        async chooseFriendGroup(){
+          // this.chooseFriendGroupInfo.show=true
+          // await this.$refs["refChooseFriendGroup"].getAllFriendGroupRecords()
+          //
+          // this.chooseFriendInfo.show=true
+          // await this.$refs["refChooseFriend"].getAvailableFriends()
+
+          this.chooseUserInfo.show=true
+          await this.$refs["refChooseUser"].searchUser()
         },
       },
       computed: {},
       data() {
         // inf('this.route',this.$route.params)
           return {
+/*            ref:{
+              chooseFriendGroup:"chooseFriendGroup",
+            },*/
             ifUserLogin:misc.ifUserLogin({that:this}),
             spinInfo:{
               msg:'读取文档...',
@@ -278,11 +287,22 @@
             // editable:false,
             // additionalData:{recordId:'test'},
             // host:host,
+
+            chooseFriendGroupInfo:{
+              show:false
+            },
+            chooseFriendInfo:{
+              show:false
+            },
+/*            chooseUserInfo:{
+              show:false,
+              queryFieldName:'name',//name/account
+            },*/
+
+
             articleInfo:undefined,
             staticResult:undefined,
-/*            validResult:true,
 
-            editable:true,//不是通过父组件传入，而是通过本组件的按钮 来控制*/
             attachmentListPropsInfo:{
               configuration:{
                 action:`${host}/article/articleAttachment/${this.$route.params.articleId}`,

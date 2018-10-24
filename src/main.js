@@ -5,15 +5,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-/*                    引入cookies               */
-import VueCookies from 'vue-cookies'
-Vue.use(VueCookies)
-
-/*  引入iview（需npm install --save iview）     */
-import iView from 'iview'
-import 'iview/dist/styles/iview.css'
-Vue.use(iView)
-
 /*********************/
 /***  自定义css  ****/
 /*********************/
@@ -29,6 +20,17 @@ import '../static/css/position.css'
 import '../static/css/radius.css'
 import '../static/css/size.css'
 import '../static/css/style.css'
+
+
+/**           引入cookies          **/
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies)
+
+/**  引入iview（需npm install --save iview）     **/
+import iView from 'iview'
+import 'iview/dist/styles/iview.css'
+Vue.use(iView)
+
 
 /**************************/
 /**   引入element-ui     **/

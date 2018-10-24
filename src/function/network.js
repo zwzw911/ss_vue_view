@@ -54,7 +54,7 @@ myAxios.interceptors.response.use(undefined,function axiosRetryInterceptor(err) 
     });
   }
 });
-async function sendRequestGetResult_async({urlOption,data,downloadFile=false}){
+async function sendRequestGetResult_async({urlOption,data,queryString,downloadFile=false}){
   let result
 
   if(true===downloadFile){
@@ -64,7 +64,7 @@ async function sendRequestGetResult_async({urlOption,data,downloadFile=false}){
   }else{
     myAxios.defaults.responseType='json'
   }
-  // inf('send data',data)
+  // inf('queryString',queryString)
   switch (urlOption.method){
     case RequestMethod.PUT:
       result=await myAxios.put(urlOption.url,data)
@@ -73,11 +73,16 @@ async function sendRequestGetResult_async({urlOption,data,downloadFile=false}){
       result=await myAxios.post(urlOption.url,data)
           break;
     case RequestMethod.GET:
+      let getUrl
       if(undefined!==data){
-        result=await myAxios.get(urlOption.url+'/'+data) //get/delete即使传入data，也不会发送出去
+        getUrl=urlOption.url+'/'+data
       }else{
-        result=await myAxios.get(urlOption.url,data) //get/delete即使传入data，也不会发送出去
+        getUrl=urlOption.url
       }
+      if(undefined!==queryString && ''!==queryString){
+        getUrl+=`?${queryString}`
+      }
+      result=await myAxios.get(getUrl) //get/delete即使传入data，也不会发送出去
 
       break;
     case RequestMethod.DELETE:

@@ -14,6 +14,7 @@ const urlConfiguration={
     register:{url:'/user',method:RequestMethod.POST},
     uploadUserPhoto:{url:'/user/uploadUserPhoto',method:RequestMethod.PUT},
     getUserInfo:{url:'/user',method:RequestMethod.GET},
+    search:{url:'/user/search',method:RequestMethod.GET},
     saveUserInfo:{url:'/user',method:RequestMethod.PUT},
     changePassword:{url:'/user/changePassword',method:RequestMethod.PUT}
   },
@@ -95,6 +96,7 @@ const urlConfiguration={
   /**   user friend group **/
   userFriendGroup:{
     getAllFriendGroups:{url:'/user_friend_group',method:RequestMethod.GET},
+    searchFriend:{url:'/user_friend_group/friend',method:RequestMethod.GET},
     createFriendGroup:{url:'/user_friend_group',method:RequestMethod.POST},
     updateFriendGroup:{url:'/user_friend_group',method:RequestMethod.PUT},
     deleteFriendGroup:{url:'/user_friend_group',method:RequestMethod.DELETE},
