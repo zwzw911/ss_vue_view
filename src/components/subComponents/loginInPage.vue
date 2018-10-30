@@ -14,7 +14,7 @@
     </div>
 
 
-    <Button long size="large" shape="circle" type="primary" @click="sendLoginInfo()" :style="submitButtonDisable ? buttonDisableStyle:''" :disabled="submitButtonDisable">登录</Button>
+    <Button long size="large" shape="circle" type="primary" @click="sendLoginInfo()" :class="{primaryButtonDisable:submitButtonDisable}"  :disabled="submitButtonDisable">登录</Button>
     <!--paddingH4: 和form的设置一致，以便对齐-->
     <div class="  flex-flow-row-nowrap justify-content-flex-start marginT4">
       <a class="text-align-left" @click="routeToRegister" >注册</a>
@@ -72,7 +72,7 @@
         },
 
         submitButtonDisable:true,
-        buttonDisableStyle:this.$store.state.style.button.primary.disable,
+        // buttonDisableStyle:this.$store.state.style.button.primary.disable,
       }
     }
   }

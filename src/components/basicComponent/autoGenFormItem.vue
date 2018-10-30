@@ -79,7 +79,7 @@ props:
 
     <div>
       <!--,-->
-      <Button type="primary" :style="newButtonDisable ? buttonDisableStyle:''" :disabled="newButtonDisable" :class="{hidden:!editable}"
+      <Button type="primary" :class="{primaryButtonDisable:newButtonDisable,hidden:!editable}"  :disabled="newButtonDisable"
               @click="addItem();validateIfAllItemPass_async()">new</Button>
     </div>
 
@@ -239,7 +239,7 @@ props:
             newButtonDisable:false,//达到上限，为false（是否显示，通过editable控制）
 
             //采用style，优先级覆盖iview
-            buttonDisableStyle:this.$store.state.style.button.primary.disable,
+            // buttonDisableStyle:this.$store.state.style.button.primary.disable,
 
             // editable:false,//是否可以进行编辑
 

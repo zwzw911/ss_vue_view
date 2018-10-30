@@ -17,7 +17,7 @@
       </Form>
       <div slot="footer">
         <Button type="default" size="large" @click="cancel" >取消</Button>
-        <Button type="primary" size="large"  @click="ok" :disabled="submitButtonDisable" :style="submitButtonDisable ? buttonDisableStyle:''">确定</Button>
+        <Button type="primary" size="large"  @click="ok" :disabled="submitButtonDisable" :class="{primaryButtonDisable:submitButtonDisable}" >确定</Button>
       </div>
     </Modal>
     <!--<Button type="primary" @click="modal1 = true">Display dialog box</Button>-->
@@ -42,7 +42,7 @@
           }
           },
         submitButtonDisable:true,
-        buttonDisableStyle:this.$store.state.style.button.primary.disable,
+        // buttonDisableStyle:this.$store.state.style.button.primary.disable,
         validateResult:false,
       }
     },

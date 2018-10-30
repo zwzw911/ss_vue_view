@@ -7,19 +7,27 @@
 </style>
 
 <template>
-  <!--:style="{height:containerHeight+'px'}"-->
-  <div class="" style="background-color: rgba(255,255,255,1);position: fixed;width:100%;height:100%;top:0px;left:0px;border-style:solid;border-color:rgba(15,15,15,0.7);z-index:2000" >
+  <!--:style="{height:containerHeight+'px'}"    style="background-color: rgba(255,255,255,0);position: fixed;width:100%;height:100%;top:0px;left:0px;;z-index:2000"
+-->
+  <div class="flex-flow-row-nowrap justify-content-center align-items-center"
+       style="background-color: rgba(255,255,255,0);position: fixed;width:100%;height:100%;top:0px;left:0px;z-index:2000"
+      :style="{'min-height': buttonCmdGroupMinHeight}"
+       @click.self.stop="exit"
+  >
     <div class="flex-flow-row-nowrap justify-content-center align-items-center" style="z-index:4000;position:fixed;width:100%;height:100%;background: rgba(0, 0, 0, 0.8);top:0px;left:0px;" :style="{display:showPreviewFlag ? '':'none'}"
       @click="hidePreview"
     >
       <img id="croppedImg" style="padding:5px;border:1px solid rgb(200,200,200);border-radius:5px;"  :style="{width:cropImgWH.width+'px',height:cropImgWH.height+'px'}" class="" :src="cropImgDataUrl">
     </div>
-    <div id="cropContainer" class="flex-flow-row-nowrap justify-content-flex-start"
-         :style="{margin:containerMargin.top+'px'+' '+containerMargin.right+'px'+' '+containerMargin.bottom+'px'+' '+containerMargin.left+'px',
-         }">
+    <div id="cropContainer" class="flex-flow-row-nowrap justify-content-flex-start align-content-flex-start bg-color-white paddingAll2 radius2"
+         :style="{margin:containerMargin.top+'px'+' '+containerMargin.right+'px'+' '+containerMargin.bottom+'px'+' '+containerMargin.left+'px',height:L1OrigImgMaxWH.height+20+'px'}"
+          style="box-shadow: 0 0 10px #2d8cf0"
+    >
 
       <!--<div style="" class="">-->
-        <div id="cmdButtonGroup" class="marginR7 flex-flow-column-nowrap justify-content-space-between" style="height:200px;">
+      <!--:style="{height:cropImgWH.height+'px'}"-->
+        <div id="cmdButtonGroup" class="paddingR2 flex-flow-column-nowrap justify-content-flex-start"
+             :style="{'min-height': buttonCmdGroupMinHeight,height:L1OrigImgMaxWH.height+'px'}">
           <!--        <Button type="primary" @click="" style="">选择图片</Button>
                   <form enctype="multipart/form-data" id="cropppedImgForm">
                     <img id="croppedImg" style="padding:5px;border:1px solid rgb(200,200,200);border-radius:5px;display:none"  class="marginT4">
@@ -27,15 +35,15 @@
 
           <input id="input_chooseImg" class="" type="file"  name="userIcon" style="display: none" @change="readImage()"/>
           <Button id="btn_chooseImg" class="" @click="delegateClick();">选择图片</Button>
-          <Button id="btn_cropImg" class="" @click="cropImg();" :disabled="btnDisableFlag.btn_cropImg">裁剪</Button>
+          <Button id="btn_cropImg" class="marginT2" @click="cropImg();" :disabled="btnDisableFlag.btn_cropImg">裁剪</Button>
 
-          <Button id='btn_cropImgPreview' class="" :disabled="btnDisableFlag.btn_cropImgPreview" @click="showPreview();">预览</Button>
-          <Button id='btn_cropImgOK' class=""  :disabled="btnDisableFlag.btn_cropImgOK" @click="exitWithCroppedImg">确定</Button>
-          <Button id='btn_cropImgCancel' class="" @click="exit">退出</Button>
+          <Button id='btn_cropImgPreview' class="marginT2" :disabled="btnDisableFlag.btn_cropImgPreview" @click="showPreview();">预览</Button>
+          <Button id='btn_cropImgOK' class="marginT2"  :disabled="btnDisableFlag.btn_cropImgOK" @click="exitWithCroppedImg">确定</Button>
+          <Button id='btn_cropImgCancel' class="marginT2" @click="exit">退出</Button>
         </div>
       <!--</div>-->
 
-      <div id="L0_container" :style="{'width':L1OrigImgMaxWH.width+'px','height':L1OrigImgMaxWH.height+'px'}" style="position: relative;border:0px solid;" class="bg-color-silver"
+      <div id="L0_container" :style="{'width':L1OrigImgMaxWH.width+'px','height':L1OrigImgMaxWH.height+'px','min-height': buttonCmdGroupMinHeight}" style="position: relative;border:0px solid;" class="bg-color-silver"
            @mouseup="mouseUp">
         <!-- img 必须使用visibility，而不是display，否则，在display之前，会无法读取img的pos属性
               left/top/width/height不能预先设置（而是要通过js原生方法设置），否则无法正确设置
@@ -145,7 +153,7 @@
         }
 
         this.L1OrigImgSrc=''
-        this.$parent.hideCrop()
+        // this.$parent.hideCrop()
         this.$emit('exit')
 
       },
@@ -458,7 +466,7 @@ inf('wholeContainerWH',wholeContainerWH)
           height:0,
         },
 
-
+        buttonCmdGroupMinHeight:'200px',//为了容纳所有的按钮，最小需要多高
         ratio:1,//如果图片超过L0的大小，需要自动缩小，ratio=原始大小:缩小图片
         // displayNone: 'none',
         L1OrigImgSrc:'', //原始图片的dataURL

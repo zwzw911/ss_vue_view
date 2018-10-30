@@ -286,7 +286,7 @@ function setL2BoardWidth({L2_boardWidth,L2_coverZone}){
 * */
 function calcL3BoardPosBaseOnVisiblePartPos({visiblePartPos,L3_cropImgBorder,L3BorderWidth}){
   L3_cropImgBorder.width=visiblePartPos.width+2*L3BorderWidth.left
-  L3_cropImgBorder.height=visiblePartPos.width+2*L3BorderWidth.top
+  L3_cropImgBorder.height=visiblePartPos.height+2*L3BorderWidth.top
   L3_cropImgBorder.left=visiblePartPos.left-L3BorderWidth.left
   L3_cropImgBorder.top=visiblePartPos.top-L3BorderWidth.top
 }

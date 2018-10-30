@@ -61,13 +61,15 @@ function genNeedInput({collName,allowFields,additionalFields}) {
 
   //2. 合并字段额外的定义（inputAttribute）
   let sourceInputAttribute=finalResult['inputAttribute']
-  let extraInputAttribute=objectPartlyDeepCopy({sourceObj:source['extraAttribute'][collName],expectedKey:allowFields})
+  if(undefined!==source['extraAttribute'][collName]){
+    let extraInputAttribute=objectPartlyDeepCopy({sourceObj:source['extraAttribute'][collName],expectedKey:allowFields})
 
-  for(let singleField in sourceInputAttribute){
-    if(undefined!==extraInputAttribute[singleField]){
-      for(let singleExtraAttribute in extraInputAttribute[singleField]){
-        if(undefined!==extraInputAttribute[singleField][singleExtraAttribute]){
-          sourceInputAttribute[singleField][singleExtraAttribute]=extraInputAttribute[singleField][singleExtraAttribute]
+    for(let singleField in sourceInputAttribute){
+      if(undefined!==extraInputAttribute[singleField]){
+        for(let singleExtraAttribute in extraInputAttribute[singleField]){
+          if(undefined!==extraInputAttribute[singleField][singleExtraAttribute]){
+            sourceInputAttribute[singleField][singleExtraAttribute]=extraInputAttribute[singleField][singleExtraAttribute]
+          }
         }
       }
     }
@@ -325,7 +327,19 @@ function openNewPage({url}){
   window.open(`${host}${url}`)
 }
 
-
+/**   将formItemInfo中的inpurValue和inputTempData初始化，以便使用formItemInfo的组件初始化 **/
+function initFormItemInfo({formItemInfo}){
+  if(undefined!==formItemInfo['inputValue']){
+    for(let fieldName in formItemInfo['inputValue']){
+      formItemInfo['inputValue'][fieldName]=null
+    }
+  }
+  if(undefined!==formItemInfo['inputTempData']){
+    for(let fieldName in formItemInfo['inputTempData']){
+      formItemInfo['inputTempData'][fieldName]='NotValidate'
+    }
+  }
+}
 export {
   genNeedInput,
   mergeInputAttribute,
@@ -342,6 +356,8 @@ export {
   routeTo,
 
   openNewPage,
+
+  initFormItemInfo,
   // countDown,
 }
 

@@ -97,7 +97,7 @@ import * as componentInfo from '../../../constant/globalConfiguration/componentI
         },
         /*        self      */
         globalResultMsg:'',//全局错误信息
-        buttonDisableStyle:this.$store.state.style.button.primary.disable,
+        // buttonDisableStyle:this.$store.state.style.button.primary.disable,
         rememberMe:false, //记住用户名
         submitButtonDisable:true,
 

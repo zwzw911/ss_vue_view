@@ -12,7 +12,7 @@
 
       <!--'border-width':cropBorderWidth.top+'px'+' '+cropBorderWidth.left+'px'-->
       <self-crop id="selfCropId" :ref="ref.crop.cropForUserInfo" :style="{visibility:cropHidden,}"
-                 :crop-info="userInfo.cropInfo" @exitWithCroppedImg="getCroppedImg" ></self-crop>
+                 :crop-info="userInfo.cropInfo" @exitWithCroppedImg="getCroppedImg" @exit="hideCrop"></self-crop>
 
     </div>
 
@@ -35,7 +35,7 @@
       <!--<self-form-item :form-item-info=""></self-form-item>-->
   </div>
   <!--;-->
-  <Button class="marginT7" size="large"  type="primary" @click="saveUserInfo_async" :style="validateFormItemResult ? '':buttonDisableStyle" :disabled="!validateFormItemResult">保存</Button>
+  <Button class="marginT7" size="large"  type="primary" @click="saveUserInfo_async" :class="{primaryButtonDisable:validateFormItemResult}" :disabled="!validateFormItemResult">保存</Button>
 
 </div>
 </template>
@@ -249,7 +249,7 @@
         formItemInfoForNonIconInput:this.userInfo.formItemInfo,
 
         validateFormItemResult:false,//默认验证不通过或者尚未验证
-        buttonDisableStyle:this.$store.state.style.button.primary.disable,
+        // buttonDisableStyle:this.$store.state.style.button.primary.disable,
 
         ref:{
           formItem:{

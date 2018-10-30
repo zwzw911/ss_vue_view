@@ -84,7 +84,7 @@
         </div>
 
 
-        <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" long :style="submitButtonDisable[currentType] ? buttonDisableStyle:''" :disabled="submitButtonDisable[currentType]">
+        <Button long size="large" shape="circle" type="primary" @click="sendRegInfo({type:currentType})" long :class="{primaryButtonDisable:submitButtonDisable[currentType]}"  :disabled="submitButtonDisable[currentType]">
           注册
         </Button>
 
@@ -323,7 +323,7 @@
           },
           allTabNames:['phone','email'],
           currentType:'phone',
-          buttonDisableStyle:{'background-color':`#8cc0f7`,'color':`white`},
+          // buttonDisableStyle:{'background-color':`#8cc0f7`,'color':`white`},
 
           tabInfo:{
             phone:{label:'手机注册',icon:'android-phone-portrait',name:'phone'},

@@ -84,8 +84,8 @@ formItemInfo:
 
                 <Input
                   @on-focus="focusInputPlaceHolderDisappear({keyName:k,idx:idx});dismissError({keyName:k,idx:idx});onFocus()"
-                  @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenAffButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();onBlur({k:k,idx:idx});xssCheck({keyName:k,idx:idx});"
-                  @on-change="validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenAffButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();xssCheck({keyName:k,idx:idx})"
+                  @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();onBlur({k:k,idx:idx});xssCheck({keyName:k,idx:idx});"
+                  @on-change="validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();xssCheck({keyName:k,idx:idx})"
 
                   :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                   v-model="formItemInfo.inputValue[k][idx]" :placeholder="formItemInfo.inputArrayAttribute[k][idx]['placeHolder'][0]"
@@ -835,7 +835,7 @@ formItemInfo:
         // this.formItemInfo.addItemButtonDisable[keyName]=false
         return true
       },
-      setAutoGenAffButtonStatusByCheckValidatedResult({keyName}){
+      setAutoGenButtonStatusByCheckValidatedResult({keyName}){
         this.formItemInfo.addItemButtonDisable[keyName]=!this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName})
       },
       /***    not used for array    **/
@@ -910,7 +910,7 @@ formItemInfo:
         this.formItemInfo.inputArrayAttribute[keyName].splice(idx,1)
         this.formItemInfo.inputArrayTempData[keyName].splice(idx,1)
         // inf('this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName})',this.checkIfAllAutoGenItemValidatedResultPass({keyName:keyName}))
-        this.setAutoGenAffButtonStatusByCheckValidatedResult({keyName:keyName})
+        this.setAutoGenButtonStatusByCheckValidatedResult({keyName:keyName})
         //如果删除autoGen所有元素，需要进行全局（整个字段）检查
         if(this.formItemInfo.inputValue[keyName].length===0){
           this.validSingleInputValueAndStoreResult({fieldName:keyName})
@@ -953,7 +953,7 @@ formItemInfo:
         newButtonDisable:false,//达到上限，为false（是否显示，通过editable控制）
 
         //采用style，优先级覆盖iview
-        buttonDisableStyle:this.$store.state.style.button.primary.disable,
+        // buttonDisableStyle:this.$store.state.style.button.primary.disable,
 
         classVertical:'flex-flow-column-nowrap justify-content-flex-start align-items-flex-start align-content-flex-start',
         classHorizontal:'flex-flow-row-nowrap justify-content-flex-start align-items-flex-start align-content-flex-start',

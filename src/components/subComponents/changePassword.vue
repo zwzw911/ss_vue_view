@@ -26,7 +26,7 @@
         <!--<Button type="ghost" @click="handleReset('userInputValue')" style="margin-left: 8px">Reset</Button>-->
       <!--</FormItem>-->
     </Form>
-    <Button size="large"  type="primary" @click="sendChangePasswordInfo_async()" :style="submitButtonDisable ? buttonDisableStyle:''" :disabled="submitButtonDisable">修改</Button>
+    <Button size="large"  type="primary" @click="sendChangePasswordInfo_async()" :class="{primaryButtonDisable:submitButtonDisable}" :disabled="submitButtonDisable">修改</Button>
       <!--<span class="h4">already?<a>link</a></span>-->
 
   </div>
@@ -204,7 +204,7 @@
 
 
         globalResultMsg:'',//全局错误信息
-        buttonDisableStyle:{'background-color':`#8cc0f7`,'color':`white`},
+        // buttonDisableStyle:{'background-color':`#8cc0f7`,'color':`white`},
         submitButtonDisable:true,
 
 

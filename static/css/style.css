@@ -41,7 +41,7 @@
 .cursorPointer:hover {
   cursor: pointer;
 }
-.buttonDisable {
+.primaryButtonDisable {
   background-color: #8cc0f7 !important;
   color: white !important;
 }
