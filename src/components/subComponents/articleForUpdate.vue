@@ -111,10 +111,10 @@
             //   neededValue[neededField]=response.msg[neededField]
             // }
             // inf('response.msg[\'articleAttachmentsId\']',response.msg['articleAttachmentsId'])
-            that.$refs[that.articleInfo.ref.formItem.articleFormItem].loadServerData({valueFromDb:response.msg,neededFields:neededFields})
-            that.$refs[that.articleInfo.ref.formItem.articleFormItem].saveAsOriginData({valueFromDb:response.msg,neededFields:neededFields})
+            that.$refs[that.articleInfo.ref.formItem.articleFormItem].loadServerData({valueFromDb:response.msg['article'],neededFields:neededFields})
+            // that.$refs[that.articleInfo.ref.formItem.articleFormItem].saveAsOriginData({valueFromDb:response.msg,neededFields:neededFields})
 
-            that.attachmentListPropsInfo.currentAttachmentFileInfo=response.msg['articleAttachmentsId']
+            that.attachmentListPropsInfo.currentAttachmentFileInfo=response.msg['article']['articleAttachmentsId']
             // that.$refs[that.articleInfo.ref.formItem.articleFormItem].validAllInputValueAndStoreResult()
           },function (err) {
 
@@ -135,7 +135,8 @@
             let data={values:{}}
             data.values[ValidatePart.RECORD_ID]=that.articleId
             //2.1 获得发生变化的字段
-            data.values[ValidatePart.RECORD_INFO]=that.$refs[that.articleInfo.ref.formItem.articleFormItem].sanityInputValueBeforeSendToServer()
+            that.$refs[that.articleInfo.ref.formItem.articleFormItem].getChangedValue()
+            data.values[ValidatePart.RECORD_INFO]=that.articleInfo.formItemInfo.changedValue
             if(0===Object.keys(data.values[ValidatePart.RECORD_INFO]).length){
               // alert('未作任何更改')
               handleResult.commonHandlerForSuccessResult({that:that,response:{rc:0,msg:'未作任何更改，无需保存'}})
@@ -152,7 +153,7 @@
                 /***    文档更新成功，需要重新设置inputOriginValue   ***/
                 let neededFields=['name','status','allowComment','tags','htmlContent']
                 // let neededValue=misc.extractPartObject({sourceObj:response.msg,neededKeyNames:neededFields})
-                that.$refs[that.articleInfo.ref.formItem.articleFormItem].saveAsOriginData({valueFromDb:response.msg,neededFields:neededFields})
+                // that.$refs[that.articleInfo.ref.formItem.articleFormItem].saveAsOriginData({valueFromDb:response.msg,neededFields:neededFields})
               }
             },function (err) {
               // inf('update article err',err)
@@ -172,6 +173,7 @@
           this.validResult=result
         },
         ifAnyFieldValueChanged(result){
+          // inf('emit result',result)
           this.anyFieldValueChange=result
         },
         /********************/

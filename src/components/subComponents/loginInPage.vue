@@ -13,12 +13,22 @@
 
     </div>
 
+    <div :style="{'padding-left':loginConfig.formItemInfo.labelWidth+'px'}">
+      <Button long size="large" shape="circle" type="primary" @click="sendLoginInfo()"
+              :class="{primaryButtonDisable:submitButtonDisable}"  :disabled="submitButtonDisable"
+      >
+        登录
+      </Button>
+    </div>
 
-    <Button long size="large" shape="circle" type="primary" @click="sendLoginInfo()" :class="{primaryButtonDisable:submitButtonDisable}"  :disabled="submitButtonDisable">登录</Button>
+
     <!--paddingH4: 和form的设置一致，以便对齐-->
-    <div class="  flex-flow-row-nowrap justify-content-flex-start marginT4">
+    <div class="  flex-flow-row-nowrap justify-content-flex-start marginT4"
+        :style="{'margin-left':loginConfig.formItemInfo.labelWidth+'px'}"
+    >
       <a class="text-align-left" @click="routeToRegister" >注册</a>
     </div>
+
   </div>
 </template>
 
@@ -35,6 +45,10 @@
   /**    common function       **/
   /******************************/
   import * as misc from '../../function/misc'
+  /******************************/
+  /**     common constant     **/
+  /******************************/
+  import * as componentInfo from '../../constant/globalConfiguration/componentInfo'
 
   export default {
     components:{selfLoginFormItem},
@@ -68,7 +82,8 @@
 
       return {
         loginConfig:{
-          routeToLastOrMainPageAfterLoginSuccessful:true
+          routeToLastOrMainPageAfterLoginSuccessful:true,
+          formItemInfo:componentInfo.loginInfo(),
         },
 
         submitButtonDisable:true,

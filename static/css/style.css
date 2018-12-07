@@ -41,10 +41,6 @@
 .cursorPointer:hover {
   cursor: pointer;
 }
-.primaryButtonDisable {
-  background-color: #8cc0f7 !important;
-  color: white !important;
-}
 .hidden {
   visibility: hidden;
 }
@@ -72,6 +68,11 @@
 .inputDisabled input {
   background-color: transparent !important;
   cursor: default !important;
+}
+/** use !important to overwrite iview class **/
+.primaryButtonDisable {
+  background-color: #8cc0f7 !important;
+  color: white !important;
 }
 /**   wangEditor  **/
 .wangEditor-error-border {

@@ -84,8 +84,8 @@ formItemInfo:
 
                 <Input
                   @on-focus="focusInputPlaceHolderDisappear({keyName:k,idx:idx});dismissError({keyName:k,idx:idx});onFocus()"
-                  @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();onBlur({k:k,idx:idx});xssCheck({keyName:k,idx:idx});"
-                  @on-change="validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();xssCheck({keyName:k,idx:idx})"
+                  @on-blur="blurInputPlaceHolderRestore({keyName:k,idx:idx});validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged({keyName:k});onBlur({k:k,idx:idx});xssCheck({keyName:k,idx:idx});"
+                  @on-change="validateDuplicate({keyName:k,idx:idx});validSingleInputValueAndStoreResult({fieldName:k,idx:idx});setAutoGenButtonStatusByCheckValidatedResult({keyName:k});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged({keyName:k});xssCheck({keyName:k,idx:idx})"
 
                   :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                   v-model="formItemInfo.inputValue[k][idx]" :placeholder="formItemInfo.inputArrayAttribute[k][idx]['placeHolder'][0]"
@@ -142,7 +142,7 @@ formItemInfo:
                 v-model="formItemInfo.inputValue[k]"
                 :placeholder="formItemInfo.inputAttribute[k]['placeHolder'][0]"
                 :style="undefined!==formItemInfo.inputAttribute[k]['width'] ? 'width:'+formItemInfo.inputAttribute[k]['width'] +'px':''"
-                @on-change="checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged()"
+                @on-change="checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged({keyName:k})"
               >
                 <Option v-for="(enumValue,enumKey) in formItemInfo.inputAttribute[k]['enumValue']" :value="enumKey" :key="enumKey">{{enumValue}}</Option>
               </Select>
@@ -162,11 +162,11 @@ formItemInfo:
                     <template v-if="'wangEditor'===formItemInfo['richTextEditorConfiguration']['name']">
                       <!--换行效果+初始文字靠左-->
                       <div :ref="k" style="display: table;width:100%;text-align:left;" :class="[''!==formItemInfo.inputTempData[k]['validResult'] && null!==formItemInfo.inputTempData[k]['validResult'] ? 'wangEditor-error-border':'']"></div>
-                      <!--复用formItem的validator-->
+                      <!--实际操作的是wangEditor，只是把内容赋值给了textarea。所以要使用wangEditor的onchang/blur/focus-->
                       <Input
-                        @on-focus="focusInputPlaceHolderDisappear({keyName:k});onFocus()"
-                        @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();onBlur();xssCheck({keyName:k});"
-                        @on-change="validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();xssCheck({keyName:k})"
+                        @on-focus=""
+                        @on-blur=""
+                        @on-change=""
                         :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                         v-model="formItemInfo.inputValue[k]" :placeholder="!editable ? '':formItemInfo.inputAttribute[k]['placeHolder'][0]"
                         :class="[editable ? '':'inputUnEditAble inputDisabled', 'title'===formItemInfo.inputAttribute[k]['inputSize'] ? 'inputTitle':'']"
@@ -182,8 +182,8 @@ formItemInfo:
                   <template v-else>
                     <Input
                       @on-focus="focusInputPlaceHolderDisappear({keyName:k});onFocus()"
-                      @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();onBlur();xssCheck({keyName:k})"
-                      @on-change="validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged();xssCheck({keyName:k})"
+                      @on-blur="blurInputPlaceHolderRestore({keyName:k});validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged({keyName:k});onBlur();xssCheck({keyName:k})"
+                      @on-change="validSingleInputValueAndStoreResult({fieldName:k});validateUnique({fieldName:k,formItemInfo:formItemInfo});checkIfAllItemValidatedResultPass();ifAnyFieldValueChanged({keyName:k});xssCheck({keyName:k})"
                       :type="formItemInfo.inputAttribute[k]['inputType']" :autosize="formItemInfo.inputAttribute[k]['autoSize']"
                       v-model="formItemInfo.inputValue[k]" :placeholder="!editable ? '':formItemInfo.inputAttribute[k]['placeHolder'][0]"
                       :class="[editable ? '':'inputUnEditAble inputDisabled', 'title'===formItemInfo.inputAttribute[k]['inputSize'] ? 'inputTitle':'']"
@@ -260,16 +260,30 @@ formItemInfo:
             // inf('after assign editor.customConfig',editor.customConfig)
             // editor.customConfig.zIndex =
             editor.customConfig.onchange = (html) => {
-              // console.log('html',html)
-              this.validateContent(singleKey,html)
+              // console.log('onchange html',html)
+              this.setContentToInputValue(singleKey,html)
+              this.validSingleInputValueAndStoreResult({fieldName:singleKey});
+              this.validateUnique({fieldName:singleKey,formItemInfo:this.formItemInfo});
+              this.checkIfAllItemValidatedResultPass();
+              this.ifAnyFieldValueChanged({keyName:singleKey});
+              this.xssCheck({keyName:singleKey})
             }
             editor.customConfig.onfocus = (html) => {
-              // console.log('html',html)
+              // console.log('onfocus html',html)
               this.focusInputPlaceHolderDisappear({keyName:singleKey})
+              this.onFocus()
             }
             editor.customConfig.onblur = (html) => {
-              // console.log('html',html)
-              this.validateContent(singleKey,html)
+              this.setContentToInputValue(singleKey,html)
+              this.blurInputPlaceHolderRestore({keyName:singleKey});
+              this.validSingleInputValueAndStoreResult({fieldName:singleKey});
+              this.validateUnique({fieldName:singleKey,formItemInfo:this.formItemInfo});
+              this.checkIfAllItemValidatedResultPass();
+              this.ifAnyFieldValueChanged({keyName:singleKey});
+              this.onBlur();
+              this.xssCheck({keyName:singleKey});
+              // this.blurInputPlaceHolderRestore({keyName:singleKey})
+
             }
             editor.create()
             // inf('this.formItemInfo.inputValue[singleKey]',this.formItemInfo.inputValue[singleKey])
@@ -296,15 +310,17 @@ formItemInfo:
       /**   wangEditor  **/
       //keyName:字段名称
       //content:字段内容
-      validateContent(keyName,content){
+        //将wangEditor的内容赋值给inputValue
+      setContentToInputValue(keyName,content){
+
         this.formItemInfo.inputValue[keyName] = content
-        this.$parent.validateField(keyName, (validResult) => {
+/*        this.$parent.validateField(keyName, (validResult) => {
           // inf('fieldName',fieldName)
           // inf('validSingleInputValueAndStoreResult',validResult)
           this.formItemInfo.inputTempData[keyName][InputTempDataFieldName.VALID_RESULT] = validResult
           this.checkIfAllItemValidatedResultPass()
           // inf('this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT]',this.formItemInfo.inputTempData[fieldName][InputTempDataFieldName.VALID_RESULT])
-        })
+        })*/
       },
 
       //根据是否处于edit，相应的设置input的trigger。如果disable editable，那么去除blur；否则加上blur
@@ -324,7 +340,7 @@ formItemInfo:
       /****    common      ***/
       /************************/
       //获得字段的required的定义，返回true/false(undefined 也被视为false)
-      getFieldRequiredefinition({fieldName}){
+      getFieldRequireDefinition({fieldName}){
 
         for(let fieldSingleRuleDefinition of this.formItemInfo.rule[fieldName]){
           if(undefined!==fieldSingleRuleDefinition['required']){
@@ -339,15 +355,15 @@ formItemInfo:
       /****   预处理数据    ***/
       /************************/
       //将传入数据保存为原始数据（载入已经更新数据之后），以便判断是否可以更新
-      saveAsOriginData({valueFromDb,neededFields}){
-        this.inputOriginalValue=misc.extractPartObject({sourceObj:valueFromDb,neededKeyNames:neededFields})
-      },
+/*      saveAsOriginData({valueFromDb,neededFields}){
+        this.formItemInfo.inputOriginValue=misc.extractPartObject({sourceObj:valueFromDb,neededKeyNames:neededFields})
+      },*/
       loadServerData({valueFromDb,neededFields}){
         // inf('load in')
         // let copyOfValueFromDb=misc.objectDeepCopy(valueFromDb)
         let copyOfValueFromDb=misc.extractPartObject({sourceObj:valueFromDb,neededKeyNames:neededFields})
         // inf('copyOfValueFromDb',copyOfValueFromDb)
-        // this.inputOriginalValue=copyOfValueFromDb
+        // this.formItemInfo.inputOriginValue=copyOfValueFromDb
         for(let singleKey in copyOfValueFromDb){
           //autoGen，需要根据数量，自动更新对应的数组
           // inf('singleKey',singleKey)
@@ -359,15 +375,15 @@ formItemInfo:
               let length=copyOfValueFromDb[singleKey].length
               this.formItemInfo.inputArrayAttribute[singleKey]=new Array(length)
               this.formItemInfo.inputArrayTempData[singleKey]=new Array(length)
-              this.formItemInfo.inputValue[singleKey]=copyOfValueFromDb[singleKey]
-              // this.inputOriginalValue[singleKey]=copyOfValueFromDb[singleKey]
+
+              // this.formItemInfo.inputOriginValue[singleKey]=copyOfValueFromDb[singleKey]
 
               // let length=copyOfValueFromDb[singleKey].length
               let tmpLength=0
               while (tmpLength<length){
                 // inf('copyOfValueFromDb[singleKey][tmpLength]',copyOfValueFromDb[singleKey][tmpLength])
                 // this.formItemInfo.inputValue[singleKey].push(copyOfValueFromDb[singleKey][tmpLength])
-                // this.inputOriginalValue[singleKey].push(copyOfValueFromDb[singleKey][tmpLength])
+                // this.formItemInfo.inputOriginValue[singleKey].push(copyOfValueFromDb[singleKey][tmpLength])
 /*                this.formItemInfo.inputArrayAttribute[singleKey].push(misc.objectDeepCopy(this.formItemInfo.inputAttribute[singleKey]))
                 this.formItemInfo.inputArrayTempData[singleKey].push(misc.objectDeepCopy(this.formItemInfo.inputTempData[singleKey]))*/
                 this.formItemInfo.inputArrayAttribute[singleKey][tmpLength]=misc.objectDeepCopy(this.formItemInfo.inputAttribute[singleKey])
@@ -375,12 +391,15 @@ formItemInfo:
                 tmpLength++
               }
             }
-          }else{
-            this.formItemInfo.inputValue[singleKey]=copyOfValueFromDb[singleKey]
-            // this.inputOriginalValue[singleKey]=copyOfValueFromDb[singleKey]
-            // this.formItemInfo.inputValue=misc.objectDeepCopy(valueFromDb)
-            // this.inputOriginalValue=misc.objectDeepCopy(valueFromDb)
           }
+          //无论是否autoGen，首要赋值，且设置originValue
+          this.formItemInfo.inputValue[singleKey]=copyOfValueFromDb[singleKey]
+          //重新复制，防止是Object，导致无法inputValue/originValue指向同一个地方
+          this.formItemInfo.inputOriginValue[singleKey]=misc.objectDeepCopy(copyOfValueFromDb[singleKey])
+            // this.formItemInfo.inputOriginValue[singleKey]=copyOfValueFromDb[singleKey]
+            // this.formItemInfo.inputValue=misc.objectDeepCopy(valueFromDb)
+            // this.formItemInfo.inputOriginValue=misc.objectDeepCopy(valueFromDb)
+
         }
 
         //如果是textarea且有editor实例，那么需要用load的值来初始化editor
@@ -400,34 +419,35 @@ formItemInfo:
         })
 
       },
-      //发送请求到server前，对数据进行处理
-      sanityInputValueBeforeSendToServer(){
-        let finalData={}
+      //获得改变过的值
+      getChangedValue(){
+        // let finalData={}
+        this.formItemInfo.changedValue={}
         for(let singleKey in this.formItemInfo.rule){
           //a. inputValue和inputOriginalValue都有值
-          if(undefined!==this.formItemInfo.inputValue[singleKey] && undefined!==this.inputOriginalValue[singleKey]){
+          if(undefined!==this.formItemInfo.inputValue[singleKey] && undefined!==this.formItemInfo.inputOriginValue[singleKey]){
             //值发生变化，添加到finalData（上传至server）
-            if(JSON.stringify(this.formItemInfo.inputValue[singleKey])!==JSON.stringify(this.inputOriginalValue[singleKey])){
-              finalData[singleKey]=this.formItemInfo.inputValue[singleKey]
+            if(JSON.stringify(this.formItemInfo.inputValue[singleKey])!==JSON.stringify(this.formItemInfo.inputOriginValue[singleKey])){
+              this.formItemInfo.changedValue[singleKey]=this.formItemInfo.inputValue[singleKey]
             }
           }
           //b. inputValue有值，而inputOriginalValue为undefined
-          if(undefined!==this.formItemInfo.inputValue[singleKey] && undefined===this.inputOriginalValue[singleKey]){
-            finalData[singleKey]=this.formItemInfo.inputValue[singleKey]
+          if(undefined!==this.formItemInfo.inputValue[singleKey] && undefined===this.formItemInfo.inputOriginValue[singleKey]){
+            this.formItemInfo.changedValue[singleKey]=this.formItemInfo.inputValue[singleKey]
           }
           //c. inputValue为undefined，而inputOriginalValue有值
-          if(undefined===this.formItemInfo.inputValue[singleKey] && undefined!==this.inputOriginalValue[singleKey]){
-            finalData[singleKey]=null
+          if(undefined===this.formItemInfo.inputValue[singleKey] && undefined!==this.formItemInfo.inputOriginValue[singleKey]){
+            this.formItemInfo.changedValue[singleKey]=null
           }
         }
-        return finalData
+        // return finalData
       },
       ifSingleFieldValueChanged({keyName}){
         // inf('keyname',keyName)
         // inf('this.formItemInfo.inputValue[keyName]',this.formItemInfo.inputValue[keyName])
-        // inf('this.inputOriginalValue[keyName]',this.inputOriginalValue[keyName])
+        // inf('this.formItemInfo.inputOriginValue[keyName]',this.formItemInfo.inputOriginValue[keyName])
         if(undefined!==this.formItemInfo.inputValue[keyName]){
-          return this.formItemInfo.inputValue[keyName]!==this.inputOriginalValue[keyName]
+          return this.formItemInfo.inputValue[keyName]!==this.formItemInfo.inputOriginValue[keyName]
         }
       },
       ifAllFieldValueChanged(){
@@ -440,20 +460,24 @@ formItemInfo:
         }
         return true
       },
-      ifAnyFieldValueChanged(){
-        let result=JSON.stringify(this.formItemInfo.inputValue)!==JSON.stringify(this.inputOriginalValue)
-        this.$emit('ifAnyFieldValueChanged',result)
-
-        /*//假设全部未变
-        let result=false
-        for(let singleKey in this.formItemInfo.rule){
-          // inf('singleKey',singleKey)
-          // inf('his.ifSingleFieldValueChanged({singleKey})',this.ifSingleFieldValueChanged({singleKey}))
-          if(true===this.ifSingleFieldValueChanged({keyName:singleKey})){
-            return true
-          }
+      ifAnyFieldValueChanged({keyName}) {
+        // inf('ifAnyFieldValueChanged keyName',keyName)
+        if(this.formItemInfo.inputValue[keyName]!==this.formItemInfo.inputOriginValue[keyName]){
+          // inf('ifAnyFieldValueChanged keyName new cahnged value',this.formItemInfo.inputValue[keyName])
+          this.formItemInfo.changedValue[keyName]=this.formItemInfo.inputValue[keyName]
+        }else{
+          // inf('ifAnyFieldValueChanged keyName deleted',keyName)
+          delete this.formItemInfo.changedValue[keyName]
         }
-        return false*/
+/*        let result=JSON.stringify(this.formItemInfo.inputValue)!==JSON.stringify(this.formItemInfo.inputOriginValue)
+        this.$emit('ifAnyFieldValueChanged',result)*/
+// inf('this.formItemInfo.changedValue',this.formItemInfo.changedValue)
+//         inf('Object.keys(this.formItemInfo.changedValue)',Object.keys(this.formItemInfo.changedValue))
+        if(Object.keys(this.formItemInfo.changedValue).length>0){
+          this.$emit('ifAnyFieldValueChanged',true)
+        }else{
+          this.$emit('ifAnyFieldValueChanged',false)
+        }
       },
       /************************/
       /****  判断返回结果  ***/
@@ -496,7 +520,7 @@ formItemInfo:
       /***********************/
       //模拟safiri，点击input时，placeHolder内容消失
       focusInputPlaceHolderDisappear({keyName,idx}) {
-        inf('focusInputPlaceHolderDisappear in')
+        // inf('focusInputPlaceHolderDisappear in')
         let fieldAttribute=this.formItemInfo.inputAttribute[keyName]
         //如果是autoGen，直接在inputArrayTempData操作
         if(true===fieldAttribute[InputAttributeFieldName.AUTO_GEN]){
@@ -520,7 +544,7 @@ formItemInfo:
 
       //如果离开input时，inputValue为空，需要恢复placeholder内容
       blurInputPlaceHolderRestore({keyName,idx}) {
-// inf('blurInputPlaceHolderRestore keyName',keyName)
+inf('blurInputPlaceHolderRestore keyName',keyName)
 //         inf('blurInputPlaceHolderRestore idx',idx)
         let fieldAttribute=this.formItemInfo.inputAttribute[keyName]
         //如果是autoGen，直接在inputArrayTempData操作
@@ -658,7 +682,7 @@ formItemInfo:
           }else{
             //否则，根据rule中require的定义，对字段设置整体结果
             //如果没有任何数据，则要结合rule中定义，是否require，autogen的全局validResult(直接放置在inputTempData)
-            let requiredDefine = this.getFieldRequiredefinition({fieldName: fieldName})
+            let requiredDefine = this.getFieldRequireDefinition({fieldName: fieldName})
             // inf('requiredDefine', requiredDefine)
             //autoGen为必须字段，但是没有任何值（没有任何元素），需要（手工）设置全局错误
             if(true===requiredDefine['required']){
@@ -746,7 +770,24 @@ formItemInfo:
             // inf('singleFieldName',singleFieldName)
             let singleFieldRequired=this.formItemInfo.rule[singleFieldName][0]['required']
             // inf('singleFieldRequired',singleFieldRequired)
-            //必须字段未经验证，或者字段验证失败
+            //如果未经验证
+            if(null === singleFieldValidResult){
+              //且为必须，那么验证结果错误
+              if(true===singleFieldRequired){
+                flag=false
+                break
+              }
+              //不是必须，这不做处理
+            }else{
+              //验证过
+              //且验证错误（不顾是否require）
+              if('' !== singleFieldValidResult){
+                flag=false
+                break
+              }
+            }
+
+            /*//必须字段未经验证，或者字段验证失败
             if ( true===singleFieldRequired && (null === singleFieldValidResult || '' !== singleFieldValidResult)) {
 
               // inf('checkIfAllItemValidatedResultPass non autogen result false')
@@ -754,7 +795,7 @@ formItemInfo:
               // return
               flag=false
               break
-            }
+            }*/
           }
         }
         // inf('checkIfAllItemValidatedResultPass flag',flag)
@@ -884,7 +925,7 @@ formItemInfo:
             //设置tempData，需要设置validResult，以便运行checkIfAllItemPass(),且在界面上是否显示错误，提示用户输入（然而直接设置validResult和调用validField方法（报错）都无法触发界面错误）
             let newItemTempData=misc.objectDeepCopy(that.formItemInfo.inputTempData[keyName])
             // inf('before newItemTempData',newItemTempData)
-            let requiredDefine = that.getFieldRequiredefinition({fieldName: keyName})
+            let requiredDefine = that.getFieldRequireDefinition({fieldName: keyName})
             if(true===requiredDefine['required']){
               newItemTempData[InputTempDataFieldName.VALID_RESULT]=requiredDefine['message']
             }
@@ -960,7 +1001,7 @@ formItemInfo:
         // ref:this.formItemInfo.captchaInfo.captchaImgId,
 
         //存储原始数据
-        inputOriginalValue:{},
+        // inputOriginalValue:{},
         //如果是textarea，可能需要存储对应的editor实例
         inputValueEditor:{},
       }

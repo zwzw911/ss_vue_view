@@ -228,7 +228,7 @@
               // }
               return
             }
-
+            that.staticResult.like++
 
           },function (err) {
             // handleResult.commonHandlerForErrorResult({that:that,response:err})
@@ -250,7 +250,7 @@
               handleResult.commonHandlerForErrorResult({that:that,response:response,showType:'modal'})
               return
             }
-
+            that.staticResult.dislike++
           },function (err) {
             // handleResult.commonHandlerForErrorResult({that:that,response:err})
             that.readArticleError=err.msg

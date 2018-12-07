@@ -5,6 +5,9 @@
 "use strict"
 
 
+const defaultSetting={
+   miscellaneous:{"captchaExpire":{"value":60,"type":"int","chineseName":"captcha最大保存时间","unit":"秒"}},
+}
 const searchSetting={
    normal:{"maxKeyNum":5,"maxQueryValuePerField":5},
 }
@@ -24,10 +27,10 @@ const uploadFileDefine={
 const maxNumber={
    article:{"tagNumberPerArticle":5,"imagesNumberPerArticle":5,"imageSizeInMb":2,"attachmentNumberPerArticle":5,"attachmentSizeInMb":12,"commentNumberPerArticle":500},
    folder:{"folderLevel":4},
-   friend:{"maxFriendsNumberPerGroup":500,"maxMemberNumberPerPublicGroup":200,"maxAdministratorPerPublicGroup":10,"maxGroupUserCanJoinIn":20},
+   friend:{"maxFriendsNumberPerGroup":500,"maxMemberNumberPerPublicGroup":200,"maxAdministratorPerPublicGroup":10,"maxGroupUserCanJoinIn":20,"searchMaxFriend":5},
    impeach:{"maxImageNumber":10,"maxImageSizeInMb":2,"maxAttachmentNumber":10,"maxCommentNumber":200},
    impeachAttachment:{"maxImageNumber":10,"maxImageSizeInMb":2,"maxAttachmentNumber":10},
-   user_operation:{"maxTopic":100,"maxArticlePerTopic":10,"maxRecommendToUser":10,"maxRecommendToGroup":10,"maxRecommendToPublicGroup":10,"maxArticlePerCollection":100,"maxTopicPerCollection":100},
+   user_operation:{"maxTopic":100,"maxArticlePerTopic":10,"maxRecommendToUser":10,"maxRecommendPerPage":10,"maxUnReadReceiveRecommends":2,"maxArticlePerCollection":100,"maxTopicPerCollection":100},
    user:{"maxUsedAccountNum":10},
 }
 const userGroupFriend={
@@ -37,6 +40,7 @@ const userGroupFriend={
 
 
 export {
+    defaultSetting,
     searchSetting,
     suggestLimit,
     uploadFileDefine,

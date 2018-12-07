@@ -102,7 +102,7 @@
           this.$refs[this.ref.form.formForUserInfo].resetFields()
           this.$refs[this.ref.formItem.formItemForUserInfo].clearAllItemError()
           this.$refs[this.ref.formItem.formItemForUserInfo].loadServerData({valueFromDb:result.msg,neededFields:neededFields})
-          this.$refs[this.ref.formItem.formItemForUserInfo].saveAsOriginData({valueFromDb:result.msg,neededFields:neededFields})
+          // this.$refs[this.ref.formItem.formItemForUserInfo].saveAsOriginData({valueFromDb:result.msg,neededFields:neededFields})
 /*          for(let singleField in this.formItemInfoForNonIconInput.inputValue){
             if(undefined!==result.msg[singleField]){
               this.formItemInfoForNonIconInput.inputValue[singleField]=this.formItemInfoForNonIconInput.originInputValue[singleField]=result.msg[singleField]
@@ -122,7 +122,9 @@
         //2. 上传数据
         let data={values:{}}
         //2.1 获得发生变化的字段
-        data.values[ValidatePart.RECORD_INFO]=this.$refs[this.ref.formItem.formItemForUserInfo].sanityInputValueBeforeSendToServer()
+        that.$refs[this.ref.formItem.formItemForUserInfo].getChangedValue()
+        data.values[ValidatePart.RECORD_INFO]=that.userInfo.formItemInfo.changedValue
+        // data.values[ValidatePart.RECORD_INFO]=this.$refs[this.ref.formItem.formItemForUserInfo].getChangedValue()
 /*        for(let singleField in this.formItemInfoForNonIconInput.inputValue){
           if(this.formItemInfoForNonIconInput.inputValue[singleField]!==this.formItemInfoForNonIconInput.originInputValue[singleField]){
             value[singleField]=this.formItemInfoForNonIconInput.inputValue[singleField]
@@ -241,7 +243,7 @@
       }*/
 
     },
-    props:['userInfo'],
+    props:{'userInfo':{type:Object}},
     data(){
       // this.userInfo.formItemInfo['originInputValue']=misc.objectDeepCopy(this.userInfo.formItemInfo['inputValue'])
       return {

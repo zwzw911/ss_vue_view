@@ -36,6 +36,8 @@ function registerInfo(){
     formItemInfo:{
       //data
       inputValue:objectDeepCopy(registerInput['inputValue']),
+      inputOriginValue:objectDeepCopy(registerInput['inputValue']),//存储原始数据
+      changedValue:{},//获得更改后的数据
       inputTempData:objectDeepCopy(registerInput['inputTempData']),
       inputAttribute:registerInput['inputAttribute'],
       rule:registerInput['rule'],
@@ -74,6 +76,8 @@ function loginInfo(){
   // let loginInfo={
   let formItemInfo={
       inputValue:objectDeepCopy(loginMergeResult['inputValue']),
+      inputOriginValue:objectDeepCopy(loginMergeResult['inputValue']),//存储原始数据
+      changedValue:{},//获得更改后的数据
       inputAttribute:loginMergeResult['inputAttribute'],
       rule:loginMergeResult['rule'],
       inputTempData:objectDeepCopy(loginMergeResult['inputTempData']),
@@ -110,6 +114,8 @@ function changePasswordInfo(){
   let changePasswordInfo={
     formItemInfo:{
       inputValue:objectDeepCopy(changePasswordInput['inputValue']),
+      inputOriginValue:objectDeepCopy(changePasswordInput['inputValue']),//存储原始数据
+      changedValue:{},//获得更改后的数据
       inputAttribute:changePasswordInput['inputAttribute'],
       rule:changePasswordInput['rule'],
       inputTempData:objectDeepCopy(changePasswordInput['inputTempData']),
@@ -128,6 +134,8 @@ function userInfo(){
   let userInfo={
     formItemInfo:{
       inputValue:objectDeepCopy(userInput['inputValue']),
+      inputOriginValue:objectDeepCopy(userInput['inputValue']),//存储原始数据
+      changedValue:{},//获得更改后的数据
       inputAttribute:userInput['inputAttribute'],
       rule:userInput['rule'],
       inputTempData:objectDeepCopy(userInput['inputTempData']),
@@ -246,6 +254,8 @@ function articleInfo(){
     formItemInfo:{
       //data
       inputValue:objectDeepCopy(articleInput['inputValue']),
+      inputOriginValue:objectDeepCopy(articleInput['inputValue']),//存储原始数据
+      changedValue:{},//获得更改后的数据
       inputTempData:objectDeepCopy(articleInput['inputTempData']),
       inputAttribute:articleInput['inputAttribute'],
       rule:articleInput['rule'],
@@ -286,6 +296,8 @@ function articleTreeFolderInfo(){
     },
     formItemInfo:{
       inputValue:objectDeepCopy(folderInput['inputValue']),
+      inputOriginValue:objectDeepCopy(folderInput['inputValue']),//存储原始数据
+      changedValue:{},//获得更改后的数据
       inputTempData:objectDeepCopy(folderInput['inputTempData']),
       inputAttribute:folderInput['inputAttribute'],
       rule:folderInput['rule'],

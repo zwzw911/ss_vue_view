@@ -96,14 +96,24 @@ const urlConfiguration={
   /**   user friend group **/
   userFriendGroup:{
     getAllFriendGroups:{url:'/user_friend_group',method:RequestMethod.GET},
+    getAllFriendGroupsAndItsMember:{url:'/user_friend_group/friends',method:RequestMethod.GET},
+    getAllFriendGroupsMember:{url:'/user_friend_group/friendGroup',method:RequestMethod.GET},
+
     searchFriend:{url:'/user_friend_group/friend',method:RequestMethod.GET},
     createFriendGroup:{url:'/user_friend_group',method:RequestMethod.POST},
     updateFriendGroup:{url:'/user_friend_group',method:RequestMethod.PUT},
     deleteFriendGroup:{url:'/user_friend_group',method:RequestMethod.DELETE},
     moveFriend:{url:'/user_friend_group/move_friend',method:RequestMethod.PUT}, //editSub  {field1:{from;recordId,to:recordId,eleArray:[]}}
   },
+  /**   recommend **/
+  recommend:{
+    createRecommend:{url:'/recommend',method:RequestMethod.POST},
+    getUnreadRecommend:{url:'/recommend/getUnreadRecommend',method:RequestMethod.GET},
+    getReadRecommend:{url:'/recommend/getReadRecommend',method:RequestMethod.GET},
+    getSendRecommend:{url:'/recommend/getSendRecommend',method:RequestMethod.GET},
 
-
+    readUnreadRecommend:{url:'/recommend/readUnreadRecommend',method:RequestMethod.PUT},
+  },
   /******************************************/
   /*************    admin    ***************/
   /******************************************/

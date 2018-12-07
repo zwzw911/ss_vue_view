@@ -336,7 +336,7 @@ function initFormItemInfo({formItemInfo}){
   }
   if(undefined!==formItemInfo['inputTempData']){
     for(let fieldName in formItemInfo['inputTempData']){
-      formItemInfo['inputTempData'][fieldName]='NotValidate'
+      formItemInfo['inputTempData'][fieldName]['validResult']=null
     }
   }
 }

@@ -20,10 +20,8 @@ const numRange={
         articlesId:{"max":100},
         topicsId:{"max":100},
     },
-    recommend:{
-        toUserId:{"max":5},
-        toGroupId:{"max":5},
-        toPublicGroupId:{"max":5},
+    send_recommend:{
+        receivers:{"max":10},
     },
     topic:{
         articlesId:{"max":10},

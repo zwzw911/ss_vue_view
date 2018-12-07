@@ -6,15 +6,16 @@ import App from './App'
 import router from './router'
 
 /*********************/
-/***  自定义css  ****/
+/***  自定义css(development)  ****/
 /*********************/
 import '../static/css/action.css'
 import '../static/css/color.css'
+import '../static/css/border.css'
 import '../static/css/common.css'
 import '../static/css/customer.css'
 import '../static/css/flex.css'
 import '../static/css/font.css'
-import '../static/css/fromBootStrap.css'
+import '../static/css/bootStrap.css'
 import '../static/css/marginPadding.css'
 import '../static/css/position.css'
 import '../static/css/radius.css'

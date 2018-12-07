@@ -29,7 +29,7 @@ onblur/onchange会emit event，带1个结果，是否可以自行login操作（i
 
 
         <!--不影响是否可以执行-->
-        <div class="flex-flow-row-nowrap justify-content-flex-start marginV1">
+        <div class="flex-flow-row-nowrap justify-content-flex-start marginV1" :style="{'margin-left':formItemInfo.labelWidth+'px'}">
           <Checkbox v-model="rememberMe" @on-change="">
 
           </Checkbox>
@@ -65,7 +65,7 @@ onblur/onchange会emit event，带1个结果，是否可以自行login操作（i
   import {sendRequestGetResult_async} from '../../../function/network'
   // import {showErrorInModal} from '../../function/showResult'
   import {objectDeepCopy,ifUserLogin,routeTo} from '../../../function/misc'
-import * as componentInfo from '../../../constant/globalConfiguration/componentInfo'
+
   /******************************/
   /**     common constant     **/
   /******************************/
@@ -85,7 +85,8 @@ import * as componentInfo from '../../../constant/globalConfiguration/componentI
 
       return {
         /*      formItemInfo      */
-        formItemInfo:componentInfo.loginInfo(),
+        // formItemInfo:componentInfo.loginInfo(),
+        formItemInfo:this.loginConfig.formItemInfo,
         validateFormItemResult:null, //存储forItem整体验证结果
         ref:{
           formItem:{

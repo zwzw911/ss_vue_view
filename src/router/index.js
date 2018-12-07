@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 /**   import page   **/
-import mainPage from '@/layout/mainPage'
-import login from '@/layout/login'
-import register from '@/layout/register'
-import updateArticle from '@/layout/updateArticle'
-import userCenter from '@/layout/userCenter'
-import redirectToLogin from '@/layout/redirectToLogin'
-import registerAgreement from '@/layout/registerAgreement'
-import readArticle from '@/layout/readArticle'
+import mainPage from '../layout/mainPage'
+import login from '../layout/login'
+import register from '../layout/register'
+import updateArticle from '../layout/updateArticle'
+import userCenter from '../layout/userCenter'
+import redirectToLogin from '../layout/redirectToLogin'
+import registerAgreement from '../layout/registerAgreement'
+import readArticle from '../layout/readArticle'
 /**   routePath   **/
 import {routePath} from "../constant/url/routePath";
 

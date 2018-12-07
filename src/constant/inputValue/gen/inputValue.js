@@ -31,7 +31,7 @@ const inputValueForCreate={
     user:{"name":null,"account":null,"password":null,"addFriendRule":null},
     user_resource_profile:{"userId":null,"resource_profile_id":null,"duration":null},
     collection:{"name":null,"articlesId":null,"topicsId":null},
-    recommend:{"articleId":null,"toUserId":null,"toGroupId":null,"toPublicGroupId":null},
+    send_recommend:{"articleId":null,"receivers":null},
     topic:{"name":null,"desc":null,"articlesId":null},
 }
 
@@ -61,7 +61,7 @@ const inputValueForUpdate={
     user:{"name":"notUsed","account":"notUsed","password":"notUsed","addFriendRule":"notUsed"},
     user_resource_profile:{},
     collection:{"name":"notUsed","articlesId":"notUsed","topicsId":"notUsed"},
-    recommend:{},
+    send_recommend:{},
     topic:{"name":"notUsed","desc":"notUsed","articlesId":"notUsed"},
 }
 

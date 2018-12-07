@@ -56,6 +56,10 @@
 
 <script>
   /******************************/
+  /**         3rd              **/
+  /******************************/
+  import {inf} from 'awesomeprint'
+  /******************************/
   /**         component       **/
   /******************************/
   import selfSpin from '../../components/basicComponent/spin'
@@ -73,28 +77,57 @@
   export default {
     components:{selfSpin},
     async created(){
-      await this.getSideBarArticle_async()
+      // await this.getSideBarArticle_async()
     },
       methods:{
         /**   获得sidebar的文档信息（最新和最火的文档） **/
         async getSideBarArticle_async(){
+
           let that=this
+          let res=await network.sendRequestGetResult_async({urlOption:urlConfiguration.article.getLatestArticle})
+          if(res ){
+            //如果没有session，抛出reject，供父组件调用
+            if(60050===res.rc){
+              return that.getSideBarArticle_async()
+              // return Promise.reject(res)
+            }
+            if( res.rc>0){
+              that.errMsgForGetLatest=res.msg
+            }else{
+              that.latestArticleInfo=res.msg
+            }
+            that.spinInfoForLatest.show=false
+            // return Promise.resolve()
+          }
+          /*return new Promise(function(resolve, reject){
             network.sendRequestGetResult_async({urlOption:urlConfiguration.article.getLatestArticle}).then(
               function(res){
                 if(res ){
+                  //如果没有session，抛出reject，供父组件调用
+                  if(60050===res.rc){
+                    return that.getSideBarArticle_async()
+                    // return Promise.reject(res)
+                  }
                   if( res.rc>0){
                     that.errMsgForGetLatest=res.msg
                   }else{
                     that.latestArticleInfo=res.msg
                   }
                   that.spinInfoForLatest.show=false
+
                 }
+                inf('before resolve')
+                return resolve(1)
               },
               function(err){
                 that.errMsgForGetLatest=err
                 that.spinInfoForLatest.show=false
+                inf('before reject')
+                return reject(false)
               },
             )
+          })*/
+
         },
 
         readArticle({articleId}){

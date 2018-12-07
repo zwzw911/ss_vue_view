@@ -21,6 +21,11 @@ import {routePath} from '../constant/url/routePath'
 * */
 function commonHandlerForErrorResult({that,response,showType='message'}){
   if(undefined!==response){
+/*    //尚未设置session
+    if(60050===response.rc){
+      // that.$router.push('/redirectToLogin')
+      return
+    }*/
     //尚未登录，无法获得用户信息
     if(50100===response.rc){
       that.$router.push('/redirectToLogin')

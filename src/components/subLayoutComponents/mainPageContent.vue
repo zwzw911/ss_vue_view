@@ -42,6 +42,10 @@
 
 <script>
   /******************************/
+  /**         3rd              **/
+  /******************************/
+  import {inf} from 'awesomeprint'
+  /******************************/
   /****        配置         ****/
   /******************************/
   import {uploadFileDefine} from '../../constant/globalConfiguration/globalConfiguration'
@@ -69,13 +73,18 @@
     components:{selfSpin},
     // props:['contentInfo'], //{articleInfo:[{title,content:}]}
     async mounted(){
-      this.getMainPageArticle_async()
+      // this.getMainPageArticle_async()
     },
       methods:{
         async getMainPageArticle_async(){
           let result=await sendRequestGetResult_async({urlOption:urlConfiguration.article.getMainPageArticle})
-          // inf('result',result)
+          inf('getMainPageArticle_async result',result)
           if(result.rc>0){
+            //如果没有session，抛出reject，供父组件调用
+            if(60050===result.rc){
+              return this.getSideBarArticle_async()
+              // return Promise.reject(res)
+            }
             // commonHandlerForErrorResult({that:this,response:result})
             this.spinInfo.show=false
             this.loadDataErrMsg=result.msg

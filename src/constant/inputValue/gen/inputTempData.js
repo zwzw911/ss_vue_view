@@ -133,11 +133,9 @@ const inputTempData={
         articlesId:{"validResult":null},
         topicsId:{"validResult":null},
     },
-    recommend:{
+    send_recommend:{
         articleId:{"validResult":null},
-        toUserId:{"validResult":null},
-        toGroupId:{"validResult":null},
-        toPublicGroupId:{"validResult":null},
+        receivers:{"validResult":null},
     },
     topic:{
         name:{"validResult":null},

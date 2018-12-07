@@ -64,13 +64,13 @@
       </div>
       <div class="flex-flow-row-nowrap marginT7 flex-grow-1" >
         <div class="sideBar" style="" >
-          <selfSideBar></selfSideBar>
+          <selfSideBar ref="sidebar"></selfSideBar>
         </div>
 
 
         <!--flex-grow-1:article 占据所有剩余空间-->
         <div  class="flex-grow-1 marginL4">
-          <selfContent :content-info="contentInfo"></selfContent>
+          <selfContent :content-info="contentInfo" ref="content"></selfContent>
         </div>
       </div>
       <!--</div>-->
@@ -86,6 +86,10 @@
 
 <script>
   /******************************/
+  /**         3rd              **/
+  /******************************/
+  import {inf} from 'awesomeprint'
+  /******************************/
   /**         component       **/
   /******************************/
   import selfHeader from '../components/subLayoutComponents/header.vue'
@@ -97,6 +101,12 @@
   /**    common function       **/
   /******************************/
   import {ifUserLogin,routeTo} from '../function/misc'
+  import * as handleResult from '../function/handleResult'
+/*  /!******************************!/
+  /!****        网络         ****!/
+  /!******************************!/
+  import {sendRequestGetResult_async} from '../function/network'
+  import {urlConfiguration} from '../constant/url/url'*/
   /******************************/
   /**     common constant     **/
   /******************************/
@@ -105,9 +115,20 @@
   export default {
       components:{selfSearch,selfSideBar,selfContent,selfHeader,selfFooter},
       computed:{
-
-
       },
+    async mounted(){
+        let that=this
+       this.getData_async()
+          .then(
+          function (res) {
+          // 正确结果已经在子组件中处理，所以无需任何代码
+        },
+          function (err) {
+            handleResult.commonHandlerForErrorResult({that:that,response:err})
+            // inf('err',err)
+          }
+        )
+    },
     data () {
       return {
 
@@ -144,7 +165,13 @@
       }
     },
     methods:{
-
+        //单独函数调用子组件获取数据的方法，如此，当子组件reject，便可进行处理
+        async getData_async(){
+          /**   子组件的网络事件由父组件控制，以便判断是否已经有session   **/
+          await this.$refs['sidebar'].getSideBarArticle_async()
+          // inf('getSideBarArticle_async done')
+          await this.$refs['content'].getMainPageArticle_async()
+        }
     }
   }
 </script>

@@ -63,12 +63,6 @@ aside>div>span:not(:first-of-type){
 /**************************************************************/
 /**************** border ************************/
 /**************************************************************/
-.border1 {
-  border: thin dashed black;
-}
-.border-left-separator {
-  border-left: 1px solid silver;
-}
 .cursor-pointer {
   cursor: pointer;
 }
