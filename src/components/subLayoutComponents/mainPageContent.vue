@@ -130,60 +130,6 @@
           contentInfo:[],
           userThumb:uploadFileDefine.user_photo,
         }
-          /*return {
-            sidebarName: {
-                configuration:{
-//              key:'configuration',
-//                name: 'configuration',
-                  name:'配置信息',
-                icon:'gear-b',
-                children:
-                  {
-        //submenu中，将key的值绑定到name属性，当此menu被点击（on-select），name（也就是sidebarName的key）会被返回，所以最好英文
-                    billType:{name: '单据类别'},
-                    department:{name:'部门信息'},
-                    employee:{name:  '员工信息'}
-                  }
-            },
-            reimbursement:{
-//              name: 'reimbursement',
-              name:'报销信息',
-              icon:'clipboard',
-              children:
-                {
-                  bill:{name: '报销记录'},
-                  'static':{name:'统计信息'}
-                }
-
-
-            }
-          },
-             /!* sidebarName:[
-              {
-                label: '配置信息',
-                name: 'configuration',
-                icon:'gear-b',
-                children: [
-                    //menu中，name属性作为key，会被返回，所以最好英文
-                  {name:TABLE.billType.toString(),label: '单据类别'},
-                  {name:TABLE.department.toString(), label: '部门信息'},
-                  {name:TABLE.employee.toString(), label: '员工信息'}
-                ]
-
-              },
-              {
-                label:'报销信息',
-                name: 'reimbursement',
-                icon:'clipboard',
-                children:[
-                  {name:TABLE.bill.toString(),label:'报销记录'},
-                  {label:'统计信息'}
-                ]
-
-              }
-            ],*!/
-          }*/
-
       }
   }
 </script>

@@ -311,6 +311,26 @@ function articleTreeFolderInfo(){
   return articleTreeFolderInfo
 }
 
+
+function collectionNameInfo(){
+  let allowFields=['name']
+  let changePasswordInput=genNeedInput({source:source,collName:'collection',allowFields:allowFields,additionalFields:undefined})
+  let collectionNameInfo={
+    formItemInfo:{
+      inputValue:objectDeepCopy(changePasswordInput['inputValue']),
+      inputOriginValue:objectDeepCopy(changePasswordInput['inputValue']),//存储原始数据
+      changedValue:{},//获得更改后的数据
+      inputAttribute:changePasswordInput['inputAttribute'],
+      rule:changePasswordInput['rule'],
+      inputTempData:objectDeepCopy(changePasswordInput['inputTempData']),
+      showStarForRequire:false,
+      // icon:icon.user,
+      // iconColor:'#5cadff',
+      labelWidth:80, //0或者undefined，则不显示label；其他数值，显示label
+    },
+  }
+  return collectionNameInfo
+}
 // inf('articleTreeFolderInfo',articleTreeFolderInfo)
 export {
   registerInfo,
@@ -325,4 +345,6 @@ export {
   footerInfo,
 
   articleTreeFolderInfo,
+
+  collectionNameInfo,
 }

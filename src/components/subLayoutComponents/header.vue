@@ -135,11 +135,16 @@
               this.$cookies.remove('loginDone')
               /**   logout，直接转到主页   **/
               //如果不是主页，执行跳转
-              misc.routeTo({that:this,path:routePath.main})
-              //如果已经是主页，不会执行跳转
+              if(this.$route.path!=='/'){
+                misc.routeTo({that:this,path:routePath.main})
+              }else{
+                //如果已经是主页，执行刷新（因为logout后，session变化，需要重新获得加密id）
+                window.location.reload()
+              }
+
+
               this.userLogin=false
-// this.userLogin()
-              // this.userLogin()
+
               break;
           }
       },

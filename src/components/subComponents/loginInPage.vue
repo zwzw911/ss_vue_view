@@ -84,6 +84,7 @@
         loginConfig:{
           routeToLastOrMainPageAfterLoginSuccessful:true,
           formItemInfo:componentInfo.loginInfo(),
+          createdAlreadyLoginRouteToLastOrMainPage:true,//组件创建时，如果已经登录，是否要重定向
         },
 
         submitButtonDisable:true,

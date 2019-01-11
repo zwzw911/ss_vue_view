@@ -135,7 +135,6 @@ const inputTempData={
     },
     send_recommend:{
         articleId:{"validResult":null},
-        receivers:{"validResult":null},
     },
     topic:{
         name:{"validResult":null},

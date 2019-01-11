@@ -28,8 +28,6 @@
     box-shadow: 0 1px 1px rgba(0,0,0,.1);
   }
 
-
-
   .layout-content{
     min-height: 400px;
     /*margin: 15px;*/
@@ -37,21 +35,6 @@
     background: #fff;
     border-radius: 4px;
   }
-/*  .layout-content-main{
-    padding: 10px;
-  }*/
-/*  .layout-ceiling{
-    background: #464c5b;
-    padding: 10px 0;
-    overflow: hidden;
-  }
-  .layout-ceiling-main{
-    float: right;
-    margin-right: 15px;
-  }
-  .layout-ceiling-main a{
-    color: #9ba7b5;
-  }*/
 </style>
 <template>
   <div class="container flex-flow-column-nowrap align-content-space-between" style="height:100%">
@@ -74,12 +57,9 @@
         </div>
       </div>
       <!--</div>-->
-
       <div class="footer">
         <selfFooter :footer-info="footerInfo"></selfFooter>
       </div>
-
-
 
   </div>
 </template>

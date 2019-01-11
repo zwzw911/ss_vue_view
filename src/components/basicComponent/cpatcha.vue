@@ -35,9 +35,10 @@ example
     <div class="flex-flow-row-nowrap align-items-center">
 
       <div >
-        <img  alt="单击刷新" title="单击刷新"
+        <img  v-if="false===spinInfo.show" alt="单击刷新" title="单击刷新"
               :id="innerCaptchaImgId" :src="captchaImgDataURL" :style="{width:this.captchaInfo.captchaImgWidth+'px',height:this.captchaInfo.captchaImgHeight+'px'}"
               @load="captchaLoaded"  @click="getCaptchaImg_async"/>
+        <self-spin :spin-info="spinInfo"></self-spin>
       </div>
 
       <span @click="getCaptchaImg_async">
@@ -53,7 +54,10 @@ example
 
 </template>
 <script>
-    // import axios from 'axios'
+    /******************************/
+    /**        子组件           **/
+    /******************************/
+    import selfSpin from './spin'
     /******************************/
     /**         3rd              **/
     /******************************/
@@ -68,6 +72,7 @@ example
     import {urlConfiguration} from '../../constant/url/url'
 
     export default {
+      components:{selfSpin},
       props: ['captchaInfo'],
       mounted(){
           if(undefined===this.captchaInfo.getAfterMounted || true===this.captchaInfo.getAfterMounted){
@@ -95,13 +100,16 @@ example
         getCaptchaImg_async(){
           // inf('getCaptchaImg_async in')
           let that=this
+          this.spinInfo.show=true
           sendRequestGetResult_async({urlOption:urlConfiguration.standAlone.captcha}).then(function (response) {
             that.dealCorrectCaptchaResult(response)
+            that.spinInfo.show=false
           },function (err) {
-            console.log('getCaptchaImg_async err in')
-            console.log(err)
-            console.log(err.data)
+            // console.log('getCaptchaImg_async err in')
+            // console.log(err)
+            // console.log(err.data)
             // inf(',sg',msg)
+            that.spinInfo.show=false
             //转换错误信息
             if(err.status && err.status===504){
               err.data='无法连接服务器，请稍后重试'
@@ -109,27 +117,7 @@ example
             return handleResult.commonHandlerForErrorResult({that:that,response:err,showType:'modal'})
 
           })
-          // let result=await sendRequestGetResult_async({urlOption:urlConfiguration.standAlone.captcha})
-          // // inf('captcha call getCaptchaImg_async',result)
-          // this.captchaImgLoadedFlag=false
-          // if(result.rc===0){
-          //   this.captchaImgHideFlag=false
-          //   this.captchaImgDataURL=result.msg
-          //   this.captchaImgErrorMsg=''
-          // }else{
-          //   // error/controller/helperError
-          //   // 前一次POST未设session，需要重发来获得captcha
-          //   if(result.rc===60052){
-          //     this.getCaptchaImg_async()
-          //   }
-          //   else{
-          //     //只有出错才会见错误信息传递给父组件
-          //     this.captchaImgErrorMsg=result.msg
-          //     this.$emit('genCaptchaFail',result.msg)
-          //     // this.$emit('getCaptchaImg_asyncFail',result)
-          //   }
-          //
-          // }
+
         },
         async dealCorrectCaptchaResult(result){
           // inf('dealCorrectCaptchaResult in')
@@ -179,6 +167,11 @@ example
             captchaImgHideFlag:true,
             captchaImgDataURL:'',
             captchaImgErrorMsg:'',
+
+            spinInfo:{
+              msg:'获取中...',
+              show:true,
+            },
           }
       },
     }

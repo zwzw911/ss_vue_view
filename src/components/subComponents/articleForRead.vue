@@ -48,15 +48,19 @@
               踩
             </span>
             <span class="marginR7 h5 color-grey">{{staticResult.dislike}}</span>
-            <span class="cursor-pointer marginR6" @click="chooseFriendGroup()" >
+            <span class="cursor-pointer marginR6" @click="chooseFriend_async()" >
               <Icon type="md-share" class="color-primary"/>
               分享
             </span>
-            <self-choose-friend-group :chooseFriendGroupInfo="chooseFriendGroupInfo" ref="refChooseFriendGroup"></self-choose-friend-group>
-            <self-choose-friend :chooseFriendInfo="chooseFriendInfo" ref="refChooseFriend"></self-choose-friend>
+            <!--<self-choose-friend-group :chooseFriendGroupInfo="chooseFriendGroupInfo" ref="refChooseFriendGroup"></self-choose-friend-group>-->
+            <!--<self-choose-collection></self-choose-collection>-->
             <!--<self-choose-user :chooseUserInfo="chooseUserInfo" ref="refChooseUser"></self-choose-user>-->
-            <self-add-friend></self-add-friend>
-            <span class="cursor-pointer marginR6"><Icon type="md-filing" class="color-primary"/>收藏</span>
+            <!--<self-add-friend></self-add-friend>-->
+            <span class="cursor-pointer marginR6" @click="chooseCollection_async()">
+              <Icon type="md-filing" class="color-primary"/>
+              收藏
+            </span>
+            <!--<self-choose-friend :chooseFriendInfo="chooseFriendInfo" ref="refChooseFriend" @getFriendGroupError="getFriendGroupError"></self-choose-friend>-->
           </p>
           <p class="marginTX text-align-left marginBX content-min-height" v-html="articleInfo.htmlContent"></p>
 
@@ -92,10 +96,17 @@
 
     </div>
 
+    <self-modal-result :modal-info="modalResultPropInfo" @showLoginModal="showLoginModal" ref="modalResult"></self-modal-result>
+    <!-- login会自动发送captcha，通过v-if防止加载组件，可以阻断自动发送captcha-->
+    <!---->
+    <self-modal-login :modal-info="modalLoginPropInfo" ref="modalLogin" ></self-modal-login>
 
+    <self-modal-choose-friend :modal-info="modalChooseFriendPropInfo" @selectedFriendsInfo="sendSelectedFriendsInfo_async"></self-modal-choose-friend>
 
-
+    <self-modal-choose-collection :modal-info="modalChooseCollectionPropInfo"></self-modal-choose-collection>
   </div>
+
+
 
 </template>
 <script>
@@ -108,9 +119,14 @@
   import selfCommentList from '../basicComponent/commentList'
   import selfCreateComment from '../basicComponent/createComment'
   import selfSpin from '../../components/basicComponent/spin'
-  import selfChooseFriendGroup from '../../components/basicComponent/chooseFriendGroup'
-  import selfChooseFriend from '../../components/basicComponent/chooseFriend'
+  // import selfChooseFriendGroup from '../../components/basicComponent/chooseFriend'
+  // import selfChooseFriend from '../../components/basicComponent/chooseFriend'
   import selfAddFriend from '../../components/subComponents/autoComplete/addFriend'
+  import selfModalLogin from '../../components/basicComponent/modal/modalLogin'
+  import selfModalResult from '../../components/basicComponent/modal/modalResult'
+  import selfModalChooseFriend from '../../components/basicComponent/modal/modalChooseFriend'
+  import selfModalChooseCollection from '../../components/basicComponent/modal/modalChooseCollection'
+  // import selfChooseCollection from '../../components/basicComponent/tree/chooseCollection'
   /******************************/
   /**          网络            **/
   /******************************/
@@ -139,6 +155,8 @@
   import * as inputTempData from '../../constant/inputValue/gen/inputTempData'
   import * as rule from '../../constant/rule/rule'
   import {routePath} from '../../constant/url/routePath'
+
+  import {modalResultError,modalResultLogin,modalChooseFriend,modalChooseCollection} from '../../constant/propsTemplate/modal'
   // import * as nonValueEnum from '../../constant/enum/nonValueEnum'
   /******************************/
   /*******     3rd     *********/
@@ -155,12 +173,77 @@
   commentInputAttribute[nonValueEnum.InputAttributeFieldName.PLACE_HOLDER]=commentInputAttribute[nonValueEnum.InputAttributeFieldName.PLACE_HOLDER_BKUP]=['评论内容至少15个字符']
 
     export default {
-      components:{selfAttachmentList,selfCommentList,selfCreateComment,selfSpin,selfChooseFriendGroup,selfChooseFriend,selfAddFriend},
+      components:{selfAttachmentList,selfCommentList,selfCreateComment,
+        selfSpin,selfAddFriend,
+        selfModalLogin,selfModalResult,selfModalChooseFriend,
+        selfModalChooseCollection,
+      },
       // props: {'articleInfo':{type:Object}},
       async mounted(){
-        await this.getArticle_async()
+        // await this.getArticle_async()
       },
       methods: {
+        /********************/
+        /**   子组件事件    **/
+        /********************/
+        //chooseFriend
+        sendSelectedFriendsInfo_async(result){
+          inf('sendSelectedFriendsInfo_async result',result)
+          //结果为空，不执行推荐操作
+          if(undefined===result || 0===Object.keys(result).length){
+            return
+          }
+          //检测各个key：allFriends/friendGroups/friends
+          if(undefined!==result['allFriends']){
+            result['allFriends']=true
+            delete result['friendGroups']
+            delete result['friends']
+          }
+          if(undefined!==result['friendGroups']){
+            if(0===result['friendGroups'].length){
+              delete result['friendGroups']
+            }
+          }
+          if(undefined!==result['friends']){
+            if(0===result['friends'].length){
+              delete result['friends']
+            }
+          }
+          inf('sendSelectedFriendsInfo_async sanity result',result)
+          //sanity后结果为空，不执行 推荐 操作
+          if(undefined===result || 0===Object.keys(result).length){
+            return
+          }
+          let that=this
+          let data={
+            values:{
+              [nonValueEnum.ValidatePart.RECORD_INFO]: {['articleId']: this.$route.params.articleId},
+              [nonValueEnum.ValidatePart.CHOOSE_FRIEND]: result,
+            }
+          }
+          network.sendRequestGetResult_async({urlOption:urlConfiguration.recommend.createRecommend,data:data}).then(
+            function (res) {
+              if(res){
+                if(0===res.rc){
+                  handleResult.commonHandlerForSuccessResult({that:that,response:{rc:0,msg:'分享成功'}})
+                }else{
+                  handleResult.commonHandlerForErrorResult({that:that,response:res,type:'modal'})
+                }
+              }else{
+                handleResult.commonHandlerForErrorResult({that:that,response:{rc:98765,msg:'没有收到响应消息'}})
+              }
+            },
+            function(err){
+
+            }
+          )
+        },
+/*        getFriendGroupError(res){
+          this.modalResultPropInfo.configuration.content=res.msg
+          this.$refs['modalResult'].checkIfLogin({rc:res.rc,noLoginRc:[51732]})
+          this.modalResultPropInfo.configuration.show=true
+        },*/
+
         routeToLogin(){
           misc.routeTo({that:this,path:routePath.login})
         },
@@ -257,24 +340,53 @@
 
           })
         },
-        async chooseFriendGroup(){
-          // this.chooseFriendGroupInfo.show=true
-          // await this.$refs["refChooseFriendGroup"].getAllFriendGroupRecords()
-          //
-          // this.chooseFriendInfo.show=true
-          // await this.$refs["refChooseFriend"].getAvailableFriends()
+        async chooseFriend_async(){
+          //1. 检查用户是否登录
+          if(false===misc.ifUserLogin({that:this})){
+            this.modalResultPropInfo.configuration.content='尚未登录，无法获得好友信息。'
+            this.$refs['modalResult'].checkIfLogin({rc:98765,noLoginRc:[98765]})
+            this.modalResultPropInfo.configuration.show=true
+            // this.showLoginModal()
+            return
+          }
+          //2. 显示modalChooseFriend
+          this.modalChooseFriendPropInfo.configuration.show=true
+          // await this.$refs["refChooseFriend"].getFriendGroups_async()
 
-          this.chooseUserInfo.show=true
-          await this.$refs["refChooseUser"].searchUser()
+          // this.chooseUserInfo.show=true
+          // await this.$refs["refChooseUser"].searchUser()
+        },
+        async chooseCollection_async(){
+          //1. 检查用户是否登录
+          if(false===misc.ifUserLogin({that:this})){
+            this.modalResultPropInfo.configuration.content='尚未登录，无法获得收藏夹信息。'
+            this.$refs['modalResult'].checkIfLogin({rc:98765,noLoginRc:[98765]})
+            this.modalResultPropInfo.configuration.show=true
+            // this.showLoginModal()
+            return
+          }
+          //2. 显示modalChooseFriend
+          this.modalChooseCollectionPropInfo.configuration.show=true
+          // await this.$refs["refChooseFriend"].getFriendGroups_async()
+
+          // this.chooseUserInfo.show=true
+          // await this.$refs["refChooseUser"].searchUser()
+        },
+        showLoginModal(){
+          // inf('showLoginModal in')
+          this.modalLoginPropInfo.configuration.show=true
         },
       },
+
       computed: {},
       data() {
         // inf('this.route',this.$route.params)
           return {
-/*            ref:{
-              chooseFriendGroup:"chooseFriendGroup",
-            },*/
+            modalLoginPropInfo:misc.objectDeepCopy(modalResultLogin),
+            modalResultPropInfo:misc.objectDeepCopy(modalResultError),//用来显示modal结果的信息，不能设置为undefined，否则编译会报错
+            modalChooseFriendPropInfo:misc.objectDeepCopy(modalChooseFriend),
+            modalChooseCollectionPropInfo:misc.objectDeepCopy(modalChooseCollection),
+
             ifUserLogin:misc.ifUserLogin({that:this}),
             spinInfo:{
               msg:'读取文档...',
@@ -294,10 +406,7 @@
             chooseFriendInfo:{
               show:false
             },
-/*            chooseUserInfo:{
-              show:false,
-              queryFieldName:'name',//name/account
-            },*/
+
 
 
             articleInfo:undefined,

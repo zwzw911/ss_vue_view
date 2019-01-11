@@ -3,7 +3,8 @@
 </style>
 <template>
   <div>
-    <el-tree :data="treeData" :props="defaultProps" :load="loadNode"  lazy node-key="id" @node-click="handleNodeClick" :render-content="renderContent"
+    <el-tree :data="treeData" :props="defaultProps" :load="loadNode"  lazy node-key="id"
+             @node-click="handleNodeClick" :render-content="renderContent"
              empty-text=""
              :expand-on-click-node="false"
              draggable
@@ -375,7 +376,7 @@
       // },
       //将server端传入的数据转换成tree的格式
       convertTreeData(serverData){
-        // inf('convertTreeData node',node.data)
+        inf('serverData',serverData)
         let result=[]
         if(undefined!==serverData['folder'] && serverData['folder'].length>0){
           for(let singleEle of serverData['folder']){
@@ -395,7 +396,7 @@
             result.push(singleEle)
           }
         }
-        // inf('result',result)
+        inf('result',result)
         return result
       },
       async loadNode(node, resolve) {

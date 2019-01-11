@@ -19,18 +19,22 @@ import {routePath} from '../constant/url/routePath'
 /*  对一些通用的返回结果集中处理，例如：没有登录则直接转移到登录页面
 *   showType:显示在modal，还是信息中
 * */
-function commonHandlerForErrorResult({that,response,showType='message'}){
+function commonHandlerForErrorResult({that,response,showType='message',redirectToLoginCode=[51000]}){
   if(undefined!==response){
 /*    //尚未设置session
     if(60050===response.rc){
       // that.$router.push('/redirectToLogin')
       return
     }*/
-    //尚未登录，无法获得用户信息
+if(-1!==redirectToLoginCode.indexOf(response.rc)){
+  that.$router.push('/redirectToLogin')
+  return
+}
+/*    //尚未登录，无法获得用户信息
     if(50100===response.rc){
       that.$router.push('/redirectToLogin')
       return
-    }
+    }*/
 
     if('message'===showType){
       showErrorInCenterMessage({that:that,msg:response.msg})
@@ -90,6 +94,32 @@ function showSuccessInCenterMessage({that,msg,title='成功'}){
   });
 }
 
+/**   使用了自定义的modal，处理错误结果   **/
+/*function commonModalErrorResult({that,response,showType='message',redirectToLoginCode=[51000]}){
+  if(undefined!==response){
+    /!*    //尚未设置session
+        if(60050===response.rc){
+          // that.$router.push('/redirectToLogin')
+          return
+        }*!/
+    if(-1!==redirectToLoginCode.indexOf(response.rc)){
+      that.$router.push('/redirectToLogin')
+      return
+    }
+    /!*    //尚未登录，无法获得用户信息
+        if(50100===response.rc){
+          that.$router.push('/redirectToLogin')
+          return
+        }*!/
+
+    if('message'===showType){
+      showErrorInCenterMessage({that:that,msg:response.msg})
+    }
+    if('modal'===showType){
+      showErrorInModal({that:that,msg:response.msg})
+    }
+  }
+}*/
 export {
   commonHandlerForErrorResult,
   commonHandlerForSuccessResult,

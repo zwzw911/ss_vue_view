@@ -30,7 +30,7 @@ const maxNumber={
    friend:{"maxFriendsNumberPerGroup":500,"maxMemberNumberPerPublicGroup":200,"maxAdministratorPerPublicGroup":10,"maxGroupUserCanJoinIn":20,"searchMaxFriend":5},
    impeach:{"maxImageNumber":10,"maxImageSizeInMb":2,"maxAttachmentNumber":10,"maxCommentNumber":200},
    impeachAttachment:{"maxImageNumber":10,"maxImageSizeInMb":2,"maxAttachmentNumber":10},
-   user_operation:{"maxTopic":100,"maxArticlePerTopic":10,"maxRecommendToUser":10,"maxRecommendPerPage":10,"maxUnReadReceiveRecommends":2,"maxArticlePerCollection":100,"maxTopicPerCollection":100},
+   user_operation:{"maxTopic":100,"maxArticlePerTopic":10,"maxRecommendToUser":10,"maxRecommendPerPage":10,"maxReadCollectionPerPage":10,"maxUnReadReceiveRecommends":2,"maxArticlePerCollection":100,"maxTopicPerCollection":100},
    user:{"maxUsedAccountNum":10},
 }
 const userGroupFriend={

@@ -5,9 +5,14 @@
     </div>-->
     <Row class="" style="flex:1">
       <Tabs :animated="false" class="flex-flow-column-nowrap" @on-click="clickTab" :value="currentTabName">
+        <TabPane label="我的收藏"   name="myCollection" class="paddingH4 marginT6">
+          <Col span="8">
+          <self-collection ></self-collection>
+          </Col>
+        </TabPane>
         <TabPane label="我的文档"   name="myArticle" class="paddingH4 marginT6">
           <!--<Col span="8">-->
-            <self-tree></self-tree>
+            <self-tree v-if="'myArticle'===currentTabName"></self-tree>
           <!--</Col>-->
         </TabPane>
         <TabPane label="用户信息"   name="userInfo" class="paddingH4 marginT6">
@@ -41,6 +46,7 @@
   /**         component       **/
   /******************************/
   import selfTree from '../components/basicComponent/articleTree'
+  import selfCollection from '../components/basicComponent/tree/collection'
   import selfChangePassword from '../components/subComponents/changePassword'
   import selfUserInfo from '../components/subComponents/userInfo'
 
@@ -67,7 +73,7 @@
   import * as componentInfo from '../constant/globalConfiguration/componentInfo'
 
   export default {
-    components:{selfTree,selfChangePassword,selfUserInfo,selfFooter,selfHeader},
+    components:{selfTree,selfChangePassword,selfUserInfo,selfFooter,selfHeader,selfCollection},
     computed:{
 
     },
@@ -103,6 +109,9 @@
       async clickTab(name){
         this.currentTabName=name
         switch (name){
+          case "myCollection":
+            // await this.$refs['selfCollection'].
+            break;
           case 'myArticle':
             break;
           case 'userInfo':

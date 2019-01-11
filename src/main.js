@@ -21,7 +21,7 @@ import '../static/css/position.css'
 import '../static/css/radius.css'
 import '../static/css/size.css'
 import '../static/css/style.css'
-
+import '../static/css/iviewEnhancement.css'
 
 /**           引入cookies          **/
 import VueCookies from 'vue-cookies'

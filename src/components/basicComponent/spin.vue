@@ -70,6 +70,7 @@
         }else{
           spinInfo.style=''
         }
+        // inf('generate spinInfo',spinInfo)
         return spinInfo
         // this.spinInfo.fontSize=this.spinInfo.fontSize||18
       },

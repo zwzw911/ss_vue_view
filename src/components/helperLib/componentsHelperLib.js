@@ -241,7 +241,7 @@ function calcCenterParams({element,elementWH,container,withCover}){
   if(containerWH['width']>elementWH['width']){
     elementVirtualPos['left']=parseInt((containerWH['width']-elementWH['width'])/2)
   }
-  inf('elementVirtualPos',elementVirtualPos)
+  // inf('elementVirtualPos',elementVirtualPos)
 
   let elementBorderWidth={top:0,left:0}
   if(true===withCover){

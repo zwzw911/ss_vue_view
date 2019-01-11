@@ -32,6 +32,8 @@ const proxySetting={
         {"target":"http://localhost:3000","changeOrigin":true,"pathRewrite":{"^/folder":"/folder"}},
     '/recommend':
         {"target":"http://localhost:3000","changeOrigin":true,"pathRewrite":{"^/recommend":"/recommend"}},
+    '/collection':
+        {"target":"http://localhost:3000","changeOrigin":true,"pathRewrite":{"^/collection":"/collection"}},
 }
 
 

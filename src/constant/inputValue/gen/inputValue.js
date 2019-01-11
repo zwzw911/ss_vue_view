@@ -31,7 +31,7 @@ const inputValueForCreate={
     user:{"name":null,"account":null,"password":null,"addFriendRule":null},
     user_resource_profile:{"userId":null,"resource_profile_id":null,"duration":null},
     collection:{"name":null,"articlesId":null,"topicsId":null},
-    send_recommend:{"articleId":null,"receivers":null},
+    send_recommend:{"articleId":null},
     topic:{"name":null,"desc":null,"articlesId":null},
 }
 

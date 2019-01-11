@@ -20,9 +20,6 @@ const numRange={
         articlesId:{"max":100},
         topicsId:{"max":100},
     },
-    send_recommend:{
-        receivers:{"max":10},
-    },
     topic:{
         articlesId:{"max":10},
     },

@@ -966,6 +966,7 @@ inf('blurInputPlaceHolderRestore keyName',keyName)
           //并不是所有rule中字段都用作输入字段
           if(undefined!==this.formItemInfo.inputValue[singleKey]){
             this.formItemInfo.inputValue[singleKey]=null
+            this.formItemInfo.changedValue[singleKey]=null
           }
           this.clearSingleItemError({keyName:singleKey})
         }

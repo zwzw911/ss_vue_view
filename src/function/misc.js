@@ -323,6 +323,8 @@ function routeTo({that,path}){
   that.$router.push(path)
 }
 
+
+
 function openNewPage({url}){
   window.open(`${host}${url}`)
 }

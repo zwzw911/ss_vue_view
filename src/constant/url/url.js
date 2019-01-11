@@ -114,6 +114,18 @@ const urlConfiguration={
 
     readUnreadRecommend:{url:'/recommend/readUnreadRecommend',method:RequestMethod.PUT},
   },
+  /**   collection  **/
+  collection:{
+    createCollection:{url:'/collection',method:RequestMethod.POST},
+    getCollectionContent:{url:'/collection',method:RequestMethod.GET},//
+    //显示所有collection，以便用户获得更好体验（无需点击top level来获得2nd level的collection）
+    getAllCollection:{url:'/collection/all',method:RequestMethod.GET},
+    getTopCollection:{url:'/collection/top',method:RequestMethod.GET},//如果URL中带collectionId，说明读取单个collection的内容；没有id，读取所有collection（list）
+    getNonTopCollection:{url:'/collection/nonTop',method:RequestMethod.GET},//
+    deleteCollection:{url:'/collection',method:RequestMethod.DELETE},
+    updateCollectionName:{url:'/collection/name',method:RequestMethod.PUT},
+    addDeleteContent:{url:'/collection/content',method:RequestMethod.PUT},
+  },
   /******************************************/
   /*************    admin    ***************/
   /******************************************/

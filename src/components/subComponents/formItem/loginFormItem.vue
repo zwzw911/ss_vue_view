@@ -106,9 +106,12 @@ onblur/onchange会emit event，带1个结果，是否可以自行login操作（i
       }
     },
     created(){
-      //如果已经登录，直接跳转到首页
-      if(true===ifUserLogin({that:this})){
-        routeTo({that:this,path:'/'})
+      if(undefined===this.loginConfig.createdAlreadyLoginRouteToLastOrMainPage || true===this.loginConfig.createdAlreadyLoginRouteToLastOrMainPage){
+        //如果已经登录，直接跳转到首页
+        if(true===ifUserLogin({that:this})){
+          routeTo({that:this,path:'/'})
+        }
+
       }
       if(true===this.$cookies.isKey('rememberMe') && true===this.$cookies.isKey('account') ){
         this.formItemInfo.inputValue.account=this.$cookies.get('account')
