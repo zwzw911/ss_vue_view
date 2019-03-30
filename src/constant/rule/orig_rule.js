@@ -1,5 +1,5 @@
-/*    gene by D:\U\ss_vue_express\server_common\maintain\convert2Client\generateClientRule.js  
-* 产生client的rule 
+/*    gene by D:\U\ss_vue_express\server_common\maintain\convert2Client\generateClientRule.js
+* 产生client的rule
 */
 
 "use strict"
@@ -13,13 +13,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "受罚人不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "受罚人格式不正确",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "reason": [
@@ -70,7 +70,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "受罚类型不正确",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "penalizeSubType": [
@@ -91,7 +91,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "受罚子类型不正确",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "duration": [
@@ -99,19 +99,19 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "受罚时长不能为空",
-        "type": "integer"
+        "type": "int"
       },
       {
         "min": 0,
         "trigger": "blur,change",
         "message": "受罚时长至少1天",
-        "type": "integer"
+        "type": "int"
       },
       {
         "max": 30,
         "trigger": "blur,change",
         "message": "受罚时长最长30天",
-        "type": "integer"
+        "type": "int"
       }
     ]
   },
@@ -158,7 +158,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "管理员类型不正确",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "userPriority": [
@@ -166,7 +166,7 @@ const ruleForCreate=
         "required": false,
         "trigger": "blur,change",
         "message": "用户权限不能为空",
-        "type": "string"
+        "type": "array"
       },
       {
         "enum": [
@@ -181,19 +181,19 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "用户权限不正确",
-        "type": "enum"
+        "type": "array"
       },
       {
         "min": 1,
         "trigger": "blur,change",
         "message": "至少拥有1个权限",
-        "type": "string"
+        "type": "array"
       },
       {
         "max": 8,
         "trigger": "blur,change",
         "message": "最多拥有8个权限",
-        "type": "string"
+        "type": "array"
       }
     ]
   },
@@ -223,13 +223,13 @@ const ruleForCreate=
         "required": false,
         "trigger": "blur,change",
         "message": "上级分类不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "上级分类必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ]
   },
@@ -294,7 +294,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "资源配置范围的类型不正确",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "type": [
@@ -311,7 +311,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "资源配置类型的值类型不正确",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "maxNum": [
@@ -356,7 +356,8 @@ const ruleForCreate=
       {
         "required": true,
         "trigger": "blur,change",
-        "message": "存储路径不能为空"
+        "message": "存储路径不能为空",
+        "type": "folder"
       }
     ],
     "usage": [
@@ -376,7 +377,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "储路径用途的类型不正确",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "sizeInKb": [
@@ -464,7 +465,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "文档状态不正确",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "folderId": [
@@ -472,13 +473,13 @@ const ruleForCreate=
         "required": false,
         "trigger": "blur,change",
         "message": "文档目录不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "文档目录必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "htmlContent": [
@@ -506,20 +507,19 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "文档标签不能为空",
-        "type": "array"
+        "type": "string"
       },
       {
-        "max": 5,
+        "min": 2,
         "trigger": "blur,change",
-        "message": "最多设置5标签",
-        "type": "array"
+        "message": "文档标签至少2个字符",
+        "type": "string"
       },
       {
-        "defaultField": {
-          "type": "string",
-          "min": 2,
-          "max": 20
-        }
+        "max": 20,
+        "trigger": "blur,change",
+        "message": "文档标签的长度不能超过20个字符",
+        "type": "string"
       }
     ],
     "categoryId": [
@@ -527,13 +527,13 @@ const ruleForCreate=
         "required": false,
         "trigger": "blur,change",
         "message": "文档分类不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "文档分类必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "allowComment": [
@@ -550,7 +550,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "文档评论设置不正确",
-        "type": "enum"
+        "type": "string"
       }
     ]
   },
@@ -560,13 +560,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "文档不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "文档必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "content": [
@@ -596,13 +596,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "文档不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "文档必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ]
   },
@@ -626,13 +626,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "上级目录不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "上级目录必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ]
   },
@@ -658,13 +658,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "添加好友不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "好友必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "message": [
@@ -691,13 +691,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "公共群不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "公共群必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ]
   },
@@ -707,13 +707,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "群不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "群必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "memberId": [
@@ -721,13 +721,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "成员不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "成员必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "penalizeType": [
@@ -758,7 +758,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "未知处罚类型",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "duration": [
@@ -766,19 +766,19 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "处罚时间不能为空",
-        "type": "integer"
+        "type": "int"
       },
       {
         "min": 1,
         "trigger": "blur,change",
         "message": "处罚时间最少1天",
-        "type": "integer"
+        "type": "int"
       },
       {
         "max": 30,
         "trigger": "blur,change",
         "message": "处罚时间最多30天",
-        "type": "integer"
+        "type": "int"
       }
     ]
   },
@@ -818,7 +818,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "新成员加入规则不正确",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "adminsId": [
@@ -826,25 +826,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "群管理员不能为空",
-        "type": "array"
+        "type": "objectId"
       },
       {
-        "min": 1,
+        "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
-        "message": "群管理员至少有一个成员",
-        "type": "array"
-      },
-      {
-        "max": 10,
-        "trigger": "blur,change",
-        "message": "群最多有10个群管理员",
-        "type": "array"
-      },
-      {
-        "defaultField": {
-          "type": "string",
-          "pattern":/^[0-9a-fA-F]{24}$/
-        }
+        "message": "群管理员必须是objectId",
+        "type": "objectId"
       }
     ],
     "membersId": [
@@ -852,25 +840,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "群成员不能为空",
-        "type": "array"
+        "type": "objectId"
       },
       {
-        "min": 1,
+        "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
-        "message": "群至少有一个成员",
-        "type": "array"
-      },
-      {
-        "max": 200,
-        "trigger": "blur,change",
-        "message": "群最多有200个成员",
-        "type": "array"
-      },
-      {
-        "defaultField": {
-          "type": "string",
-          "pattern":/^[0-9a-fA-F]{24}$/
-        }
+        "message": "群成员必须是objectId",
+        "type": "objectId"
       }
     ]
   },
@@ -880,13 +856,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "群不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "群必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "eventType": [
@@ -907,7 +883,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "未知群事件类型",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "targetId": [
@@ -915,13 +891,13 @@ const ruleForCreate=
         "required": false,
         "trigger": "blur,change",
         "message": "事件接收者不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "事件接收者必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "status": [
@@ -942,7 +918,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "未知事件状态",
-        "type": "enum"
+        "type": "string"
       }
     ]
   },
@@ -952,13 +928,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "群不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "群必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "content": [
@@ -1008,19 +984,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "好友分组不能为空",
-        "type": "array"
+        "type": "objectId"
       },
       {
-        "max": 100,
+        "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
-        "message": "好友分组最多包含100个好友",
-        "type": "array"
-      },
-      {
-        "defaultField": {
-          "type": "string",
-          "pattern":/^[0-9a-fA-F]{24}$/
-        }
+        "message": "好友必须是objectId",
+        "type": "objectId"
       }
     ]
   },
@@ -1070,13 +1040,13 @@ const ruleForCreate=
         "required": false,
         "trigger": "blur,change",
         "message": "举报的文档不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "举报的文档必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "impeachedCommentId": [
@@ -1084,13 +1054,13 @@ const ruleForCreate=
         "required": false,
         "trigger": "blur,change",
         "message": "举报的评论不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "举报的评论必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ]
   },
@@ -1100,13 +1070,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "举报不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "举报必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "adminOwnerId": [
@@ -1114,13 +1084,13 @@ const ruleForCreate=
         "required": false,
         "trigger": "blur,change",
         "message": "处理人不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "处理人必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "action": [
@@ -1142,7 +1112,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "未知操作",
-        "type": "enum"
+        "type": "string"
       }
     ]
   },
@@ -1152,13 +1122,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "举报对象不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "举报对象必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ]
   },
@@ -1168,13 +1138,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "举报不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "举报必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ]
   },
@@ -1184,13 +1154,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "举报处理不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "举报处理必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ]
   },
@@ -1209,7 +1179,7 @@ const ruleForCreate=
         "type": "string"
       },
       {
-        "pattern":/^[\\u4E00-\\u9FFF\\w]{2,20}$/,
+        // "pattern":/^[\\u4E00-\\u9FFF\\w]{2,20}$/,
         "trigger": "blur,change",
         "message": "昵称必须由2-20个字符组成",
         "type": "string"
@@ -1223,7 +1193,7 @@ const ruleForCreate=
         "type": "string"
       },
       {
-        "pattern":/^(([\\w\\u4e00-\\u9fa5\\-]+\\.)*[\\w\\u4e00-\\u9fa5\\-]+@([\\w\\u4e00-\\u9fa5\\-]+\\.)+[A-Za-z]+|1\\d{10})$/,
+        // "pattern":/^(([\\w\\u4e00-\\u9fa5\\-]+\\.)*[\\w\\u4e00-\\u9fa5\\-]+@([\\w\\u4e00-\\u9fa5\\-]+\\.)+[A-Za-z]+|1\\d{10})$/,
         "trigger": "blur,change",
         "message": "账号必须是手机号或者email",
         "type": "string"
@@ -1237,7 +1207,7 @@ const ruleForCreate=
         "type": "string"
       },
       {
-        "pattern":/^[A-Za-z0-9~`!@#%&)(_=}{:\"><,;'\\[\\]\\\\\\^\\$\\*\\+\\|\\?\\.\\-]{6,20}$/,
+        // "pattern":/^[A-Za-z0-9~`!@#%&)(_=}{:\"><,;'\\[\\]\\\\\\^\\$\\*\\+\\|\\?\\.\\-]{6,20}$/,
         "trigger": "blur,change",
         "message": "密码必须由6-20个字符组成",
         "type": "string"
@@ -1258,7 +1228,7 @@ const ruleForCreate=
         ],
         "trigger": "blur,change",
         "message": "未知规则",
-        "type": "enum"
+        "type": "string"
       }
     ]
   },
@@ -1268,13 +1238,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "用户不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "用户格式不正确",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "resource_profile_id": [
@@ -1282,13 +1252,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "资源配置不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "资源配置格式不正确",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "duration": [
@@ -1338,19 +1308,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "收藏文档不能为空",
-        "type": "array"
+        "type": "objectId"
       },
       {
-        "max": 100,
+        "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
-        "message": "最多收藏100篇文档",
-        "type": "array"
-      },
-      {
-        "defaultField": {
-          "type": "string",
-          "pattern":/^[0-9a-fA-F]{24}$/
-        }
+        "message": "文档必须是objectId",
+        "type": "objectId"
       }
     ],
     "topicsId": [
@@ -1358,19 +1322,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "系列不能为空",
-        "type": "array"
+        "type": "objectId"
       },
       {
-        "max": 100,
+        "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
-        "message": "最多收藏100个系列",
-        "type": "array"
-      },
-      {
-        "defaultField": {
-          "type": "string",
-          "pattern":/^[0-9a-fA-F]{24}$/
-        }
+        "message": "系列必须是objectId",
+        "type": "objectId"
       }
     ]
   },
@@ -1380,13 +1338,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "文档不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "文档必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ]
   },
@@ -1436,19 +1394,13 @@ const ruleForCreate=
         "required": true,
         "trigger": "blur,change",
         "message": "系列文档不能为空",
-        "type": "array"
+        "type": "objectId"
       },
       {
-        "max": 10,
+        "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
-        "message": "最多设置10篇文档",
-        "type": "array"
-      },
-      {
-        "defaultField": {
-          "type": "string",
-          "pattern":/^[0-9a-fA-F]{24}$/
-        }
+        "message": "文档必须是objectId",
+        "type": "objectId"
       }
     ]
   }
@@ -1499,7 +1451,7 @@ const ruleForUpdate=
         ],
         "trigger": "blur,change",
         "message": "管理员类型不正确",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "userPriority": [
@@ -1507,7 +1459,7 @@ const ruleForUpdate=
         "required": false,
         "trigger": "blur,change",
         "message": "用户权限不能为空",
-        "type": "string"
+        "type": "array"
       },
       {
         "enum": [
@@ -1522,19 +1474,19 @@ const ruleForUpdate=
         ],
         "trigger": "blur,change",
         "message": "用户权限不正确",
-        "type": "enum"
+        "type": "array"
       },
       {
         "min": 1,
         "trigger": "blur,change",
         "message": "至少拥有1个权限",
-        "type": "string"
+        "type": "array"
       },
       {
         "max": 8,
         "trigger": "blur,change",
         "message": "最多拥有8个权限",
-        "type": "string"
+        "type": "array"
       }
     ]
   },
@@ -1564,13 +1516,13 @@ const ruleForUpdate=
         "required": false,
         "trigger": "blur,change",
         "message": "上级分类不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "上级分类必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ]
   },
@@ -1634,7 +1586,7 @@ const ruleForUpdate=
   "article": {
     "name": [
       {
-        "required": true,
+        "required": false,
         "trigger": "blur,change",
         "message": "文档名不能为空",
         "type": "string"
@@ -1648,7 +1600,7 @@ const ruleForUpdate=
     ],
     "status": [
       {
-        "required": true,
+        "required": false,
         "trigger": "blur,change",
         "message": "文档状态不能为空",
         "type": "string"
@@ -1661,7 +1613,7 @@ const ruleForUpdate=
         ],
         "trigger": "blur,change",
         "message": "文档状态不正确",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "folderId": [
@@ -1669,18 +1621,18 @@ const ruleForUpdate=
         "required": false,
         "trigger": "blur,change",
         "message": "文档目录不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "文档目录必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "htmlContent": [
       {
-        "required": true,
+        "required": false,
         "trigger": "blur,change",
         "message": "文档内容不能为空",
         "type": "string"
@@ -1703,20 +1655,19 @@ const ruleForUpdate=
         "required": false,
         "trigger": "blur,change",
         "message": "文档标签不能为空",
-        "type": "array"
+        "type": "string"
       },
       {
-        "max": 5,
+        "min": 2,
         "trigger": "blur,change",
-        "message": "最多设置5标签",
-        "type": "array"
+        "message": "文档标签至少2个字符",
+        "type": "string"
       },
       {
-        "defaultField": {
-          "type": "string",
-          "min": 2,
-          "max": 20
-        }
+        "max": 20,
+        "trigger": "blur,change",
+        "message": "文档标签的长度不能超过20个字符",
+        "type": "string"
       }
     ],
     "categoryId": [
@@ -1724,13 +1675,13 @@ const ruleForUpdate=
         "required": false,
         "trigger": "blur,change",
         "message": "文档分类不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "文档分类必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ],
     "allowComment": [
@@ -1747,7 +1698,7 @@ const ruleForUpdate=
         ],
         "trigger": "blur,change",
         "message": "文档评论设置不正确",
-        "type": "enum"
+        "type": "string"
       }
     ]
   },
@@ -1773,13 +1724,13 @@ const ruleForUpdate=
         "required": false,
         "trigger": "blur,change",
         "message": "上级目录不能为空",
-        "type": "string"
+        "type": "objectId"
       },
       {
         "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
         "message": "上级目录必须是objectId",
-        "type": "string"
+        "type": "objectId"
       }
     ]
   },
@@ -1823,7 +1774,7 @@ const ruleForUpdate=
         ],
         "trigger": "blur,change",
         "message": "新成员加入规则不正确",
-        "type": "enum"
+        "type": "string"
       }
     ],
     "adminsId": [
@@ -1831,25 +1782,13 @@ const ruleForUpdate=
         "required": false,
         "trigger": "blur,change",
         "message": "群管理员不能为空",
-        "type": "array"
+        "type": "objectId"
       },
       {
-        "min": 1,
+        "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
-        "message": "群管理员至少有一个成员",
-        "type": "array"
-      },
-      {
-        "max": 10,
-        "trigger": "blur,change",
-        "message": "群最多有10个群管理员",
-        "type": "array"
-      },
-      {
-        "defaultField": {
-          "type": "string",
-          "pattern":/^[0-9a-fA-F]{24}$/
-        }
+        "message": "群管理员必须是objectId",
+        "type": "objectId"
       }
     ],
     "membersId": [
@@ -1857,25 +1796,13 @@ const ruleForUpdate=
         "required": false,
         "trigger": "blur,change",
         "message": "群成员不能为空",
-        "type": "array"
+        "type": "objectId"
       },
       {
-        "min": 1,
+        "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
-        "message": "群至少有一个成员",
-        "type": "array"
-      },
-      {
-        "max": 200,
-        "trigger": "blur,change",
-        "message": "群最多有200个成员",
-        "type": "array"
-      },
-      {
-        "defaultField": {
-          "type": "string",
-          "pattern":/^[0-9a-fA-F]{24}$/
-        }
+        "message": "群成员必须是objectId",
+        "type": "objectId"
       }
     ]
   },
@@ -1907,19 +1834,13 @@ const ruleForUpdate=
         "required": false,
         "trigger": "blur,change",
         "message": "好友分组不能为空",
-        "type": "array"
+        "type": "objectId"
       },
       {
-        "max": 100,
+        "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
-        "message": "好友分组最多包含100个好友",
-        "type": "array"
-      },
-      {
-        "defaultField": {
-          "type": "string",
-          "pattern":/^[0-9a-fA-F]{24}$/
-        }
+        "message": "好友必须是objectId",
+        "type": "objectId"
       }
     ]
   },
@@ -2054,7 +1975,7 @@ const ruleForUpdate=
         ],
         "trigger": "blur,change",
         "message": "未知规则",
-        "type": "enum"
+        "type": "string"
       }
     ]
   },
@@ -2085,19 +2006,13 @@ const ruleForUpdate=
         "required": false,
         "trigger": "blur,change",
         "message": "收藏文档不能为空",
-        "type": "array"
+        "type": "objectId"
       },
       {
-        "max": 100,
+        "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
-        "message": "最多收藏100篇文档",
-        "type": "array"
-      },
-      {
-        "defaultField": {
-          "type": "string",
-          "pattern":/^[0-9a-fA-F]{24}$/
-        }
+        "message": "文档必须是objectId",
+        "type": "objectId"
       }
     ],
     "topicsId": [
@@ -2105,19 +2020,13 @@ const ruleForUpdate=
         "required": false,
         "trigger": "blur,change",
         "message": "系列不能为空",
-        "type": "array"
+        "type": "objectId"
       },
       {
-        "max": 100,
+        "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
-        "message": "最多收藏100个系列",
-        "type": "array"
-      },
-      {
-        "defaultField": {
-          "type": "string",
-          "pattern":/^[0-9a-fA-F]{24}$/
-        }
+        "message": "系列必须是objectId",
+        "type": "objectId"
       }
     ]
   },
@@ -2168,19 +2077,13 @@ const ruleForUpdate=
         "required": false,
         "trigger": "blur,change",
         "message": "系列文档不能为空",
-        "type": "array"
+        "type": "objectId"
       },
       {
-        "max": 10,
+        "pattern":/^[0-9a-fA-F]{24}$/,
         "trigger": "blur,change",
-        "message": "最多设置10篇文档",
-        "type": "array"
-      },
-      {
-        "defaultField": {
-          "type": "string",
-          "pattern":/^[0-9a-fA-F]{24}$/
-        }
+        "message": "文档必须是objectId",
+        "type": "objectId"
       }
     ]
   }

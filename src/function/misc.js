@@ -134,7 +134,7 @@ function genNeedInput({collName,allowFields,additionalFields}) {
 }
 
 
-function genAutoGenInfo(){}
+
 /*
 * collName
 * */

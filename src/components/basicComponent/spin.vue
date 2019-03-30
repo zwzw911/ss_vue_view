@@ -1,7 +1,7 @@
 <style scoped>
-  .spin-icon-load{
+/*  .spin-icon-load{
     animation: ani-demo-spin 1s linear infinite;
-  }
+  }*/
   .left{fill:url(#left);}
   .right{fill:url(#right);}
   .top{fill:#2b85e4;}

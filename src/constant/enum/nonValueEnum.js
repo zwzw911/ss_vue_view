@@ -6,7 +6,7 @@
 
 
 const InputAttributeFieldName=
-{"LABEL":"label","PLACE_HOLDER":"placeHolder","PLACE_HOLDER_BKUP":"placeHolderBkup","INPUT_TYPE":"inputType","ENUM_VALUE":"enumValue","UNIQUE":"unique","AUTO_GEN":"autoGen"}
+{"LABEL":"label","PLACE_HOLDER":"placeHolder","PLACE_HOLDER_BKUP":"placeHolderBkup","INPUT_TYPE":"inputType","REQUIRED":"required","ENUM_VALUE":"enumValue","UNIQUE":"unique","AUTO_GEN":"autoGen"}
 const InputTempDataFieldName=
 {"VALID_RESULT":"validResult"}
 const ValidatePart=

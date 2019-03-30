@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "async-validator": "^1.8.5",
+    "axios": "^0.18.0",
     "awesomeprint": "^1.0.2",
-    "axios": "^0.17.1",
     "element-ui": "^2.3.6",
     "glob": "^7.1.2",
     "iview": "^3.2.0",
